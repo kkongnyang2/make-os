@@ -1,53 +1,57 @@
-PLATFORM ?= qemu   # or rpi4
-CROSS=aarch64-linux-gnu-
-CC=$(CROSS)gcc
-AS=$(CROSS)as
-LD=$(CROSS)ld
-OBJCOPY=$(CROSS)objcopy
-CFLAGS=-nostdlib -ffreestanding -O2 -Wall -Iinclude -DPLATFORM_$(shell echo $(PLATFORM) | tr a-z A-Z)
+#======================================
+# Makefile: 빌드, 실행(run), 정리(clean) 타겟 포함
+#======================================
+CC      = aarch64-linux-gnu-gcc
+OBJCOPY = aarch64-linux-gnu-objcopy
+CFLAGS  = -Wall -Werror -nostdlib -ffreestanding -O2 -Iinclude -Iboards
+LDFLAGS = -T link.ld
+OBJS    = start.o main.o uart.o timer.o gic.o
 
-OBJS = start.o \
-       drivers/uart.o drivers/gic.o drivers/timer.o \
-       kernel/main.o
+#-----------------------------
+# 기본 타겟
+#-----------------------------
+all: kernel.img
 
-all: build/kernel.img
+#-----------------------------
+# 개별 컴파일
+#-----------------------------
+start.o: start.S
+	$(CC) $(CFLAGS) -c $< -o $@
 
-build/kernel.img: build/kernel.elf
+main.o: main.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+uart.o: src/uart.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+timer.o: src/timer.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+gic.o: src/gic.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+#-----------------------------
+# 링크 → ELF
+#-----------------------------
+kernel.elf: $(OBJS) link.ld
+	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
+
+#-----------------------------
+# ELF → 순수 바이너리 이미지
+#-----------------------------
+kernel.img: kernel.elf
 	$(OBJCOPY) -O binary $< $@
 
-build/kernel.elf: $(OBJS) linker.ld
-	$(LD) -T linker.ld -o $@ $(OBJS)
+#-----------------------------
+# QEMU 실행 (UART0를 STDIO로 연결)
+#-----------------------------
+run: kernel.img
+	qemu-system-aarch64 \
+		-M virt -cpu cortex-a53 -nographic \
+		-kernel kernel.img 2>&1 | tee qemu.log
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-%.o: %.S
-	$(CC) $(CFLAGS) -c $< -o $@
-
+#-----------------------------
+# 정리
+#-----------------------------
 clean:
-	rm -f *.o drivers/*.o kernel/*.o build/*
-
-run: build/kernel.img
-	qemu-system-aarch64 \
-		-M virt \
-		-cpu cortex-a53 \
-		-nographic \
-		-kernel build/kernel.img
-
-gdb: build/kernel.img
-	qemu-system-aarch64 \
-		-M virt \
-		-cpu cortex-a53 \
-		-nographic \
-		-kernel build/kernel.img \
-		-s -S
-
-log: build/kernel.img
-	qemu-system-aarch64 \
-		-M virt \
-		-cpu cortex-a53 \
-		-nographic \
-		-kernel build/kernel.img \
-		-d int,guest_errors \
-    	-D build/qemu.log \
-	2>&1 | tee build/terminal.log
+	rm -f *.o kernel.elf kernel.img qemu.log

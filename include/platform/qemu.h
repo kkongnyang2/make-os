@@ -1,4 +1,0 @@
-#define UART0_BASE   0x09000000
-#define GICD_BASE    0x08000000
-#define GICC_BASE    0x08010000
-#define TIMER_IRQ_ID 30
