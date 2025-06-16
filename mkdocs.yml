@@ -1,0 +1,9 @@
+site_name: make-os
+theme:
+  name: material
+nav:
+  - 이론: qemu.md
+site_dir: site          # <- 기본값이지만 명시해 둡니다
+markdown_extensions:
+  - toc
+  - codehilite
