@@ -3,7 +3,8 @@ theme:
   name: material
 nav:
   - 이론: qemu.md
-site_dir: site          # <- 기본값이지만 명시해 둡니다
+docs_dir: docs          #기본값은 docs. 따라서 안써도 되지만 그냥 명시
+site_dir: site          #기본값은 site. 따라서 안써도 되지만 그냥 명시
 markdown_extensions:
   - toc
   - codehilite
