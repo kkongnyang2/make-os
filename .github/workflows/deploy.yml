@@ -2,8 +2,6 @@ name: Daily Deploy to GitHub Pages & Raspberry Pi
 
 on:
   push:                 # 수동 push 시 즉시
-  schedule:             # 매일 03:00 KST = 18:00 UTC
-    - cron:  '0 18 * * *'
 
 jobs:
   build:
