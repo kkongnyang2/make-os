@@ -11,16 +11,16 @@
       
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
-        <title>make-os</title>
+        <title>Vm - make-os</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
       
       
 
@@ -39,7 +39,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -57,11 +57,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#_1" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -74,7 +69,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="make-os" class="md-header__button md-logo" aria-label="make-os" data-md-component="logo">
+    <a href=".." title="make-os" class="md-header__button md-logo" aria-label="make-os" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -94,7 +89,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Vm
             
           </span>
         </div>
@@ -172,7 +167,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="make-os" class="md-nav__button md-logo" aria-label="make-os" data-md-component="logo">
+    <a href=".." title="make-os" class="md-nav__button md-logo" aria-label="make-os" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -190,7 +185,7 @@
   
   
     <li class="md-nav__item">
-      <a href="qemu/" class="md-nav__link">
+      <a href="../qemu/" class="md-nav__link">
         
   
   
@@ -223,23 +218,6 @@
   
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      📚 목차
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -254,12 +232,81 @@
 
 
 
-  <h1>Home</h1>
+  <h1>Vm</h1>
 
-<h2 id="_1">📚 목차<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="qemu/">0. qemu</a></li>
-</ul>
+<p>가상머신? 물리적 컴퓨터 위에서 돌아가는 소프트웨어 컴퓨터</p>
+<p>하이퍼바이저 -&gt; 그 가짜 컴퓨터를 관리하는 관리자</p>
+<p>가상머신 구조</p>
+<p>type 1. 네이티브 구조<br />
+하드웨어 바로 위에 하이퍼바이저가 동작. os 설치 없이 바로 vm 실행 가능</p>
+<p>[물리 컴퓨터]<br />
+ ┌────────────────────────────┐<br />
+ │        Hypervisor          │  ← 하이퍼바이저 (Xen, VMware ESXi, Hyper-V)<br />
+ │  ┌────────────┐ ┌────────┐ │<br />
+ │  │ VM #1      │ │ VM #2 │ │<br />
+ │  │ Ubuntu     │ │ Win10 │ │  ← 가상머신 (게스트 OS + 커널)<br />
+ │  └────────────┘ └────────┘ │<br />
+ └────────────────────────────┘</p>
+<p>하드웨어<br />
+  ↓<br />
+Hypervisor (bare-metal)<br />
+  ↓<br />
+게스트 OS1 / OS2<br />
+  ↓<br />
+각 OS의 프로세스</p>
+<p>type 2. 호스트 구조<br />
+일반 os 위에서 프로그램처럼 실행되는 하이퍼바이저</p>
+<p>[물리 컴퓨터]<br />
+ ┌────────────────────────────┐<br />
+ │       Host OS (예: Ubuntu) │  ← 일반 데스크탑 OS<br />
+ │  ┌──────────────────────┐  │<br />
+ │  │ Hypervisor           │  │  ← 소프트웨어 기반 (QEMU, VirtualBox)<br />
+ │  │  ┌────────────┐      │  │<br />
+ │  │  │ VM #1      │      │  │<br />
+ │  │  │ Fedora     │      │  │  ← 게스트 OS<br />
+ │  │  └────────────┘      │  │<br />
+ │  └──────────────────────┘  │<br />
+ └────────────────────────────┘</p>
+<p>하드웨어<br />
+  ↓<br />
+호스트 OS<br />
+  ↓<br />
+Hypervisor (소프트웨어, 예: QEMU)<br />
+  ↓<br />
+게스트 OS1 / OS2<br />
+  ↓<br />
+각 OS의 프로세스</p>
+<p>type 3. 컨테이너 구조<br />
+모두 호스트 커널 공유</p>
+<p>[물리 컴퓨터]<br />
+ ┌────────────────────────────┐<br />
+ │     Host OS (리눅스)        │  ← 커널 공유<br />
+ │  ┌──────────────────────┐  │<br />
+ │  │ 컨테이너 런타임       │  │  ← Docker<br />
+ │  └───────┬──────────────┘  │<br />
+ │     ┌────▼────┐  ┌────▼────┐<br />
+ │     │ Container│ │ Container│  ← 가벼운 격리 환경<br />
+ │     │  Nginx   │ │  Python  │  ← rootfs + 라이브러리 + 앱<br />
+ │     └──────────┘ └──────────┘<br />
+ └────────────────────────────┘</p>
+<p>가상머신 운용 방법</p>
+<p>전체 가상화 : 게스트 os가 가상 하드웨어를 제어하는 것처럼 보이게 함<br />
+프로세스 -&gt; 게스트os -&gt; 가상 하드웨어 -&gt; trap -&gt; 하이퍼바이저 -&gt; 실제 하드웨어</p>
+<p>반 가상화 : 게스트 os가 하이퍼바이저와 협력하여 수행. virtio 가상화 친화 드라이버 사용.<br />
+프로세스 -&gt; 게스트os &lt;-&gt; 하이퍼바이저 -&gt; 실제 하드웨어</p>
+<p>하드웨어 가상화 : cpu가 가상화를 하드웨어 수준에서 지원<br />
+프로세스 -&gt; 게스트os -&gt; cpu가 직접 실행 또는 trap 시 -&gt; 하이퍼바이저 -&gt; 실제 하드웨어</p>
+<p>qemu? 호스트 구조 전체 가상화 하이퍼바이저<br />
+kvm? 하드웨어 가상화에서 사용하는 커널 모듈</p>
+<p>큰 틀은 qemu를 쓰고 하드웨어 가상화를 추가로 진행하여 qemu+kvm 방식으로 많이 씀.</p>
+<p>cpu 권한 레벨<br />
+x86에서는 Ring 0 (커널) ~ Ring 3 (유저)<br />
+ring 0에서 실행되길 원하지만 호스트 os와 충돌.<br />
+ARM에서는 EL0~EL3<br />
+EL1에서 실행되길 원하지만 호스트 os와 충돌</p>
+<p>따라서<br />
+하이퍼바이저가 게스트의 모든 cpu 명령어를 소프트웨어적으로 감지하고 흉내내거나<br />
+게스트 os가 ring0에서 실행되도록 허용하되 특권 명령어는 trap 되어 하이퍼바이저(EL2)로 전환되어 처리된다.</p>
 
 
 
@@ -308,10 +355,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
       
     
   </body>
