@@ -2,7 +2,9 @@ site_name: make-os
 theme:
   name: material
 nav:                    #사이드바 목차
-  - 이론: qemu.md
+  - vm: vm.md
+  - xv6-riscv: xv6-riscv.md
+  - go: go.md
 docs_dir: docs          #기본값은 docs. 따라서 안써도 되지만 그냥 명시
 site_dir: site          #기본값은 site. 따라서 안써도 되지만 그냥 명시
 markdown_extensions:
