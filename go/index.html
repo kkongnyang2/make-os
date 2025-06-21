@@ -9,6 +9,8 @@
       
       
       
+        <link rel="prev" href="../xv6-riscv/">
+      
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -16,7 +18,7 @@
     
     
       
-        <title>이론 - make-os</title>
+        <title>go - make-os</title>
       
     
     
@@ -94,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              이론
+              go
             
           </span>
         </div>
@@ -187,6 +189,50 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    vm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../xv6-riscv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    xv6-riscv
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -202,7 +248,7 @@
   
   
   <span class="md-ellipsis">
-    이론
+    go
     
   </span>
   
@@ -215,7 +261,7 @@
   
   
   <span class="md-ellipsis">
-    이론
+    go
     
   </span>
   
@@ -463,8 +509,30 @@
 
 
 
-  <h1>이론</h1>
+  <h1>go</h1>
 
+<p>qemu는 전용 가상 주소가 존재. 하지만 내가 만들 os는 qemu 전용이 아니라 범용으로 사용하길 원하기에 DTB를 읽어서 동적으로 얻은 주소 사용.<br />
+아키텍처만 동일하면 어느 머신에서도 돌아갈 수 있음.</p>
+<p>[QEMU]<br />
+ │<br />
+ └───&gt; 가상 하드웨어 생성 + dtb 생성<br />
+         │<br />
+[부트로더]<br />
+ │   └──&gt; dtb 전달<br />
+[커널 (Ubuntu)]<br />
+ └──&gt; dtb 파싱 → 디바이스 주소, IRQ 등 설정<br />
+[드라이버]<br />
+ └──&gt; 실제 장치 제어</p>
+<p>.<br />
+├── start.S             → x0로 dtb 주소 받기<br />
+├── main.c              → uart 초기화 호출<br />
+├── uart.c              → 실제 MMIO 주소로 초기화<br />
+├── dtb.c               → 간단한 dtb 파서 (serial@ 찾기)<br />
+└── link.ld             → 로드 주소는 0x40080000 (QEMU 기본)</p>
+<ol>
+<li>start.S<br />
+x0 레지스터로 넘어온 </li>
+</ol>
 <p>✅ 최종 정리</p>
 <p>✔️ 목표: Bare-metal에서 하드웨어 제어<br />
 ✔️ 테스트 환경: QEMU ARM64 Virt Machine (LED 대신 UART 출력)<br />

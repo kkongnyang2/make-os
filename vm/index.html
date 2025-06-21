@@ -10,13 +10,15 @@
       
       
       
+        <link rel="next" href="../xv6-riscv/">
+      
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
-        <title>Vm - make-os</title>
+        <title>vm - make-os</title>
       
     
     
@@ -57,6 +59,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -89,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Vm
+              vm
             
           </span>
         </div>
@@ -182,15 +189,133 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../qemu/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    vm
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
   <span class="md-ellipsis">
-    이론
+    vm
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      &gt; 가상머신?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      &gt; 분류
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      &gt; 구성요소
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qemu-kvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      &gt; QEMU-KVM 흐름
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../xv6-riscv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    xv6-riscv
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    go
     
   </span>
   
@@ -218,6 +343,50 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      &gt; 가상머신?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      &gt; 분류
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      &gt; 구성요소
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qemu-kvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      &gt; QEMU-KVM 흐름
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -232,12 +401,14 @@
 
 
 
-  <h1>Vm</h1>
+  <h1>vm</h1>
 
+<h3 id="_1">&gt; 가상머신?<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
 <p>가상머신? 물리적 컴퓨터 위에서 돌아가는 소프트웨어 컴퓨터</p>
 <p>하이퍼바이저 -&gt; 그 가짜 컴퓨터를 관리하는 관리자</p>
-<p>가상머신 구조</p>
-<p>type 1. 네이티브 구조<br />
+<h3 id="_2">&gt; 분류<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>하이퍼바이저 위치</p>
+<p>type 1. bare-metal<br />
 하드웨어 바로 위에 하이퍼바이저가 동작. os 설치 없이 바로 vm 실행 가능</p>
 <p>[물리 컴퓨터]<br />
  ┌────────────────────────────┐<br />
@@ -247,18 +418,11 @@
  │  │ Ubuntu     │ │ Win10 │ │  ← 가상머신 (게스트 OS + 커널)<br />
  │  └────────────┘ └────────┘ │<br />
  └────────────────────────────┘</p>
-<p>하드웨어<br />
-  ↓<br />
-Hypervisor (bare-metal)<br />
-  ↓<br />
-게스트 OS1 / OS2<br />
-  ↓<br />
-각 OS의 프로세스</p>
-<p>type 2. 호스트 구조<br />
+<p>type 2. hosted<br />
 일반 os 위에서 프로그램처럼 실행되는 하이퍼바이저</p>
 <p>[물리 컴퓨터]<br />
  ┌────────────────────────────┐<br />
- │       Host OS (예: Ubuntu) │  ← 일반 데스크탑 OS<br />
+ │       Host OS              │  ← 일반 데스크탑 OS<br />
  │  ┌──────────────────────┐  │<br />
  │  │ Hypervisor           │  │  ← 소프트웨어 기반 (QEMU, VirtualBox)<br />
  │  │  ┌────────────┐      │  │<br />
@@ -267,16 +431,7 @@ Hypervisor (bare-metal)<br />
  │  │  └────────────┘      │  │<br />
  │  └──────────────────────┘  │<br />
  └────────────────────────────┘</p>
-<p>하드웨어<br />
-  ↓<br />
-호스트 OS<br />
-  ↓<br />
-Hypervisor (소프트웨어, 예: QEMU)<br />
-  ↓<br />
-게스트 OS1 / OS2<br />
-  ↓<br />
-각 OS의 프로세스</p>
-<p>type 3. 컨테이너 구조<br />
+<p>별첨. 컨테이너<br />
 모두 호스트 커널 공유</p>
 <p>[물리 컴퓨터]<br />
  ┌────────────────────────────┐<br />
@@ -289,24 +444,77 @@ Hypervisor (소프트웨어, 예: QEMU)<br />
  │     │  Nginx   │ │  Python  │  ← rootfs + 라이브러리 + 앱<br />
  │     └──────────┘ └──────────┘<br />
  └────────────────────────────┘</p>
-<p>가상머신 운용 방법</p>
-<p>전체 가상화 : 게스트 os가 가상 하드웨어를 제어하는 것처럼 보이게 함<br />
-프로세스 -&gt; 게스트os -&gt; 가상 하드웨어 -&gt; trap -&gt; 하이퍼바이저 -&gt; 실제 하드웨어</p>
-<p>반 가상화 : 게스트 os가 하이퍼바이저와 협력하여 수행. virtio 가상화 친화 드라이버 사용.<br />
-프로세스 -&gt; 게스트os &lt;-&gt; 하이퍼바이저 -&gt; 실제 하드웨어</p>
-<p>하드웨어 가상화 : cpu가 가상화를 하드웨어 수준에서 지원<br />
-프로세스 -&gt; 게스트os -&gt; cpu가 직접 실행 또는 trap 시 -&gt; 하이퍼바이저 -&gt; 실제 하드웨어</p>
-<p>qemu? 호스트 구조 전체 가상화 하이퍼바이저<br />
-kvm? 하드웨어 가상화에서 사용하는 커널 모듈</p>
-<p>큰 틀은 qemu를 쓰고 하드웨어 가상화를 추가로 진행하여 qemu+kvm 방식으로 많이 씀.</p>
-<p>cpu 권한 레벨<br />
-x86에서는 Ring 0 (커널) ~ Ring 3 (유저)<br />
-ring 0에서 실행되길 원하지만 호스트 os와 충돌.<br />
-ARM에서는 EL0~EL3<br />
-EL1에서 실행되길 원하지만 호스트 os와 충돌</p>
-<p>따라서<br />
-하이퍼바이저가 게스트의 모든 cpu 명령어를 소프트웨어적으로 감지하고 흉내내거나<br />
-게스트 os가 ring0에서 실행되도록 허용하되 특권 명령어는 trap 되어 하이퍼바이저(EL2)로 전환되어 처리된다.</p>
+<p>cpu 가상화 기법</p>
+<p>trap-and-emulate<br />
+특권 명령 -&gt; 트랩 발생 -&gt; 하이퍼바이저가 소프트웨어로 에뮬레이션. 쉽게 말해 울면 어른이 대신 처리.</p>
+<p>binary translation<br />
+실행 코드를 동적 재작성. 쉽게 말해 안울도록 미리 사전 작업.</p>
+<p>HW-assist<br />
+intel VT-x, AMD-V 등 하드웨어가 명령-페이지테이블 가상화 지원. 쉽게 말해 아이 전용방이 따로 있음.</p>
+<p>장치 가상화</p>
+<p>풀 에뮬레이션<br />
+qemu가 소프트웨어로 가상 하드웨어 구현. 쉽게 말해 가짜 수취함</p>
+<p>파라가상화<br />
+게스트가 virtio 통신. 전용 고속 택배 전용</p>
+<p>패스-스루<br />
+실제 장치 기능 직접 넘김. 집 열쇠를 통째로 줌.</p>
+<h3 id="_3">&gt; 구성요소<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>vcpu<br />
+실제 cpu 코어와 논리 코어 매핑. 컨텍스트 스위치, 타미어 인터럽트, TLB flush 등.<br />
+┌─ Host CPU Core ──────────────────────────┐<br />
+│  …실행 중…                               │<br />
+│  (호스트 코드)                           │<br />
+│  ↙ 「World-switch」 ↘                   │<br />
+│  게스트 레지스터 세트 로드              │<br />
+│  게스트 코드 실행 (user → kernel → …)   │<br />
+│  VM-Exit (트랩 발생)                    │<br />
+│  …다시 호스트 코드…                     │<br />
+└──────────────────────────────────────────┘<br />
+world-switch= 레지스터,TLB를 싹 바꿔 끼우는 순간<br />
+스케줄러가 이번 타임슬라이스는 vCPU #2라고 결정하여 실 cpu에 태우는 형식</p>
+<p>가상 메모리<br />
+nested page table</p>
+<p>게스트 가상 addr 0x7fff_1234<br />
+   │ (게스트 페이지 테이블)          ← xv6가 아는 세계<br />
+   ▼<br />
+게스트-물리 addr 0x8010_1234<br />
+   │ (Nested page table / EPT)      ← 하이퍼바이저가 속임<br />
+   ▼<br />
+호스트-물리 addr 0x3c20_51234<br />
+   │ (MMU 실제 DRAM)                ← 진짜 하드웨어</p>
+<p>i/o 가상화<br />
+mmio 트랩, DMA 리맵, virtio ring buffer<br />
+1. 게스트 커널이 store 0x10001014 &lt;- 0x1 (virtio 디스크 큐 등록)<br />
+2. MMIO 주소이므로 VM-Exit -&gt; QEMU에게 디스크 쓰자 요청<br />
+3. QEMU가 호스트 파일(fs.img)에 write -&gt; 완료 후 가짜 인터럽트 재주입<br />
+4. 게스트에서 ISR 실행 -&gt; 시스템콜로 사용자에게 쓰기 완료 알림</p>
+<p>이때 virtio는 2,3단계에서 링 버퍼/IOVRING을 써서 트랩 횟수를 확 줄이는 최적화</p>
+<p>스토리지 네트워킹<br />
+QCOW2같은 이미지 형식</p>
+<h3 id="qemu-kvm">&gt; QEMU-KVM 흐름<a class="headerlink" href="#qemu-kvm" title="Permanent link">&para;</a></h3>
+<p>qemu? type2 풀 에뮬레이션 하이퍼바이저<br />
+kvm? HW-assist 방식 전용 커널 모듈(type 1)<br />
+큰 틀은 qemu를 쓰고 cpu 가상화를 추가로 진행하여 qemu+kvm 방식으로 많이 씀.</p>
+<p>A. 부팅 전 <code>make qemu</code><br />
+qemu가 risc-v virt 머신을 생성 -&gt; /dev/kvm에 vCPU 3개 요청<br />
+B. vCPU 진입 <code>hart 2 starting</code><br />
+kvm 모듈이 KVM_RUN 진입 -&gt; mepc=0x80000000 로드. 게스트 첫 명령 실행<br />
+C. 시계 인터럽트 <code>tick</code><br />
+RISC-V mtimecmp 만료 -&gt; 하드웨어가 'supervisor timer interrupt' -&gt; VM-Exit -&gt; KVM가 인터럽트 재주입<br />
+D. 시스템콜 <code>read</code><br />
+사용자 프로그램이 ecall -&gt; trap -&gt; xv6-kernel sys_open -&gt; I/O 요청 생성<br />
+E. 디스크 I/O<br />
+virtio-blk MMIO 접근 -&gt; VM-Exit -&gt; QEMU가 fs.img에 블록 read -&gt; 종료 IRQ 재주입<br />
+F. 콘솔 출력 <code>$ls</code><br />
+게스트가 UART MMIO(0x10000000) write -&gt; QEMU가 호스트 stderr로 바로 프린트<br />
+G. 호스트로 복귀<br />
+단축키 Ctrl-a x 누르면 QEMU 종료 -&gt; vCPU context 저장, 파일 flush 후 make 종료</p>
+<p>cpu 권한 레벨</p>
+<p>x86에서는 Ring0(커널) Ring3(유저)<br />
+ARM에서는 EL0(유저) EL1(커널) EL2(하이퍼바이저) EL3(보안)<br />
+RISC-V에서는 U(유저) S(커널) M(최상위)</p>
+<p>게스트 OS -&gt; 직접 CPU에서 실행 (EL1)<br />
+특권 명령어 -&gt; trap -&gt; EL2 -&gt; KVM -&gt; 결과처리 -&gt; 복귀</p>
 
 
 
