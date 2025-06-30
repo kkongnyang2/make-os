@@ -2,9 +2,16 @@ site_name: make-os
 theme:
   name: material
 nav:                    #사이드바 목차
-  - vm: vm.md
-  - xv6-riscv: xv6-riscv.md
-  - go: go.md
+  - vm: 0-vm.md
+  - h/w: 1-hardware.md
+  - kernel: 2-kernel.md
+  - MMU: 3-MMU.md
+  - trap: 4-trap.md
+  - PCB: 5-PCB.md
+  - uart: 6-uart.md
+  - mkfs: 7-mkfs.md
+  - mini-os: 8-mini-os.md
+  - build: 9-build.md
 docs_dir: docs          #기본값은 docs. 따라서 안써도 되지만 그냥 명시
 site_dir: site          #기본값은 site. 따라서 안써도 되지만 그냥 명시
 markdown_extensions:
