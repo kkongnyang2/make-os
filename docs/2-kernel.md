@@ -1,4 +1,10 @@
-### > 파일 구조
+## xv6-riscv의 시작 파일을 읽어보자
+
+### 목표: 커널의 이해
+작성자: kkongnyang2 작성일: 2025-06-21
+
+---
+### 0> 파일 구조
 
 [1] 부트 진입
 [2] 커널 초기화
@@ -37,7 +43,9 @@ xv6-riscv/
 
 
 
-### > 메모리 배치 kernel/kernel.ld
+
+
+### 1> 메모리 배치 kernel/kernel.ld
 
 링커 스크립트란? .o 들을 하나로 묶어 실행 가능한 .elf 바이너리를 만들때, 어떤 섹션을 어디에 배치할지 결정하는 배치도 역할을 한다.
 ```
@@ -123,7 +131,7 @@ SECTIONS
 c언어 함수들을 위해 사용하는 stack0은 초기화되지 않았으므로 .bss 섹션에 포함
 
 
-### > M모드 및 스택 설정 kernel/entry.S
+### 2> M모드 및 스택 설정 kernel/entry.S
 
 cpu가 제일 먼저 읽는 파일은? _entry 라벨.
 
@@ -158,7 +166,7 @@ stack0:  ┌────────────────────┐ ← 
 ```
 
 
-### > M->S 전환, timer 세팅 kernel/start.c
+### 3> M->S 전환, timer 세팅 kernel/start.c
 
 ```c
 #include "types.h"
@@ -248,7 +256,8 @@ timerinit()
 ```
 참고로 타이머는 유일하게 cpu 안에 있는 순수 하드웨어 타이머로, M모드 소속 자원이자 모든 스케줄링의 기반이기에 여기에 정의되어 있다.
 
-### > 커널 초기화 루틴 kernel/main.c
+
+### 4> 커널 초기화 루틴 kernel/main.c
 
 ```c
 #include "types.h"
@@ -298,7 +307,7 @@ main()
 }
 ```
 
-### > 모드 전환
+### 5> 모드 전환
 mret : M->S
 mstatus.MPP를 보고 다음 모드를 결정
 MPP=00(U모드) MPP=01(S모드) MPP=11(M모드)
@@ -333,198 +342,313 @@ trap이 언제 발생하나요?
 
 ### > makefile
 
-### > kernel/trap.c
+[ test.S ] --(어셈블러)--> [ test.o ] --(링커)--> [ kernel.elf ] --(objcopy)--> [ kernel.img ]
+어셈블리 → 오브젝트	: CPU가 이해할 수 있는 기계어(.o)로 변환
+오브젝트 → ELF 실행파일	: 코드와 데이터(섹션)들을 주소에 맞게 배치
+ELF → 바이너리 이미지 : ELF 헤더 제거, 부트로더/에뮬레이터가 바로 읽을 수 있게
 
-trap handler : trap(인터럽트/예외/시스템콜)이 발생했을 때 실행되는 C 함수
-trampoline : 유저 <-> 커널 모드 전환 시 사용되는 어셈블리 코드 블록
-stvec : trap 발생 시 jump 할 주소를 저장하는 CSR 레지스터
+툴체인이란 컴파일 전 과정을 담당하는 도구 세트이다.
+(gcc / as / ld / objdump / gdb …)
+gcc : .c -> 중간 IR -> 어셈블리 -> .o
+이때 -c 옵션을 주면 여기까지만 하고 링크는 하지 않음
+as : .S -> .o
+ld : 여러 개의 .o와 라이브러리를 하나의 실행가능 elf로 묶음. 링커 스크립트에 따라 주소, 섹션 배치 결정
+objcopy : 불필요한 섹션 제거 및 elf를 순수 바이너리로 바꾸기
+objdump : 합쳐진 elf파일을 우리가 볼 수 있도록 다시 어셈블리어로 뽑아준 참고용 해설서.
+-S 옵션은 어셈블리, -t 옵션은 심볼 테이블 등.
+gdb : 실행 파일 조사 디버깅
 
+크로스 컴파일이란 x86-64 노트북에서 RISC-V용 커널을 빌드하는 것을 말한다.
+동일 아키텍트면 네이티브 컴파일.
 
+따라서 크로스 컴파일용 툴체인은 이름으로 CPU와 OS 대상을 표시한다. (네이티브 컴파일 툴체인 이름과 구분)
+<CPU>-<VENDOR>-<OS/ABI>
+vendor? 툴체인 제작사. 없으면 unknown
+OS/ABI? C 라이브러리 규약. 즉 어떤 상황에서 런 시킬건지 미리 대비해 그에 맞춰 커널 이미지를 준비함.(elf 환경인지, glibc가 존재하는 환경인지)
 
-```c
-#include "types.h"
-#include "param.h"
-#include "memlayout.h"
-#include "riscv.h"
-#include "spinlock.h"
-#include "proc.h"
-#include "defs.h"
+riscv64-unknown-elf는 RISC-V용 베어메탈 elf 실행포맷 환경 크로스 컴파일 툴체인. 즉 펌웨어, 커널, 임베디드 대상. OS 없음 → 직접 MMIO·폴링·trap 구현
+riscv64-linux-gnu는 리눅스에서 만든 RISC-V용 GNU libc 환경 크로스 컴파일 툴체인. 즉 유저 공간 프로그램 대상.
 
-struct spinlock tickslock;              // 타이머 인터럽트 보호용 스핀락
-uint ticks;                             // 시스템 틱 수(시계 단위)
+이때 xv6은 os가 리눅스가 아니기에 gnu libc나 시스템 콜이 필요하지 않고, qemu가 커널 elf를 0x80000000에 바로 로드하기에 부트로더 또한 필요하지 않고, 커널 안에서 자체 printf와 memcpy를 구현하기에 libc 또한 필요하지 않다.
+riscv64-unknown-elf로 충분하다. 그 도구만 있어도 컴파일(.o 생성), 링크(커널.ld로 elf 만들기), 실행(qemu가 elf를 메모리에 배치)가 모두 가능하다.
 
-extern char trampoline[], uservec[], userret[]; // trampline 주소 심볼
+컴파일 단계 – Host PC에 RISC-V 크로스-툴체인이 있어야 Makefile이 통과.
+실행 단계 – 생성된 kernel·fs.img 등을 QEMU가 부팅.
+만약 컴파일한 kernel elf를 qemu가 아닌 실제 하드웨어 기기에서 부팅시키고 싶다면 openSBI 등을 활용해라. 걔가 커널 elf를 0x80000000으로 데려가는 부트로더 역할을 한다.
 
-void kernelvec();                             // 커널 벡터 어셈블리 루틴
-
-extern int devintr();                         // 디바이스 인터럽트 처리 함수
-
-// S 모드에서 인터럽트 처리 루틴
-void
-trapinit(void)
-{
-  initlock(&tickslock, "time");         // 타이머 인터럽트용 ticks 값을 보호하기 위한 락 초기화
-}
-
-void
-trapinithart(void)
-{
-  w_stvec((uint64)kernelvec);           // 현재 코어의 stvec에 kernelvec라는 c함수 주소를 써넣음
-                                        // stvec = supervisor trap vector base address register.
-                                        // s 모드에서 trap이 발생했을때 어디서부터 처리를 시작할지 주소를 담는 레지스터
-}
-
-
-// 유저 프로그램이 trap 걸릴때
-void
-usertrap(void)
-{
-  int which_dev = 0;                    // 디바이스 인터럽트 식별용 변수
-
-  if((r_sstatus() & SSTATUS_SPP) != 0)      // 진짜 유저 모드에서 온게 맞는지 확인
-    panic("usertrap: not from user mode");
-
-  w_stvec((uint64)kernelvec);               // trap이 들어왔으니 stvec을 커널모드로 전환
-
-  struct proc *p = myproc();                // 현재 실행 중인 프로세스 포인터
-  
-  p->trapframe->epc = r_sepc();             // 유저의 pc를 저장 (복귀 시 필요)
-  
-  if(r_scause() == 8){                      // 8번은 시스템 콜(ecall)
-
-    if(killed(p))
-      exit(-1);                             // 이미 죽은 프로세스면 즉시 종료
-
-    p->trapframe->epc += 4;                 // pc+4 (다음 명령어)
-
-    intr_on();                              // syscall 도중 인터럽트 허용
-
-    syscall();                              // 시스템 콜 핸들링
-  } else if((which_dev = devintr()) != 0){
-
-  } else {                                  // 알 수 없는 예외 발생
-    printf("usertrap(): unexpected scause 0x%lx pid=%d\n", r_scause(), p->pid);
-    printf("            sepc=0x%lx stval=0x%lx\n", r_sepc(), r_stval());
-    setkilled(p);                           // 프로세스 종료 예약
-  }
-
-  if(killed(p))
-    exit(-1);
-
-  if(which_dev == 2)                        // 2번은 타이머 인터럽트
-    yield();                                // CPU를 양보함
-
-  usertrapret();                            // 유저 공간 복귀 준비
-}
-
-// 유저 모드로 복귀할 준비
-void
-usertrapret(void)
-{
-  struct proc *p = myproc();
-
-  intr_off();                                 // 복귀 도중 trap 발생하지 않게 인터럽트 비활성화
-
-  // stvec을 다시 다시 trampoline의 uservec으로 설정
-  uint64 trampoline_uservec = TRAMPOLINE + (uservec - trampoline);
-  w_stvec(trampoline_uservec);
-
-  // uservec에서 사용할 정보들을 trapframe에 세팅
-  p->trapframe->kernel_satp = r_satp();         // 커널 페이지 테이블
-  p->trapframe->kernel_sp = p->kstack + PGSIZE; // 커널 스택 최상단
-  p->trapframe->kernel_trap = (uint64)usertrap; // 다시 trap 들어올 때 실행할 함수
-  p->trapframe->kernel_hartid = r_tp();         // 하트 번호
-
-  
-  // 유저 모드 복귀를 위한 sstatus 설정
-  unsigned long x = r_sstatus();
-  x &= ~SSTATUS_SPP; // SPP=0(U)로
-  x |= SSTATUS_SPIE; // SPIE=1 유저 모드에서 인터럽트 허용
-  w_sstatus(x);
-
-  // 실행 재개 위치 설정
-  w_sepc(p->trapframe->epc);
-
-  // 유저 페이지 테이블 설정
-  uint64 satp = MAKE_SATP(p->pagetable);
-
-  // trampoline 상단에 있는 userret()을 호출하여 실제 복귀 수행
-  uint64 trampoline_userret = TRAMPOLINE + (userret - trampoline);
-  ((void (*)(uint64))trampoline_userret)(satp);
-}
-
-// 커널 모드에서 trap 발생 시 호출
-void 
-kerneltrap()
-{
-  int which_dev = 0;
-  uint64 sepc = r_sepc();
-  uint64 sstatus = r_sstatus();
-  uint64 scause = r_scause();
-  
-  if((sstatus & SSTATUS_SPP) == 0)
-    panic("kerneltrap: not from supervisor mode");
-  if(intr_get() != 0)
-    panic("kerneltrap: interrupts enabled");
-
-  if((which_dev = devintr()) == 0){
-    // 원인을 알 수 없는 인터럽트
-    printf("scause=0x%lx sepc=0x%lx stval=0x%lx\n", scause, r_sepc(), r_stval());
-    panic("kerneltrap");
-  }
-
-  if(which_dev == 2 && myproc() != 0)       // 타이머 인터럽트면 CPU 양보
-    yield();
-
-  // trap 전 레지스터 복원
-  w_sepc(sepc);
-  w_sstatus(sstatus);
-}
-
-// 타이머 인터럽트 핸들러
-void
-clockintr()
-{
-  if(cpuid() == 0){                     // 0번 하트만 ticks 증가 및 wakeup. 0번 하트는 초기화 담당인 동시에 전역 시계(ticks) 기준 하트임.
-    acquire(&tickslock);
-    ticks++;
-    wakeup(&ticks);
-    release(&tickslock);
-  }
-
-  // 100만 cpu 사이클 뒤에 또 깨워줘, 즉 1 tick = 1 timer interrupt = 100Hz = 약  10ms
-  w_stimecmp(r_time() + 1000000);
-}
-
-// 다른 디바이스면 1, 모르면 0, 타이머 인터럽트면 2
-int
-devintr()
-{
-  uint64 scause = r_scause();       // scause 레지스터. 현재 trap의 원인을 나타냄
-
-  // 외부 인터럽트 (PLIC을 통해 들어오는 디바이스 인터럽트)
-  if(scause == 0x8000000000000009L){      // 이 값이면 Supervisor external interrupt
-
-    // 어떤 장치가 인터럽트를 발생시켰는지 확인.
-    int irq = plic_claim();               // PLIC에서 IRQ 번호 확인
-
-    if(irq == UART0_IRQ){                 // UART(시리얼 통신 장치)에서 인터럽트 발생
-      uartintr();                         // UART 관련 인터럽트 핸들러 실행
-    } else if(irq == VIRTIO0_IRQ){        // VirtIO 디스크에서 인터럽트 발생
-      virtio_disk_intr();                 // 디스크 인터럽트 핸들러 실행
-    } else if(irq){                       // 알 수 없는 장치에서 인터럽트 발생
-      printf("unexpected interrupt irq=%d\n", irq);
-    }
-
-    if(irq)                               // 인터럽트 처리가 끝났음을 PLIC에 알림
-      plic_complete(irq);
-
-    return 1;                             // 장치 인터럽트 처리 완료
-  } else if(scause == 0x8000000000000005L){   // 이 값이면 Supervisor timer interrupt
-    clockintr();                           // 타이머 인터럽트 핸들러 실행
-    return 2;                         // 타이머 인터럽트 처리 완료
-  } else {
-    return 0;                   // 알 수 없는 인터럽트
-  }
-}
 ```
+# 여기부터 별칭 명명과 소스파일과 툴 준비
+
+# 별칭
+# GNU make에서 =는 재귀확장 변수(매번 변수를 참초), :=는 단순확장 변수(대입순간 단 한번 그뒤로 상수)
+K=kernel
+U=user
+
+# 커널 오브젝트 파일 목록
+# .c -> .o는 명령어로 적어주지 않아도 내장 규칙으로 수행
+OBJS = \
+  $K/entry.o \
+  $K/start.o \
+  $K/console.o \
+  $K/printf.o \
+  $K/uart.o \
+  $K/kalloc.o \
+  $K/spinlock.o \
+  $K/string.o \
+  $K/main.o \
+  $K/vm.o \
+  $K/proc.o \
+  $K/swtch.o \
+  $K/trampoline.o \
+  $K/trap.o \
+  $K/syscall.o \
+  $K/sysproc.o \
+  $K/bio.o \
+  $K/fs.o \
+  $K/log.o \
+  $K/sleeplock.o \
+  $K/file.o \
+  $K/pipe.o \
+  $K/exec.o \
+  $K/sysfile.o \
+  $K/kernelvec.o \
+  $K/plic.o \
+  $K/virtio_disk.o
+
+# riscv64-unknown-elf-나 riscv64-linux-gnu-는 /opt/riscv/bin에 있을 거임
+# TOOLPREFIX = 로 따로 설정도 가능
+# make toolprefix로 따로 명명하지 않았을때 자동 탐색
+# objdump = 설명서. 여기선 헤더 확인한거임
+# -i는 지원 포맷 목록을 출력
+# 2>&1 = 리다이렉션 명령어. stderr를 stdout으로 합쳐라
+# >/dev/null = 출력은 폐기하고 성공 실패 여부만 남김
+# 탐색에 성공하면 출력하여 shell의 반환값이 됨
+# 세 후보가 모두 실패했으면 exit 1로 make 자체를 중단
+# 1>&2 = stdout을 stderr로 합쳐서 빨간 글씨로 눈에 잘띄게.
+ifndef TOOLPREFIX
+TOOLPREFIX := $(shell \
+  if riscv64-unknown-elf-objdump -i 2>&1 | grep 'elf64-big' >/dev/null 2>&1; \
+	then echo 'riscv64-unknown-elf-'; \
+	elif riscv64-linux-gnu-objdump -i 2>&1 | grep 'elf64-big' >/dev/null 2>&1; \
+	then echo 'riscv64-linux-gnu-'; \
+	elif riscv64-unknown-linux-gnu-objdump -i 2>&1 | grep 'elf64-big' >/dev/null 2>&1; \
+	then echo 'riscv64-unknown-linux-gnu-'; \
+	else echo "***" 1>&2; \
+	echo "*** Error: Couldn't find a riscv64 version of GCC/binutils." 1>&2; \
+	echo "*** To turn off this error, run 'gmake TOOLPREFIX= ...'." 1>&2; \
+	echo "***" 1>&2; exit 1; fi)
+endif
+
+QEMU = qemu-system-riscv64
+
+# as vs gas ― 이름만 다르고 실체는 같다
+CC = $(TOOLPREFIX)gcc
+AS = $(TOOLPREFIX)gas
+LD = $(TOOLPREFIX)ld
+OBJCOPY = $(TOOLPREFIX)objcopy
+OBJDUMP = $(TOOLPREFIX)objdump
+
+
+
+# 여기부터 c compiler flags와 linker flags 설정
+
+# -Wall 모든 경고 켜기 -Werror 경고를 오류로 취급 -O 기본 최적화(O1)
+# -fno~ 프레임 포인터 유지 -ggdb~ dwarf-2 디버그 심볼 삽입
+# -MD .c 타킷과 헤더 연결로 이루어진 의존성 .d 파일. 헤더를 수정하면 해당 .o만 재컴파일하도록 하기 위함.
+# -mcmodel medlow 모델이면 텍스트 섹션도 데이터 섹션도 2GB(31bit) 이내에 있어야함(작은 펌웨어). medany 모델이면 텍스트는 현재 pc에서 2GB, 데이터는 어디든 32bit이어야 함. large 모델이면 64bit 절대주소를 즉시값으로 넣음
+# 예를 들어 0x80004000(텍스트 섹션) pc 지점에서 전역변수 0x80011234(데이터 섹션)를 찾으려 하면 이는 0x0000D234 즉 52KB 차이이다. auipc t0, hi20(+0x0d000)과 addi t0, t0, lo12(0x234)로 도달가능.
+# 주석 부분은 완전 bare-metal 옵션 세트. -ffreestanding 표준 C 라이브러리 존재를 가정하지 말라 -mno-relax 릴랙스 최적화를 끔
+# 그 중 두개만 열어놓음 -fno-common 중복 전역 심볼을 오류 처리 -nostdlib 커널이니 crt0/libc 링크 안함
+# -fno-buildtin-17종 컴파일러 자체 최적화 대상에서 제외(커널이 구현한 함수와 충돌x)
+# -Wno-main main 반환값 없다고 경고x
+# -I 현재 디렉토리를 include 탐색 경로에 추가(include 파일이 어디에 있든 찾기 가능)
+# 마지막 줄은 cc가 스택 보호기를 인식(-E로 컴파일 없이 전처리 했을 때 종료코드 0)하면 추가하라. 실패하면 조용히 넘어가라.
+# 즉 커널은 자급자족 코드라 libc/시작파일이 필요 없고, 컴파일러 내장 builtin/스택보호/PIE를 꺼둔다
+CFLAGS = -Wall -Werror -O -fno-omit-frame-pointer -ggdb -gdwarf-2
+CFLAGS += -MD
+CFLAGS += -mcmodel=medany
+# CFLAGS += -ffreestanding -fno-common -nostdlib -mno-relax
+CFLAGS += -fno-common -nostdlib
+CFLAGS += -fno-builtin-strncpy -fno-builtin-strncmp -fno-builtin-strlen -fno-builtin-memset
+CFLAGS += -fno-builtin-memmove -fno-builtin-memcmp -fno-builtin-log -fno-builtin-bzero
+CFLAGS += -fno-builtin-strchr -fno-builtin-exit -fno-builtin-malloc -fno-builtin-putc
+CFLAGS += -fno-builtin-free
+CFLAGS += -fno-builtin-memcpy -Wno-main
+CFLAGS += -fno-builtin-printf -fno-builtin-fprintf -fno-builtin-vprintf
+CFLAGS += -I.
+CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
+
+# PIE(포지션 독립 실행가능) 끄기 -우분투 16.10 툴체인에서 기본으로 켜질 수 있음
+# ifnoteq 같지 않으면 실행하라는 뜻. , 다음이 빈칸이니까 앞의 결과가 출력물이 존재하면 실행하라는게 됨.
+# cc의 스펙 파일 전체를 출력하여 그 중 'f'가 아닌 no-pie를 찾아라
+# 그래서 존재하면 -no-pie 옵션을 켜 PIE 끄기
+ifneq ($(shell $(CC) -dumpspecs 2>/dev/null | grep -e '[^f]no-pie'),)
+CFLAGS += -fno-pie -no-pie
+endif
+ifneq ($(shell $(CC) -dumpspecs 2>/dev/null | grep -e '[^f]nopie'),)
+CFLAGS += -fno-pie -nopie
+endif
+
+# ELF 섹션 정렬 시 페이지 크기 4KB로 고정
+LDFLAGS = -z max-page-size=4096
+
+
+
+# 여기부터 타깃 설정
+
+# kernel = .o들 + 링커파일  + initcode
+# 설정플래그 + 링커파일과 + .o들 -> 커널.elf 만들기
+# 디스어셈블로 설명서 만들기
+# 불필요 헤더 삭제하고 심볼 테이블 추출
+$K/kernel: $(OBJS) $K/kernel.ld $U/initcode
+	$(LD) $(LDFLAGS) -T $K/kernel.ld -o $K/kernel $(OBJS) 
+	$(OBJDUMP) -S $K/kernel > $K/kernel.asm
+	$(OBJDUMP) -t $K/kernel | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $K/kernel.sym
+
+# initcode란 xv6가 부팅직후 userinit()에서 메모리에 복사 실행하는 최초 사용자 공간 코드
+# 커널은 앞에서 만든거고 이건 프로세스다. 유일하게 이것만 커널에도 넣어줌
+# 설정플래그 + .S -> .o 만들기
+# -march-rv64g 모든 표준 확장 사용 -nostdinc 시스템 헤더 무시
+# .o -> .out 만들기
+# -N .text(RX)/.data(RW)를 모두 하나의 RWX 덩어리로 만들어서 재배치 없음
+# -e start 엔트리포인트 심볼을 start로 설정
+# -Ttext 0 가상주소 0부터 배치하여 xv6커널이 유저 공간에 로드하기 편함
+# 순수 바이너리 파일 만들고 설명서 만들기
+$U/initcode: $U/initcode.S
+	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/initcode.S -o $U/initcode.o
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/initcode.out $U/initcode.o
+	$(OBJCOPY) -S -O binary $U/initcode.out $U/initcode
+	$(OBJDUMP) -S $U/initcode.o > $U/initcode.asm
+
+# 모든 c와 S에 대해 심볼 색인 파일 생성. 전부 탐색하도록 빌드 산출물 의존을 걸어둠.
+tags: $(OBJS) _init
+	etags *.S *.c
+
+
+
+# 여기부터 유저 프로세스 설정
+
+# 유저 프로그램용 정적 라이브러리 묶음
+ULIB = $U/ulib.o $U/usys.o $U/printf.o $U/umalloc.o
+
+# 라이브러리 참조해 유저 프로그램 _cat같은 실행파일 만들기
+# _%는 패턴 규칙에 의해 알아서 _cat을 만들어야겠네? 하고 타깃 발동
+# $@은 정해진 타깃이름 참조 $^는 모든 의존 목록
+_%: %.o $(ULIB)
+	$(LD) $(LDFLAGS) -T $U/user.ld -o $@ $^
+	$(OBJDUMP) -S $@ > $*.asm
+	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $*.sym
+
+# perl 스크립트 usys.pl을 .o로 만들기
+$U/usys.S : $U/usys.pl
+	perl $U/usys.pl > $U/usys.S
+
+$U/usys.o : $U/usys.S
+	$(CC) $(CFLAGS) -c -o $U/usys.o $U/usys.S
+
+# 프로세스 테이블을 채우는 테스트 실행파일 만들기
+# -N .text/.data를 한 덩어리 RWX에
+# -e main 엔트리 심볼을 main으로
+# -Ttext 0 가상주소 0으로 링크
+$U/_forktest: $U/forktest.o $(ULIB)
+	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $U/_forktest $U/forktest.o $U/ulib.o $U/usys.o
+	$(OBJDUMP) -S $U/_forktest > $U/forktest.asm
+
+# 호스트(내pc)용 실행파일 mkfs 만들기
+# 커널과 mkfs간 구조체와 상수가 같도록 커널에서 fs.h 파일시스템 정의 param.h 상수 정의 가져옴
+# 네이티브 gcc
+mkfs/mkfs: mkfs/mkfs.c $K/fs.h $K/param.h
+	gcc -Werror -Wall -I. -o mkfs/mkfs mkfs/mkfs.c
+
+# GNU make에서는 중간 파일 .o를 디폴트로 삭제하지만, 공유하거나 fs.img 재생성을 막기 위해 남겨둠
+.PRECIOUS: %.o
+
+# 사용할 유저 프로그램 목록
+UPROGS=\
+	$U/_cat\
+	$U/_echo\
+	$U/_forktest\
+	$U/_grep\
+	$U/_init\
+	$U/_kill\
+	$U/_ln\
+	$U/_ls\
+	$U/_mkdir\
+	$U/_rm\
+	$U/_sh\
+	$U/_stressfs\
+	$U/_usertests\
+	$U/_grind\
+	$U/_wc\
+	$U/_zombie\
+
+# 유저 프로그램 이미지 파일 생성(호스트에서)
+fs.img: mkfs/mkfs README $(UPROGS)
+	mkfs/mkfs fs.img README $(UPROGS)
+
+# 파일이 아직 없더라도(첫빌드) 넘어가는 장치
+-include kernel/*.d user/*.d
+
+
+
+# 여기부터 추가 기능
+
+clean: 
+	rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
+	*/*.o */*.d */*.asm */*.sym \
+	$U/initcode $U/initcode.out $K/kernel fs.img \
+	mkfs/mkfs .gdbinit \
+        $U/usys.S \
+	$(UPROGS)
+
+# 호스트 UID로부터 고유한 GDB TCP 포트 계산. 몰리지 않게.
+GDBPORT = $(shell expr `id -u` % 5000 + 25000)
+# qemu 도움말에 -gdb 옵션이 있으면 -gdb tcp port 형식 사용, 없으면 구버전 -s -p port 사용
+QEMUGDB = $(shell if $(QEMU) -help | grep -q '^-gdb'; \
+	then echo "-gdb tcp::$(GDBPORT)"; \
+	else echo "-s -p $(GDBPORT)"; fi)
+# 하트수
+ifndef CPUS
+CPUS := 3
+endif
+
+# -bios none: OpenSBI같은 펌웨어 건너뜀 -kernel: 커널 elf 직접 로드
+# -m 128M: RAM 128MB -smp $(CPUS): 하트수 -nographic: 콘솔만
+# virtio-mmio 추가. fs.img 넣기.
+QEMUOPTS = -machine virt -bios none -kernel $K/kernel -m 128M -smp $(CPUS) -nographic
+QEMUOPTS += -global virtio-mmio.force-legacy=false
+QEMUOPTS += -drive file=fs.img,if=none,format=raw,id=x0
+QEMUOPTS += -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
+
+qemu: $K/kernel fs.img
+	$(QEMU) $(QEMUOPTS)
+
+# GDBPORT를 로컬에선 1234로 치환. 그리고 자동실행.
+.gdbinit: .gdbinit.tmpl-riscv
+	sed "s/:1234/:$(GDBPORT)/" < $^ > $@
+
+# -S: qemu를 리셋 직후 정지. 다른 창에서 gdb 실행하면 됨
+qemu-gdb: $K/kernel .gdbinit fs.img
+	@echo "*** Now run 'gdb' in another window." 1>&2
+	$(QEMU) $(QEMUOPTS) -S $(QEMUGDB)
+```
+
+               ┌─ kernel (S-mode) ───────────────────────────┐
+               │ main() → userinit()                         │
+               │            │                                │
+1. 부팅 완료 ──┘            ▼                                │
+2. initproc 생성          (커널 내장)                         │
+      → `p->pagetable`   +--------------------------------+  │
+      → `memmove()`      |   RAW   initcode   binary      |  │
+      → `p->trapframe`   +--------------------------------+  │
+      → `epc = 0`        ^  (VA 0x0)                       │
+               │         │  4 KiB  |R/W/X|                 │
+               └─────────┴────────┴────────────────────────┘
+                         ↓ sret (U-mode 진입)
+3. **initcode** 실행 (U-mode)  
+   *간단한 hand-written 어셈블리*  
+   ```asm
+   li  a0, 0        # argv=0
+   auipc a1, init   # "init" 문자열
+   ecall SYS_exec   # exec("/init")
+   ecall SYS_exit   # 만약 실패하면 종료
