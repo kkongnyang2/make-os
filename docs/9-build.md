@@ -9,6 +9,7 @@
 소스파일 가져오는건 
  git clone https://gitlab.com/qemu-project/qemu.git
 
+```
 (사람)             (Generator)                 (Builder)
 소스 + 옵션 ──▶  [Autotools / CMake / Meson] ──▶  [Make or Ninja]
                               │                      │
@@ -16,7 +17,7 @@
                     │  Makefile / Ninja  │───────────┘
                     │  (빌드 규칙 파일)  │
                     └────────────────────┘
-
+```
 
 generator: 빌드 규칙 생성
 builder: 빌드 산출물 리턴
@@ -29,6 +30,7 @@ riscv-gnu-toolchain의 조합
 Generator  : Autotools(./configure로 makefile파일 자동생성)
 Builder    : GNU Make
 
+```
 riscv-gnu-toolchain/
 ├── configure            ← 자동 생성된 셸 스크립트(Autoconf) ──▶ Generator
 ├── configure.ac         ← configure를 “찍어내는” 소스
@@ -43,14 +45,15 @@ riscv-gnu-toolchain/
 ├── gdb/                 (submodule)  │
 ├── newlib/              (submodule)  ┘
 └── linux/               (옵션 glibc 빌드용 커널 헤더)
+```
 
-# 1) Generator 단계
+1) Generator 단계
 ./configure --prefix=$HOME/opt/riscv --enable-multilib
      ↳ configure  →  최상위 + 각 서브디렉터리 Makefile 생성
-# 2) Builder 단계
+2) Builder 단계
 make -j$(nproc)          # 메인 Makefile이 scripts/build-*.sh 호출
      ↳ 각 script 내부   →  binutils, gcc, newlib … 를 차례로 make
-# 3) Install 단계
+3) Install 단계
 make install             # 결과물을 $HOME/opt/riscv/{bin,lib,include,…}로 복사
 
 ### 2> qemu
@@ -59,6 +62,7 @@ Generator   : Meson
 Builder     : Ninja
 최상위 ./configure 스크립트는 Autotools가 아니라 **“Meson 설정 래퍼”**입니다.
 
+```
 qemu/
 ├── configure               ← 셸 래퍼: 옵션 파싱 후 meson 호출
 ├── meson.build             ← 루트 Meson 규칙
@@ -71,13 +75,14 @@ qemu/
     ├── config-host.h        ← 호스트 기능 매크로 (#define)
     ├── Makefile             ← 단순 “all: ninja -C .” 래퍼
     └── meson-logs/…
+```
 
-# 1) Generator
+1) Generator
 ./configure --target-list=riscv64-softmmu --prefix=$HOME/opt/qemu
     ↳ 원래 사용하는 meson setup build/ 는 자동으로 되어 build.ninja 생성
-# 2) Builder
+2) Builder
 ninja -C build -j$(nproc)                        # .o → libqemu* → qemu-system-riscv64
-# 3) Install
+3) Install
 ninja -C build install               # 디폴트는 실행파일 /usr/local/bin 에 복사. 아까 prefix 설정했으면 $HOME/opt/qemu/{bin,lib,share,…}로 복사됨
 
 ### 3> xv6-riscv
@@ -85,6 +90,7 @@ xv6-riscv의 조합
 Generator  : 없음.(generator가 아무것도 없기에 손수 makefile파일 작성)
 Builder    : GNU Make
 
+```
 xv6-riscv/
 ├── Makefile          ← 최상위 빌드 규칙 ― 핵심
 ├── kernel/           ← 커널 소스 (.c, .S)
@@ -94,12 +100,13 @@ xv6-riscv/
 ├── mkfs.c            ← 호스트 툴: 파일시스템 이미지 생성
 ├── *.lds             ← 커널 링크스크립트
 └── README, LICENSE …
+```
 
-# 1) Generator
+1) Generator
 손수 makefile파일 작성
-# 2) Builder
+2) Builder
 make
-# 3) Install
+3) Install
 따로 경로는 안하고 이 소스파일안에 냅두고 qemu에 올려서 부팅(make qemu)
 
 ### 3> 명령어 의미

@@ -10,12 +10,14 @@ PCB? 커널이 한 프로세스를 식별하는 구조체이다. pagetable, ksta
 
 그리고 여러 PCB를 미리 고정된 크기의 배열로 할당해 둔 공간을 PCB 풀이라고 한다. 부팅 시 PCB풀 + kstack풀 + trapframe 등 프로세스 자원을 부팅 시 전부 예약해둔다.
 
+```
 struct proc proc[NPROC]   // .bss 영역에 한꺼번에 자리 예약
 ┌──────────────┬──────────────┬── … ──┬──────────────┐
 │ proc[0]      │ proc[1]      │       │ proc[NPROC-1]│
 │ state=UNUSED │ state=UNUSED │       │ state=UNUSED │
 │ kstack=…     │ kstack=…     │       │ kstack=…     │
 └──────────────┴──────────────┴── … ──┴──────────────┘
+```
 
 
 스케줄러는 이러한 PCB를 생성/파괴하고 스위치하고 clock 기반 스케줄링, sleep/wakeup을 맡는다.

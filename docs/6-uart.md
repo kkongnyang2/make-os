@@ -8,7 +8,7 @@
 
 uart는 cpu, 메모리 쪽의 병렬 데이터를 두 가닥(TX보내기와 RX받기)의 직렬 신호로 바꿔 주는 컨버터다. 원래 칩 내부에서는 64개의 선으로 클럭마다 64비트를 보낸다. 하지만 외부에서는 클럭을 동기화할 수 없기에 비동기 직렬로 전송하고, 8비트(1바이트)마다 체크를 한다. 그리고 이러한 선들을 버스라고 부르는데, 이미 cpu에서는 하드웨어 제작 단계에서 이러한 uart mmio의 존재를 알고 있기에 주소 0x10000000으로 사용한다.
 
-
+```
   CPU 파이프라인 (5~10 stage 예)          메모리·I/O
 ┌─ IF ─┬─ ID ─┬─ EX/AGU ─┬─ MEM  ─┬─ WB ─┐
 | 명령  | 해석  | 주소계산   |캐시/TLB | 결과  |
@@ -25,21 +25,21 @@ uart는 cpu, 메모리 쪽의 병렬 데이터를 두 가닥(TX보내기와 RX�
         ┌──────┴───────┐
         │     MISS     │ (10~20 cyc L2, 30~50 cyc L3, 100~200 cyc DRAM…)
         └──────────────┘
-
+```
 버스? 누가 언제 DRAM에 말을 걸 수 있는지 규정하는 교통로 규칙이다. CPU 말고도 디스크나 I/O 컨트롤러가 버스 마스터가 되어 직접 메모리를 읽고 쓰는 메커니즘이다. CPU는 목적지, 길이, 옵션을 레지스터에 써서 미션을 주고, 인터럽트가 올때까지 다른일을 하며 기다린다. 마스터는 "나 DRAM 0x12340000 4KB 읽을래" 라고 외치는 쪽,(과거에는 CPU 한명이었지만 현대에는 DMA,GPU,NIC 등 다수), 슬레이브는 주소가 자기사이즈 범위에 들어오면 "여긴 DRAM이야" "여긴 UART야" 응답하는 측이다. 만약 동시에 두 마스터가 버스를 요구하면 우선순위로 차례를 지정한다.
-
+```
 층                      물리 폭               한번에 다루는 논리 단위
 CPU <-> L1/L2/L3        64~512bit           캐리라인 64B를 버스트로 여러 클럭
 CPU <-> DDRS DRAM       64bit+ECC           64bit*burst16 = 128B 메모리 버스트
 PCle 4*4                4lane*1bit(복호시128)    126B TLP 페이로드, 256B MPS 추천
 UART                    1bit(TX), 1bit(RX)      8bit payload+1start+1stop
-
-
+```
+```
      ┌─ Start(0) │  bit0 … bit7 │ Stop(1) ─┐
 TX───┤────────────┴─────────────┴───────────┤→ 시간
 
-
-
+```
+```
       ┌───── 물리층(선) ─────┐
 ADDR[31:0]  DATA[63:0]  CLK  RESET …          ← parallel AXI 예시
 TX   RX  GND  REFCLK                       ← serial PCIe 예시
@@ -52,10 +52,11 @@ TX   RX  GND  REFCLK                       ← serial PCIe 예시
 • 읽기 vs 쓰기 구분 (control)  
 • 데이터 크기·정렬·burst 규칙 …  
       └───────────────────┘
-
+```
 
 ### 1> 용어 정리
 
+```
 baud rate                       // 초당 전송 비트 수. xv6은 38.4kbis/s이다
 THR/RHR(transmit/receive holding register)  // cpu에 오가는 바이트를 담는 8bit 레지스터
 LSR(line status register)       // TX_IDLE, RX_READY 같은 플래그로 하드웨어 상태 보고
@@ -65,7 +66,7 @@ FIFO                            // 추가된 16B 하드웨어 버퍼. FCR_FIFO_E
 Uart interrupt                  // PLIC이 IRQ 10번으로 cpu에 전달
 top/bottom half                 // 인터럽트 진입 직후 처리(top)과 버퍼 비우기 깨우기 등 후처리(bottom)
 console subsystem               // 실제 하드웨어는 uart.c, 라인 처리는 console.c
-
+```
 
 ### 2> 흐름 정리
 
@@ -89,7 +90,7 @@ console subsystem               // 실제 하드웨어는 uart.c, 라인 처리�
 ```
 
 ### 3> uart.c
-```
+```c
 //
 // low-level driver routines for 16550a UART.
 //

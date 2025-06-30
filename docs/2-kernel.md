@@ -13,6 +13,7 @@
 [5] init 프로세스 시작
 [6] 유저 스페이스 → 시스템 콜 → 커널 진입
 
+```
 xv6-riscv/
 ├── Makefile           ← 빌드 명령 정의
 ├── kernel/            ← 커널 코드가 담긴 디렉토리
@@ -40,7 +41,7 @@ xv6-riscv/
 │   └── *.h
 ├── .gdbinit           ← GDB 초기화 설정
 └── README.md
-
+```
 
 
 
@@ -632,7 +633,7 @@ qemu-gdb: $K/kernel .gdbinit fs.img
 	@echo "*** Now run 'gdb' in another window." 1>&2
 	$(QEMU) $(QEMUOPTS) -S $(QEMUGDB)
 ```
-
+```
                ┌─ kernel (S-mode) ───────────────────────────┐
                │ main() → userinit()                         │
                │            │                                │
@@ -645,10 +646,12 @@ qemu-gdb: $K/kernel .gdbinit fs.img
                │         │  4 KiB  |R/W/X|                 │
                └─────────┴────────┴────────────────────────┘
                          ↓ sret (U-mode 진입)
-3. **initcode** 실행 (U-mode)  
+```
+**initcode** 실행 (U-mode)  
    *간단한 hand-written 어셈블리*  
-   ```asm
-   li  a0, 0        # argv=0
-   auipc a1, init   # "init" 문자열
-   ecall SYS_exec   # exec("/init")
-   ecall SYS_exit   # 만약 실패하면 종료
+```asm
+li  a0, 0        # argv=0
+auipc a1, init   # "init" 문자열
+ecall SYS_exec   # exec("/init")
+ecall SYS_exit   # 만약 실패하면 종료
+```
