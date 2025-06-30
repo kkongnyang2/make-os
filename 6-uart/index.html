@@ -613,54 +613,57 @@
 <hr />
 <h3 id="0">0&gt; 개념 정리<a class="headerlink" href="#0" title="Permanent link">&para;</a></h3>
 <p>uart는 cpu, 메모리 쪽의 병렬 데이터를 두 가닥(TX보내기와 RX받기)의 직렬 신호로 바꿔 주는 컨버터다. 원래 칩 내부에서는 64개의 선으로 클럭마다 64비트를 보낸다. 하지만 외부에서는 클럭을 동기화할 수 없기에 비동기 직렬로 전송하고, 8비트(1바이트)마다 체크를 한다. 그리고 이러한 선들을 버스라고 부르는데, 이미 cpu에서는 하드웨어 제작 단계에서 이러한 uart mmio의 존재를 알고 있기에 주소 0x10000000으로 사용한다.</p>
-<p>CPU 파이프라인 (5~10 stage 예)          메모리·I/O<br />
-┌─ IF ─┬─ ID ─┬─ EX/AGU ─┬─ MEM  ─┬─ WB ─┐<br />
-| 명령  | 해석  | 주소계산   |캐시/TLB | 결과  |<br />
-└──────┴──────┴──────────┴────────┴──────┘<br />
-               ▲<br />
-               │ 가상주소(VA)<br />
-          ┌────┴────┐<br />
-          │ TLB HIT │ 1~2 cycle<br />
-          └────┬────┘<br />
-               │ 물리주소(PA)<br />
-               ▼<br />
-         L1 D-Cache HIT? 1~4 cycle<br />
-               │<br />
-        ┌──────┴───────┐<br />
-        │     MISS     │ (10~20 cyc L2, 30~50 cyc L3, 100~200 cyc DRAM…)<br />
-        └──────────────┘</p>
-<p>버스? 누가 언제 DRAM에 말을 걸 수 있는지 규정하는 교통로 규칙이다. CPU 말고도 디스크나 I/O 컨트롤러가 버스 마스터가 되어 직접 메모리를 읽고 쓰는 메커니즘이다. CPU는 목적지, 길이, 옵션을 레지스터에 써서 미션을 주고, 인터럽트가 올때까지 다른일을 하며 기다린다. 마스터는 "나 DRAM 0x12340000 4KB 읽을래" 라고 외치는 쪽,(과거에는 CPU 한명이었지만 현대에는 DMA,GPU,NIC 등 다수), 슬레이브는 주소가 자기사이즈 범위에 들어오면 "여긴 DRAM이야" "여긴 UART야" 응답하는 측이다. 만약 동시에 두 마스터가 버스를 요구하면 우선순위로 차례를 지정한다.</p>
-<p>층                      물리 폭               한번에 다루는 논리 단위<br />
-CPU &lt;-&gt; L1/L2/L3        64~512bit           캐리라인 64B를 버스트로 여러 클럭<br />
-CPU &lt;-&gt; DDRS DRAM       64bit+ECC           64bit<em>burst16 = 128B 메모리 버스트<br />
-PCle 4</em>4                4lane*1bit(복호시128)    126B TLP 페이로드, 256B MPS 추천<br />
-UART                    1bit(TX), 1bit(RX)      8bit payload+1start+1stop</p>
-<div class="highlight"><pre><span></span><code> ┌─ Start(0) │  bit0 … bit7 │ Stop(1) ─┐
-</code></pre></div>
-<p>TX───┤────────────┴─────────────┴───────────┤→ 시간</p>
-<div class="highlight"><pre><span></span><code>  ┌───── 물리층(선) ─────┐
-</code></pre></div>
-<p>ADDR[31:0]  DATA[63:0]  CLK  RESET …          ← parallel AXI 예시<br />
-TX   RX  GND  REFCLK                       ← serial PCIe 예시<br />
-      └────────────────────┘<br />
-              ▲<br />
-              ▼<br />
-      ┌─── 프로토콜층 ───┐<br />
-• 버스 요청/허가 (arbitration)<br />
-• 주소 → 타깃 장치 인식 (decoding)<br />
-• 읽기 vs 쓰기 구분 (control)<br />
-• 데이터 크기·정렬·burst 규칙 …<br />
-      └───────────────────┘</p>
+<p><div class="highlight"><pre><span></span><code>  CPU 파이프라인 (5~10 stage 예)          메모리·I/O
+┌─ IF ─┬─ ID ─┬─ EX/AGU ─┬─ MEM  ─┬─ WB ─┐
+| 명령  | 해석  | 주소계산   |캐시/TLB | 결과  |
+└──────┴──────┴──────────┴────────┴──────┘
+               ▲
+               │ 가상주소(VA)
+          ┌────┴────┐
+          │ TLB HIT │ 1~2 cycle
+          └────┬────┘
+               │ 물리주소(PA)
+               ▼
+         L1 D-Cache HIT? 1~4 cycle
+               │
+        ┌──────┴───────┐
+        │     MISS     │ (10~20 cyc L2, 30~50 cyc L3, 100~200 cyc DRAM…)
+        └──────────────┘
+</code></pre></div><br />
+버스? 누가 언제 DRAM에 말을 걸 수 있는지 규정하는 교통로 규칙이다. CPU 말고도 디스크나 I/O 컨트롤러가 버스 마스터가 되어 직접 메모리를 읽고 쓰는 메커니즘이다. CPU는 목적지, 길이, 옵션을 레지스터에 써서 미션을 주고, 인터럽트가 올때까지 다른일을 하며 기다린다. 마스터는 "나 DRAM 0x12340000 4KB 읽을래" 라고 외치는 쪽,(과거에는 CPU 한명이었지만 현대에는 DMA,GPU,NIC 등 다수), 슬레이브는 주소가 자기사이즈 범위에 들어오면 "여긴 DRAM이야" "여긴 UART야" 응답하는 측이다. 만약 동시에 두 마스터가 버스를 요구하면 우선순위로 차례를 지정한다.<br />
+<div class="highlight"><pre><span></span><code>층                      물리 폭               한번에 다루는 논리 단위
+CPU &lt;-&gt; L1/L2/L3        64~512bit           캐리라인 64B를 버스트로 여러 클럭
+CPU &lt;-&gt; DDRS DRAM       64bit+ECC           64bit*burst16 = 128B 메모리 버스트
+PCle 4*4                4lane*1bit(복호시128)    126B TLP 페이로드, 256B MPS 추천
+UART                    1bit(TX), 1bit(RX)      8bit payload+1start+1stop
+</code></pre></div><br />
+<div class="highlight"><pre><span></span><code>     ┌─ Start(0) │  bit0 … bit7 │ Stop(1) ─┐
+TX───┤────────────┴─────────────┴───────────┤→ 시간
+</code></pre></div><br />
+<div class="highlight"><pre><span></span><code>      ┌───── 물리층(선) ─────┐
+ADDR[31:0]  DATA[63:0]  CLK  RESET …          ← parallel AXI 예시
+TX   RX  GND  REFCLK                       ← serial PCIe 예시
+      └────────────────────┘
+              ▲
+              ▼
+      ┌─── 프로토콜층 ───┐
+• 버스 요청/허가 (arbitration)  
+• 주소 → 타깃 장치 인식 (decoding)  
+• 읽기 vs 쓰기 구분 (control)  
+• 데이터 크기·정렬·burst 규칙 …  
+      └───────────────────┘
+</code></pre></div></p>
 <h3 id="1">1&gt; 용어 정리<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
-<p>baud rate                       // 초당 전송 비트 수. xv6은 38.4kbis/s이다<br />
-THR/RHR(transmit/receive holding register)  // cpu에 오가는 바이트를 담는 8bit 레지스터<br />
-LSR(line status register)       // TX_IDLE, RX_READY 같은 플래그로 하드웨어 상태 보고<br />
-IER/ISR(interrupt enable/status)  // 어떤 이벤트로 인터럽트가 왔고 뭘 활성화햇는지 저장<br />
-LCR(line control)               // 데이터 길이, stop비트, parity, baud-latch 모드 전환 등을 지정<br />
-FIFO                            // 추가된 16B 하드웨어 버퍼. FCR_FIFO_ENABLE로 키고 FCR_FIFO_CLEAR로 초기<br />
-Uart interrupt                  // PLIC이 IRQ 10번으로 cpu에 전달<br />
-top/bottom half                 // 인터럽트 진입 직후 처리(top)과 버퍼 비우기 깨우기 등 후처리(bottom)<br />
-console subsystem               // 실제 하드웨어는 uart.c, 라인 처리는 console.c</p>
+<div class="highlight"><pre><span></span><code>baud rate                       // 초당 전송 비트 수. xv6은 38.4kbis/s이다
+THR/RHR(transmit/receive holding register)  // cpu에 오가는 바이트를 담는 8bit 레지스터
+LSR(line status register)       // TX_IDLE, RX_READY 같은 플래그로 하드웨어 상태 보고
+IER/ISR(interrupt enable/status)  // 어떤 이벤트로 인터럽트가 왔고 뭘 활성화햇는지 저장
+LCR(line control)               // 데이터 길이, stop비트, parity, baud-latch 모드 전환 등을 지정
+FIFO                            // 추가된 16B 하드웨어 버퍼. FCR_FIFO_ENABLE로 키고 FCR_FIFO_CLEAR로 초기
+Uart interrupt                  // PLIC이 IRQ 10번으로 cpu에 전달
+top/bottom half                 // 인터럽트 진입 직후 처리(top)과 버퍼 비우기 깨우기 등 후처리(bottom)
+console subsystem               // 실제 하드웨어는 uart.c, 라인 처리는 console.c
+</code></pre></div>
 <h3 id="2">2&gt; 흐름 정리<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>+-------------+        +-------------+         +----------------+
 | user space  | sys_write → consolewrite() →   | circular TX buf|
@@ -680,197 +683,197 @@ console subsystem               // 실제 하드웨어는 uart.c, 라인 처리�
     wakeup(&amp;uart_tx_r) ◄─────────────┘         while(uartgetc()!=-1) consoleintr()
 </code></pre></div>
 <h3 id="3-uartc">3&gt; uart.c<a class="headerlink" href="#3-uartc" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>//
-// low-level driver routines for 16550a UART.
-//
+<div class="highlight"><pre><span></span><code><span class="c1">//</span>
+<span class="c1">// low-level driver routines for 16550a UART.</span>
+<span class="c1">//</span>
 
-#include &quot;types.h&quot;
-#include &quot;param.h&quot;
-#include &quot;memlayout.h&quot;
-#include &quot;riscv.h&quot;
-#include &quot;spinlock.h&quot;
-#include &quot;proc.h&quot;
-#include &quot;defs.h&quot;
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;types.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;param.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;memlayout.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;riscv.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;spinlock.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;proc.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;defs.h&quot;</span>
 
-// the UART control registers are memory-mapped
-// at address UART0. this macro returns the
-// address of one of the registers.
-#define Reg(reg) ((volatile unsigned char *)(UART0 + (reg)))
+<span class="c1">// the UART control registers are memory-mapped</span>
+<span class="c1">// at address UART0. this macro returns the</span>
+<span class="c1">// address of one of the registers.</span>
+<span class="cp">#define Reg(reg) ((volatile unsigned char *)(UART0 + (reg)))</span>
 
-// the UART control registers.
-// some have different meanings for
-// read vs write.
-// see http://byterunner.com/16550.html
-#define RHR 0                 // receive holding register (for input bytes)
-#define THR 0                 // transmit holding register (for output bytes)
-#define IER 1                 // interrupt enable register
-#define IER_RX_ENABLE (1&lt;&lt;0)
-#define IER_TX_ENABLE (1&lt;&lt;1)
-#define FCR 2                 // FIFO control register
-#define FCR_FIFO_ENABLE (1&lt;&lt;0)
-#define FCR_FIFO_CLEAR (3&lt;&lt;1) // clear the content of the two FIFOs
-#define ISR 2                 // interrupt status register
-#define LCR 3                 // line control register
-#define LCR_EIGHT_BITS (3&lt;&lt;0)
-#define LCR_BAUD_LATCH (1&lt;&lt;7) // special mode to set baud rate
-#define LSR 5                 // line status register
-#define LSR_RX_READY (1&lt;&lt;0)   // input is waiting to be read from RHR
-#define LSR_TX_IDLE (1&lt;&lt;5)    // THR can accept another character to send
+<span class="c1">// the UART control registers.</span>
+<span class="c1">// some have different meanings for</span>
+<span class="c1">// read vs write.</span>
+<span class="c1">// see http://byterunner.com/16550.html</span>
+<span class="cp">#define RHR 0                 </span><span class="c1">// receive holding register (for input bytes)</span>
+<span class="cp">#define THR 0                 </span><span class="c1">// transmit holding register (for output bytes)</span>
+<span class="cp">#define IER 1                 </span><span class="c1">// interrupt enable register</span>
+<span class="cp">#define IER_RX_ENABLE (1&lt;&lt;0)</span>
+<span class="cp">#define IER_TX_ENABLE (1&lt;&lt;1)</span>
+<span class="cp">#define FCR 2                 </span><span class="c1">// FIFO control register</span>
+<span class="cp">#define FCR_FIFO_ENABLE (1&lt;&lt;0)</span>
+<span class="cp">#define FCR_FIFO_CLEAR (3&lt;&lt;1) </span><span class="c1">// clear the content of the two FIFOs</span>
+<span class="cp">#define ISR 2                 </span><span class="c1">// interrupt status register</span>
+<span class="cp">#define LCR 3                 </span><span class="c1">// line control register</span>
+<span class="cp">#define LCR_EIGHT_BITS (3&lt;&lt;0)</span>
+<span class="cp">#define LCR_BAUD_LATCH (1&lt;&lt;7) </span><span class="c1">// special mode to set baud rate</span>
+<span class="cp">#define LSR 5                 </span><span class="c1">// line status register</span>
+<span class="cp">#define LSR_RX_READY (1&lt;&lt;0)   </span><span class="c1">// input is waiting to be read from RHR</span>
+<span class="cp">#define LSR_TX_IDLE (1&lt;&lt;5)    </span><span class="c1">// THR can accept another character to send</span>
 
-#define ReadReg(reg) (*(Reg(reg)))
-#define WriteReg(reg, v) (*(Reg(reg)) = (v))
+<span class="cp">#define ReadReg(reg) (*(Reg(reg)))</span>
+<span class="cp">#define WriteReg(reg, v) (*(Reg(reg)) = (v))</span>
 
-// the transmit output buffer.
-struct spinlock uart_tx_lock;
-#define UART_TX_BUF_SIZE 32
-char uart_tx_buf[UART_TX_BUF_SIZE];
-uint64 uart_tx_w; // write next to uart_tx_buf[uart_tx_w % UART_TX_BUF_SIZE]
-uint64 uart_tx_r; // read next from uart_tx_buf[uart_tx_r % UART_TX_BUF_SIZE]
+<span class="c1">// the transmit output buffer.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">spinlock</span><span class="w"> </span><span class="n">uart_tx_lock</span><span class="p">;</span>
+<span class="cp">#define UART_TX_BUF_SIZE 32</span>
+<span class="kt">char</span><span class="w"> </span><span class="n">uart_tx_buf</span><span class="p">[</span><span class="n">UART_TX_BUF_SIZE</span><span class="p">];</span>
+<span class="n">uint64</span><span class="w"> </span><span class="n">uart_tx_w</span><span class="p">;</span><span class="w"> </span><span class="c1">// write next to uart_tx_buf[uart_tx_w % UART_TX_BUF_SIZE]</span>
+<span class="n">uint64</span><span class="w"> </span><span class="n">uart_tx_r</span><span class="p">;</span><span class="w"> </span><span class="c1">// read next from uart_tx_buf[uart_tx_r % UART_TX_BUF_SIZE]</span>
 
-extern volatile int panicked; // from printf.c
+<span class="k">extern</span><span class="w"> </span><span class="k">volatile</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">panicked</span><span class="p">;</span><span class="w"> </span><span class="c1">// from printf.c</span>
 
-void uartstart();
+<span class="kt">void</span><span class="w"> </span><span class="nf">uartstart</span><span class="p">();</span>
 
-void
-uartinit(void)
-{
-  // disable interrupts.
-  WriteReg(IER, 0x00);
+<span class="kt">void</span>
+<span class="nf">uartinit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="c1">// disable interrupts.</span>
+<span class="w">  </span><span class="n">WriteReg</span><span class="p">(</span><span class="n">IER</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">);</span>
 
-  // special mode to set baud rate.
-  WriteReg(LCR, LCR_BAUD_LATCH);
+<span class="w">  </span><span class="c1">// special mode to set baud rate.</span>
+<span class="w">  </span><span class="n">WriteReg</span><span class="p">(</span><span class="n">LCR</span><span class="p">,</span><span class="w"> </span><span class="n">LCR_BAUD_LATCH</span><span class="p">);</span>
 
-  // LSB for baud rate of 38.4K.
-  WriteReg(0, 0x03);
+<span class="w">  </span><span class="c1">// LSB for baud rate of 38.4K.</span>
+<span class="w">  </span><span class="n">WriteReg</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mh">0x03</span><span class="p">);</span>
 
-  // MSB for baud rate of 38.4K.
-  WriteReg(1, 0x00);
+<span class="w">  </span><span class="c1">// MSB for baud rate of 38.4K.</span>
+<span class="w">  </span><span class="n">WriteReg</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">);</span>
 
-  // leave set-baud mode,
-  // and set word length to 8 bits, no parity.
-  WriteReg(LCR, LCR_EIGHT_BITS);
+<span class="w">  </span><span class="c1">// leave set-baud mode,</span>
+<span class="w">  </span><span class="c1">// and set word length to 8 bits, no parity.</span>
+<span class="w">  </span><span class="n">WriteReg</span><span class="p">(</span><span class="n">LCR</span><span class="p">,</span><span class="w"> </span><span class="n">LCR_EIGHT_BITS</span><span class="p">);</span>
 
-  // reset and enable FIFOs.
-  WriteReg(FCR, FCR_FIFO_ENABLE | FCR_FIFO_CLEAR);
+<span class="w">  </span><span class="c1">// reset and enable FIFOs.</span>
+<span class="w">  </span><span class="n">WriteReg</span><span class="p">(</span><span class="n">FCR</span><span class="p">,</span><span class="w"> </span><span class="n">FCR_FIFO_ENABLE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">FCR_FIFO_CLEAR</span><span class="p">);</span>
 
-  // enable transmit and receive interrupts.
-  WriteReg(IER, IER_TX_ENABLE | IER_RX_ENABLE);
+<span class="w">  </span><span class="c1">// enable transmit and receive interrupts.</span>
+<span class="w">  </span><span class="n">WriteReg</span><span class="p">(</span><span class="n">IER</span><span class="p">,</span><span class="w"> </span><span class="n">IER_TX_ENABLE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">IER_RX_ENABLE</span><span class="p">);</span>
 
-  initlock(&amp;uart_tx_lock, &quot;uart&quot;);
-}
+<span class="w">  </span><span class="n">initlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">uart_tx_lock</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;uart&quot;</span><span class="p">);</span>
+<span class="p">}</span>
 
-// add a character to the output buffer and tell the
-// UART to start sending if it isn&#39;t already.
-// blocks if the output buffer is full.
-// because it may block, it can&#39;t be called
-// from interrupts; it&#39;s only suitable for use
-// by write().
-void
-uartputc(int c)
-{
-  acquire(&amp;uart_tx_lock);
+<span class="c1">// add a character to the output buffer and tell the</span>
+<span class="c1">// UART to start sending if it isn&#39;t already.</span>
+<span class="c1">// blocks if the output buffer is full.</span>
+<span class="c1">// because it may block, it can&#39;t be called</span>
+<span class="c1">// from interrupts; it&#39;s only suitable for use</span>
+<span class="c1">// by write().</span>
+<span class="kt">void</span>
+<span class="nf">uartputc</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">uart_tx_lock</span><span class="p">);</span>
 
-  if(panicked){
-    for(;;)
-      ;
-  }
-  while(uart_tx_w == uart_tx_r + UART_TX_BUF_SIZE){
-    // buffer is full.
-    // wait for uartstart() to open up space in the buffer.
-    sleep(&amp;uart_tx_r, &amp;uart_tx_lock);
-  }
-  uart_tx_buf[uart_tx_w % UART_TX_BUF_SIZE] = c;
-  uart_tx_w += 1;
-  uartstart();
-  release(&amp;uart_tx_lock);
-}
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">panicked</span><span class="p">){</span>
+<span class="w">    </span><span class="k">for</span><span class="p">(;;)</span>
+<span class="w">      </span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">while</span><span class="p">(</span><span class="n">uart_tx_w</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">uart_tx_r</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">UART_TX_BUF_SIZE</span><span class="p">){</span>
+<span class="w">    </span><span class="c1">// buffer is full.</span>
+<span class="w">    </span><span class="c1">// wait for uartstart() to open up space in the buffer.</span>
+<span class="w">    </span><span class="n">sleep</span><span class="p">(</span><span class="o">&amp;</span><span class="n">uart_tx_r</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">uart_tx_lock</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">uart_tx_buf</span><span class="p">[</span><span class="n">uart_tx_w</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">UART_TX_BUF_SIZE</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">  </span><span class="n">uart_tx_w</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">uartstart</span><span class="p">();</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">uart_tx_lock</span><span class="p">);</span>
+<span class="p">}</span>
 
 
-// alternate version of uartputc() that doesn&#39;t 
-// use interrupts, for use by kernel printf() and
-// to echo characters. it spins waiting for the uart&#39;s
-// output register to be empty.
-void
-uartputc_sync(int c)
-{
-  push_off();
+<span class="c1">// alternate version of uartputc() that doesn&#39;t </span>
+<span class="c1">// use interrupts, for use by kernel printf() and</span>
+<span class="c1">// to echo characters. it spins waiting for the uart&#39;s</span>
+<span class="c1">// output register to be empty.</span>
+<span class="kt">void</span>
+<span class="nf">uartputc_sync</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">push_off</span><span class="p">();</span>
 
-  if(panicked){
-    for(;;)
-      ;
-  }
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">panicked</span><span class="p">){</span>
+<span class="w">    </span><span class="k">for</span><span class="p">(;;)</span>
+<span class="w">      </span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
 
-  // wait for Transmit Holding Empty to be set in LSR.
-  while((ReadReg(LSR) &amp; LSR_TX_IDLE) == 0)
-    ;
-  WriteReg(THR, c);
+<span class="w">  </span><span class="c1">// wait for Transmit Holding Empty to be set in LSR.</span>
+<span class="w">  </span><span class="k">while</span><span class="p">((</span><span class="n">ReadReg</span><span class="p">(</span><span class="n">LSR</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">LSR_TX_IDLE</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="p">;</span>
+<span class="w">  </span><span class="n">WriteReg</span><span class="p">(</span><span class="n">THR</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
 
-  pop_off();
-}
+<span class="w">  </span><span class="n">pop_off</span><span class="p">();</span>
+<span class="p">}</span>
 
-// if the UART is idle, and a character is waiting
-// in the transmit buffer, send it.
-// caller must hold uart_tx_lock.
-// called from both the top- and bottom-half.
-void
-uartstart()
-{
-  while(1){
-    if(uart_tx_w == uart_tx_r){
-      // transmit buffer is empty.
-      ReadReg(ISR);
-      return;
-    }
+<span class="c1">// if the UART is idle, and a character is waiting</span>
+<span class="c1">// in the transmit buffer, send it.</span>
+<span class="c1">// caller must hold uart_tx_lock.</span>
+<span class="c1">// called from both the top- and bottom-half.</span>
+<span class="kt">void</span>
+<span class="nf">uartstart</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">uart_tx_w</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">uart_tx_r</span><span class="p">){</span>
+<span class="w">      </span><span class="c1">// transmit buffer is empty.</span>
+<span class="w">      </span><span class="n">ReadReg</span><span class="p">(</span><span class="n">ISR</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
-    if((ReadReg(LSR) &amp; LSR_TX_IDLE) == 0){
-      // the UART transmit holding register is full,
-      // so we cannot give it another byte.
-      // it will interrupt when it&#39;s ready for a new byte.
-      return;
-    }
+<span class="w">    </span><span class="k">if</span><span class="p">((</span><span class="n">ReadReg</span><span class="p">(</span><span class="n">LSR</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">LSR_TX_IDLE</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">      </span><span class="c1">// the UART transmit holding register is full,</span>
+<span class="w">      </span><span class="c1">// so we cannot give it another byte.</span>
+<span class="w">      </span><span class="c1">// it will interrupt when it&#39;s ready for a new byte.</span>
+<span class="w">      </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
-    int c = uart_tx_buf[uart_tx_r % UART_TX_BUF_SIZE];
-    uart_tx_r += 1;
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uart_tx_buf</span><span class="p">[</span><span class="n">uart_tx_r</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">UART_TX_BUF_SIZE</span><span class="p">];</span>
+<span class="w">    </span><span class="n">uart_tx_r</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 
-    // maybe uartputc() is waiting for space in the buffer.
-    wakeup(&amp;uart_tx_r);
+<span class="w">    </span><span class="c1">// maybe uartputc() is waiting for space in the buffer.</span>
+<span class="w">    </span><span class="n">wakeup</span><span class="p">(</span><span class="o">&amp;</span><span class="n">uart_tx_r</span><span class="p">);</span>
 
-    WriteReg(THR, c);
-  }
-}
+<span class="w">    </span><span class="n">WriteReg</span><span class="p">(</span><span class="n">THR</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 
-// read one input character from the UART.
-// return -1 if none is waiting.
-int
-uartgetc(void)
-{
-  if(ReadReg(LSR) &amp; 0x01){
-    // input data is ready.
-    return ReadReg(RHR);
-  } else {
-    return -1;
-  }
-}
+<span class="c1">// read one input character from the UART.</span>
+<span class="c1">// return -1 if none is waiting.</span>
+<span class="kt">int</span>
+<span class="nf">uartgetc</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">ReadReg</span><span class="p">(</span><span class="n">LSR</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0x01</span><span class="p">){</span>
+<span class="w">    </span><span class="c1">// input data is ready.</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ReadReg</span><span class="p">(</span><span class="n">RHR</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 
-// handle a uart interrupt, raised because input has
-// arrived, or the uart is ready for more output, or
-// both. called from devintr().
-void
-uartintr(void)
-{
-  // read and process incoming characters.
-  while(1){
-    int c = uartgetc();
-    if(c == -1)
-      break;
-    consoleintr(c);
-  }
+<span class="c1">// handle a uart interrupt, raised because input has</span>
+<span class="c1">// arrived, or the uart is ready for more output, or</span>
+<span class="c1">// both. called from devintr().</span>
+<span class="kt">void</span>
+<span class="nf">uartintr</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="c1">// read and process incoming characters.</span>
+<span class="w">  </span><span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uartgetc</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">-1</span><span class="p">)</span>
+<span class="w">      </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="n">consoleintr</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
 
-  // send buffered characters.
-  acquire(&amp;uart_tx_lock);
-  uartstart();
-  release(&amp;uart_tx_lock);
-}
+<span class="w">  </span><span class="c1">// send buffered characters.</span>
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">uart_tx_lock</span><span class="p">);</span>
+<span class="w">  </span><span class="n">uartstart</span><span class="p">();</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">uart_tx_lock</span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre></div>
 
 

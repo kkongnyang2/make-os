@@ -597,11 +597,12 @@
 <p>mkfs란 make filesystem의 약자이다.<br />
 파일 시스템은 세 가지 요소를 지닌다. 추상화, 무결성, 보호. 추상화란 디스크처럼 블록 단위(4KB)로만 읽고 쓰는 장치를 논리적으로 /home/kkong/note.txt 같은 공간으로 바꿔준다. 무결성이란 다양한 에러에 대해 기법을 사용해 보호한다. bitmap+블록 그룹, 저널링, copy-on-write, log-structured 등의 기법이 대중적이다. 보호란 퍼미션, 네임스페이스를 통해 여러 프로세스가 안전하게 사용한다.</p>
 <p>만든 디스크 이미지 구조는 다음과 같이 생겼다. (파일시스템이 디스크 전체를 어떻게 구획했느냐).</p>
-<p>디스크(파티션)<br />
-┌────────┬──────────┬───────────┬─────────┬─────────┐<br />
-│ Boot   │ Super-   │ Inode     │ Block   │ Data    │<br />
-│ block  │ block    │  table    │ bitmap  │ blocks  │<br />
-└────────┴──────────┴───────────┴─────────┴─────────┘</p>
+<div class="highlight"><pre><span></span><code>디스크(파티션)
+┌────────┬──────────┬───────────┬─────────┬─────────┐
+│ Boot   │ Super-   │ Inode     │ Block   │ Data    │
+│ block  │ block    │  table    │ bitmap  │ blocks  │
+└────────┴──────────┴───────────┴─────────┴─────────┘
+</code></pre></div>
 <hr />
 <h3 id="1">1&gt; 용어 정리<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
 <p>struct inode                // 퍼미션, uid/gid, size, time, 블록 포인터 등의 필드가 있다. 참고로 루트는 고정 inode 번호 2를 가지고 있다.</p>

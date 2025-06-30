@@ -651,45 +651,45 @@
 <p>그리고 이 프로젝트의 소재는 mini-os 이다. qemu로 가상 하드웨어를 생성하고 (그 내부에서 벌어지는 실제 일은 나중에 공부하고 설치만) 그 하드웨어를 운용하기 위한 커널 이미지와, 디스크 이미지와, 사용자 공간을 만드는 것을 목적으로 한다.</p>
 <p>이를 위한 과정은 다음과 같다. MMU와 TRAP, PCB, MMIO 함수들과, mkfs 함수 등의 소스 파일을 만든다.그리고 GNU make로 빌드할 수 있도록 makefile로 규칙을 작성한다. 크로스 툴체인(riscv64-unknown-elf)으로 컴파일하고 linker.ld 링커 파일로 빌드하여 커널 이미지를 만들도록 한다. 그리고 호스트 툴체인으로 디스크 이미지를 만든다. 해당 이미지들을 빌드 산출물로 내놓고 홈에 설치해 qemu로 런하도록 한다.</p>
 <h3 id="_1">&gt;<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>            ┌──────────┐
+<div class="highlight"><pre><span></span><code>                ┌──────────┐
+   사용자 모드    │ Syscall   │ ← trap/exception/interrupt로 진입
+                └────┬─────┘
+                     ▼
+ ┌──────── Boot &amp; Init (start.S, main.c …) ─────┐
+ │                                              │
+ │ ┌── Process 관리 &amp; Scheduler (proc.c) ────┐  │
+ │ │  • PCB/TCB      • context-switch         │ │
+ │ └──────────────────────────────────────────┘ │
+ │                                              │
+ │ ┌── Memory 관리 (vm.c) ────────────────────┐ │
+ │ │  • MMU/Pagetable  • 물리 페이지 할당기     │ │
+ │ │  • Copy-on-write  • Page cache            │ │
+ │ └──────────────────────────────────────────┘ │
+ │                                              │
+ │ ┌── Trap/Interrupt/Timer (trap.c, plic.c) ─┐ │
+ │ │  • Syscall 디스패치  • 외부 IRQ           │ │
+ │ │  • 시계 틱 갱신      • 소프트IRQ          │ │
+ │ └──────────────────────────────────────────┘ │
+ │                                              │
+ │ ┌── VFS &amp; Filesystem (fs.c, log.c) ────────┐ │
+ │ │  • inode 캐시   • 디렉터리 탐색          │ │
+ │ │  • log-based FS • 버퍼 캐시              │ │
+ │ └──────────────────────────────────────────┘ │
+ │                                              │
+ │ ┌── Device I/O &amp; Drivers (uart.c, virtio.c)┐ │
+ │ │  • 콘솔/TTY   • 블록 디바이스           │ │
+ │ │  • (네트워크 스택은 xv6엔 없음)         │ │
+ │ └──────────────────────────────────────────┘ │
+ │                                              │
+ │ ┌── 동기화 &amp; IPC (spinlock.c, sleeplock.c) ┐│
+ │ │  • spin/sleep lock • pipe, futex 류      ││
+ │ └──────────────────────────────────────────┘│
+ │                                              │
+ │ ┌── 시간·알람·전원 (clock.c, pm.c*) ───────┐│
+ │ │  • timekeeping  • RTC                    ││
+ │ └──────────────────────────────────────────┘│
+ └──────────────────────────────────────────────┘
 </code></pre></div>
-<p>사용자 모드    │ Syscall   │ ← trap/exception/interrupt로 진입<br />
-                └────┬─────┘<br />
-                     ▼<br />
- ┌──────── Boot &amp; Init (start.S, main.c …) ─────┐<br />
- │                                              │<br />
- │ ┌── Process 관리 &amp; Scheduler (proc.c) ────┐  │<br />
- │ │  • PCB/TCB      • context-switch         │ │<br />
- │ └──────────────────────────────────────────┘ │<br />
- │                                              │<br />
- │ ┌── Memory 관리 (vm.c) ────────────────────┐ │<br />
- │ │  • MMU/Pagetable  • 물리 페이지 할당기     │ │<br />
- │ │  • Copy-on-write  • Page cache            │ │<br />
- │ └──────────────────────────────────────────┘ │<br />
- │                                              │<br />
- │ ┌── Trap/Interrupt/Timer (trap.c, plic.c) ─┐ │<br />
- │ │  • Syscall 디스패치  • 외부 IRQ           │ │<br />
- │ │  • 시계 틱 갱신      • 소프트IRQ          │ │<br />
- │ └──────────────────────────────────────────┘ │<br />
- │                                              │<br />
- │ ┌── VFS &amp; Filesystem (fs.c, log.c) ────────┐ │<br />
- │ │  • inode 캐시   • 디렉터리 탐색          │ │<br />
- │ │  • log-based FS • 버퍼 캐시              │ │<br />
- │ └──────────────────────────────────────────┘ │<br />
- │                                              │<br />
- │ ┌── Device I/O &amp; Drivers (uart.c, virtio.c)┐ │<br />
- │ │  • 콘솔/TTY   • 블록 디바이스           │ │<br />
- │ │  • (네트워크 스택은 xv6엔 없음)         │ │<br />
- │ └──────────────────────────────────────────┘ │<br />
- │                                              │<br />
- │ ┌── 동기화 &amp; IPC (spinlock.c, sleeplock.c) ┐│<br />
- │ │  • spin/sleep lock • pipe, futex 류      ││<br />
- │ └──────────────────────────────────────────┘│<br />
- │                                              │<br />
- │ ┌── 시간·알람·전원 (clock.c, pm.c*) ───────┐│<br />
- │ │  • timekeeping  • RTC                    ││<br />
- │ └──────────────────────────────────────────┘│<br />
- └──────────────────────────────────────────────┘</p>
 <h3 id="1-xv6-riscv">1&gt; 기존 xv6-riscv 공부<a class="headerlink" href="#1-xv6-riscv" title="Permanent link">&para;</a></h3>
 <p>step 1. qemu-riscv64 설치<br />
 <div class="highlight"><pre><span></span><code>~$ sudo apt install ninja-build         # qemu는 기본 내장 gnu make가 아니라 ninja라는 builder 사용

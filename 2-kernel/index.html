@@ -672,33 +672,34 @@
 [4] 타이머 인터럽트 활성화<br />
 [5] init 프로세스 시작<br />
 [6] 유저 스페이스 → 시스템 콜 → 커널 진입</p>
-<p>xv6-riscv/<br />
-├── Makefile           ← 빌드 명령 정의<br />
-├── kernel/            ← 커널 코드가 담긴 디렉토리<br />
-│   ├── entry.S        ← 커널 진입점 (Assembly)<br />
-│   ├── start.c        ← 초기화 루틴<br />
-│   ├── main.c         ← 커널 main 함수<br />
-│   ├── trap.c         ← 트랩/인터럽트 처리<br />
-│   ├── syscall.c      ← 시스템 콜 디스패치<br />
-│   ├── proc.c         ← 프로세스 생성/스케줄링<br />
-│   ├── vm.c           ← 페이지 테이블 및 메모리 관리<br />
-│   ├── kalloc.c       ← 물리 메모리 할당자<br />
-│   ├── file.c, fs.c   ← 파일 시스템<br />
-│   ├── uart.c         ← UART 드라이버<br />
-│   ├── spinlock.c     ← 스핀락<br />
-│   └── ...            ← 다양한 커널 서브시스템<br />
-├── user/              ← 사용자 영역 프로그램<br />
-│   ├── init.c         ← 최초 유저 프로그램<br />
-│   ├── sh.c           ← 셸<br />
-│   └── ...            ← ls, cat, echo 등 유틸들<br />
-├── fs/                ← 파일 시스템<br />
-│   └── fs.img         ← 초기 파일 시스템 이미지<br />
-├── mkfs/              ← 파일 시스템 이미지 생성 도구<br />
-│   └── mkfs.c<br />
-├── include/           ← 커널/유저 공용 헤더<br />
-│   └── *.h<br />
-├── .gdbinit           ← GDB 초기화 설정<br />
-└── README.md</p>
+<div class="highlight"><pre><span></span><code>xv6-riscv/
+├── Makefile           ← 빌드 명령 정의
+├── kernel/            ← 커널 코드가 담긴 디렉토리
+│   ├── entry.S        ← 커널 진입점 (Assembly)
+│   ├── start.c        ← 초기화 루틴
+│   ├── main.c         ← 커널 main 함수
+│   ├── trap.c         ← 트랩/인터럽트 처리
+│   ├── syscall.c      ← 시스템 콜 디스패치
+│   ├── proc.c         ← 프로세스 생성/스케줄링
+│   ├── vm.c           ← 페이지 테이블 및 메모리 관리
+│   ├── kalloc.c       ← 물리 메모리 할당자
+│   ├── file.c, fs.c   ← 파일 시스템
+│   ├── uart.c         ← UART 드라이버
+│   ├── spinlock.c     ← 스핀락
+│   └── ...            ← 다양한 커널 서브시스템
+├── user/              ← 사용자 영역 프로그램
+│   ├── init.c         ← 최초 유저 프로그램
+│   ├── sh.c           ← 셸
+│   └── ...            ← ls, cat, echo 등 유틸들
+├── fs/                ← 파일 시스템
+│   └── fs.img         ← 초기 파일 시스템 이미지
+├── mkfs/              ← 파일 시스템 이미지 생성 도구
+│   └── mkfs.c
+├── include/           ← 커널/유저 공용 헤더
+│   └── *.h
+├── .gdbinit           ← GDB 초기화 설정
+└── README.md
+</code></pre></div>
 <h3 id="1-kernelkernelld">1&gt; 메모리 배치 kernel/kernel.ld<a class="headerlink" href="#1-kernelkernelld" title="Permanent link">&para;</a></h3>
 <p>링커 스크립트란? .o 들을 하나로 묶어 실행 가능한 .elf 바이너리를 만들때, 어떤 섹션을 어디에 배치할지 결정하는 배치도 역할을 한다.<br />
 <div class="highlight"><pre><span></span><code>OUTPUT_ARCH( &quot;riscv&quot; )
@@ -998,7 +999,7 @@ riscv64-unknown-elf로 충분하다. 그 도구만 있어도 컴파일(.o 생성
 <p>컴파일 단계 – Host PC에 RISC-V 크로스-툴체인이 있어야 Makefile이 통과.<br />
 실행 단계 – 생성된 kernel·fs.img 등을 QEMU가 부팅.<br />
 만약 컴파일한 kernel elf를 qemu가 아닌 실제 하드웨어 기기에서 부팅시키고 싶다면 openSBI 등을 활용해라. 걔가 커널 elf를 0x80000000으로 데려가는 부트로더 역할을 한다.</p>
-<div class="highlight"><pre><span></span><code># 여기부터 별칭 명명과 소스파일과 툴 준비
+<p><div class="highlight"><pre><span></span><code># 여기부터 별칭 명명과 소스파일과 툴 준비
 
 # 별칭
 # GNU make에서 =는 재귀확장 변수(매번 변수를 참초), :=는 단순확장 변수(대입순간 단 한번 그뒤로 상수)
@@ -1252,29 +1253,27 @@ qemu: $K/kernel fs.img
 qemu-gdb: $K/kernel .gdbinit fs.img
     @echo &quot;*** Now run &#39;gdb&#39; in another window.&quot; 1&gt;&amp;2
     $(QEMU) $(QEMUOPTS) -S $(QEMUGDB)
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>           ┌─ kernel (S-mode) ───────────────────────────┐
-           │ main() → userinit()                         │
-           │            │                                │
-</code></pre></div>
-<ol>
-<li>부팅 완료 ──┘            ▼                                │</li>
-<li>initproc 생성          (커널 내장)                         │<br />
-      → <code>p-&gt;pagetable</code>   +--------------------------------+  │<br />
-      → <code>memmove()</code>      |   RAW   initcode   binary      |  │<br />
-      → <code>p-&gt;trapframe</code>   +--------------------------------+  │<br />
-      → <code>epc = 0</code>        ^  (VA 0x0)                       │<br />
-               │         │  4 KiB  |R/W/X|                 │<br />
-               └─────────┴────────┴────────────────────────┘<br />
-                         ↓ sret (U-mode 진입)</li>
-<li><strong>initcode</strong> 실행 (U-mode)<br />
+</code></pre></div><br />
+<div class="highlight"><pre><span></span><code>               ┌─ kernel (S-mode) ───────────────────────────┐
+               │ main() → userinit()                         │
+               │            │                                │
+1. 부팅 완료 ──┘            ▼                                │
+2. initproc 생성          (커널 내장)                         │
+      → `p-&gt;pagetable`   +--------------------------------+  │
+      → `memmove()`      |   RAW   initcode   binary      |  │
+      → `p-&gt;trapframe`   +--------------------------------+  │
+      → `epc = 0`        ^  (VA 0x0)                       │
+               │         │  4 KiB  |R/W/X|                 │
+               └─────────┴────────┴────────────────────────┘
+                         ↓ sret (U-mode 진입)
+</code></pre></div><br />
+<strong>initcode</strong> 실행 (U-mode)<br />
 <em>간단한 hand-written 어셈블리</em><br />
-   ```asm<br />
-   li  a0, 0        # argv=0<br />
-   auipc a1, init   # "init" 문자열<br />
-   ecall SYS_exec   # exec("/init")<br />
-   ecall SYS_exit   # 만약 실패하면 종료</li>
-</ol>
+<div class="highlight"><pre><span></span><code><span class="nf">li</span><span class="w">  </span><span class="no">a0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w">        </span><span class="c1"># argv=0</span>
+<span class="nf">auipc</span><span class="w"> </span><span class="no">a1</span><span class="p">,</span><span class="w"> </span><span class="no">init</span><span class="w">   </span><span class="c1"># &quot;init&quot; 문자열</span>
+<span class="nf">ecall</span><span class="w"> </span><span class="no">SYS_exec</span><span class="w">   </span><span class="c1"># exec(&quot;/init&quot;)</span>
+<span class="nf">ecall</span><span class="w"> </span><span class="no">SYS_exit</span><span class="w">   </span><span class="c1"># 만약 실패하면 종료</span>
+</code></pre></div></p>
 
 
 
