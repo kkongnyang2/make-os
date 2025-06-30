@@ -1,0 +1,1031 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../8-mini-os/">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>build - make-os</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="make-os" class="md-header__button md-logo" aria-label="make-os" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            make-os
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              build
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="make-os" class="md-nav__button md-logo" aria-label="make-os" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    make-os
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    vm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-hardware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    h/w
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-kernel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    kernel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-MMU/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MMU
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-trap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    trap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5-PCB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PCB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6-uart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    uart
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7-mkfs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mkfs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8-mini-os/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mini-os
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    build
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    build
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      프로젝트 빌드 과정을 알아보자
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="프로젝트 빌드 과정을 알아보자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      목표: 프로젝트의 이해
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      0&gt; 기본
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-riscv-gnu-toolchain" class="md-nav__link">
+    <span class="md-ellipsis">
+      1&gt; riscv-gnu-toolchain
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      1) Generator 단계
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-builder" class="md-nav__link">
+    <span class="md-ellipsis">
+      2) Builder 단계
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      3) Install 단계
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3) Install 단계">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-qemu" class="md-nav__link">
+    <span class="md-ellipsis">
+      2&gt; qemu
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-generator_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1) Generator
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-builder_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      2) Builder
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-install_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      3) Install
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3) Install">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-xv6-riscv" class="md-nav__link">
+    <span class="md-ellipsis">
+      3&gt; xv6-riscv
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-generator_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      1) Generator
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-builder_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2) Builder
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-install_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      3) Install
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3) Install">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3&gt; 명령어 의미
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4&gt; 크로스 툴체인 위치
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5&gt; 삭제 방법
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      프로젝트 빌드 과정을 알아보자
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="프로젝트 빌드 과정을 알아보자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      목표: 프로젝트의 이해
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      0&gt; 기본
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-riscv-gnu-toolchain" class="md-nav__link">
+    <span class="md-ellipsis">
+      1&gt; riscv-gnu-toolchain
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      1) Generator 단계
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-builder" class="md-nav__link">
+    <span class="md-ellipsis">
+      2) Builder 단계
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      3) Install 단계
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3) Install 단계">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-qemu" class="md-nav__link">
+    <span class="md-ellipsis">
+      2&gt; qemu
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-generator_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1) Generator
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-builder_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      2) Builder
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-install_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      3) Install
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3) Install">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-xv6-riscv" class="md-nav__link">
+    <span class="md-ellipsis">
+      3&gt; xv6-riscv
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-generator_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      1) Generator
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-builder_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2) Builder
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-install_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      3) Install
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3) Install">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3&gt; 명령어 의미
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4&gt; 크로스 툴체인 위치
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5&gt; 삭제 방법
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h2 id="_1">프로젝트 빌드 과정을 알아보자<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h3 id="_2">목표: 프로젝트의 이해<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>작성자: kkongnyang2 작성일: 2025-06-30</p>
+<hr />
+<h3 id="0">0&gt; 기본<a class="headerlink" href="#0" title="Permanent link">&para;</a></h3>
+<p>소스파일 가져오는건 <br />
+ git clone https://gitlab.com/qemu-project/qemu.git</p>
+<p>(사람)             (Generator)                 (Builder)<br />
+소스 + 옵션 ──▶  [Autotools / CMake / Meson] ──▶  [Make or Ninja]<br />
+                              │                      │<br />
+                    ┌─────────┴──────────┐           │<br />
+                    │  Makefile / Ninja  │───────────┘<br />
+                    │  (빌드 규칙 파일)  │<br />
+                    └────────────────────┘</p>
+<p>generator: 빌드 규칙 생성<br />
+builder: 빌드 산출물 리턴<br />
+install: prefix 경로에 안착</p>
+<p>Cmake는 요즘 범용성 높아 많이 쓰임. make도 ninja도 사용 가능.</p>
+<h3 id="1-riscv-gnu-toolchain">1&gt; riscv-gnu-toolchain<a class="headerlink" href="#1-riscv-gnu-toolchain" title="Permanent link">&para;</a></h3>
+<p>riscv-gnu-toolchain의 조합<br />
+Generator  : Autotools(./configure로 makefile파일 자동생성)<br />
+Builder    : GNU Make</p>
+<p>riscv-gnu-toolchain/<br />
+├── configure            ← 자동 생성된 셸 스크립트(Autoconf) ──▶ Generator<br />
+├── configure.ac         ← configure를 “찍어내는” 소스<br />
+├── Makefile.in          ← configure가 변수 치환해 최종 Makefile 생성<br />
+├── scripts/             ← build 순서·패치 적용용 셸 스크립트 모음<br />
+├── build              (← 빌드 시 자동 생성)<br />
+│   ├── .../Makefile     ← Builder(메이크)가 실제 해석<br />
+│   └── .../<em>.o / *.a / gcc / ld ...<br />
+│<br />
+├── gcc/                 (submodule)  ┐<br />
+├── binutils/            (submodule)  │— 각 컴포넌트도 *</em>자체 Autotools** 구조<br />
+├── gdb/                 (submodule)  │<br />
+├── newlib/              (submodule)  ┘<br />
+└── linux/               (옵션 glibc 빌드용 커널 헤더)</p>
+<h1 id="1-generator">1) Generator 단계<a class="headerlink" href="#1-generator" title="Permanent link">&para;</a></h1>
+<p>./configure --prefix=$HOME/opt/riscv --enable-multilib<br />
+     ↳ configure  →  최상위 + 각 서브디렉터리 Makefile 생성</p>
+<h1 id="2-builder">2) Builder 단계<a class="headerlink" href="#2-builder" title="Permanent link">&para;</a></h1>
+<p>make -j$(nproc)          # 메인 Makefile이 scripts/build-*.sh 호출<br />
+     ↳ 각 script 내부   →  binutils, gcc, newlib … 를 차례로 make</p>
+<h1 id="3-install">3) Install 단계<a class="headerlink" href="#3-install" title="Permanent link">&para;</a></h1>
+<p>make install             # 결과물을 $HOME/opt/riscv/{bin,lib,include,…}로 복사</p>
+<h3 id="2-qemu">2&gt; qemu<a class="headerlink" href="#2-qemu" title="Permanent link">&para;</a></h3>
+<p>qemu의 조합<br />
+Generator   : Meson<br />
+Builder     : Ninja<br />
+최상위 ./configure 스크립트는 Autotools가 아니라 <strong>“Meson 설정 래퍼”</strong>입니다.</p>
+<p>qemu/<br />
+├── configure               ← 셸 래퍼: 옵션 파싱 후 meson 호출<br />
+├── meson.build             ← 루트 Meson 규칙<br />
+├── meson_options.txt       ← --enable-xxx 스위치 정의<br />
+├── block/meson.build       ← 서브디렉터리별 규칙 (C 소스·libqemu-block...)<br />
+├── hw/{arm,riscv,x86}/...  ← 각 가상 HW, 역시 meson.build 포함<br />
+├── scripts/meson-buildoptions.sh  ← ./configure가 Meson 옵션으로 매핑<br />
+└── build/            (meson setup 후 생성)<br />
+    ├── build.ninja          ← <strong>Ninja 규칙 파일</strong><br />
+    ├── config-host.h        ← 호스트 기능 매크로 (#define)<br />
+    ├── Makefile             ← 단순 “all: ninja -C .” 래퍼<br />
+    └── meson-logs/…</p>
+<h1 id="1-generator_1">1) Generator<a class="headerlink" href="#1-generator_1" title="Permanent link">&para;</a></h1>
+<p>./configure --target-list=riscv64-softmmu --prefix=$HOME/opt/qemu<br />
+    ↳ 원래 사용하는 meson setup build/ 는 자동으로 되어 build.ninja 생성</p>
+<h1 id="2-builder_1">2) Builder<a class="headerlink" href="#2-builder_1" title="Permanent link">&para;</a></h1>
+<p>ninja -C build -j$(nproc)                        # .o → libqemu* → qemu-system-riscv64</p>
+<h1 id="3-install_1">3) Install<a class="headerlink" href="#3-install_1" title="Permanent link">&para;</a></h1>
+<p>ninja -C build install               # 디폴트는 실행파일 /usr/local/bin 에 복사. 아까 prefix 설정했으면 $HOME/opt/qemu/{bin,lib,share,…}로 복사됨</p>
+<h3 id="3-xv6-riscv">3&gt; xv6-riscv<a class="headerlink" href="#3-xv6-riscv" title="Permanent link">&para;</a></h3>
+<p>xv6-riscv의 조합<br />
+Generator  : 없음.(generator가 아무것도 없기에 손수 makefile파일 작성)<br />
+Builder    : GNU Make</p>
+<p>xv6-riscv/<br />
+├── Makefile          ← 최상위 빌드 규칙 ― 핵심<br />
+├── kernel/           ← 커널 소스 (.c, .S)<br />
+├── user/             ← 유저 프로그램 소스<br />
+│   └── user.ld       ← 사용자 실행파일용 링크스크립트<br />
+├── kernel/entry.S<br />
+├── mkfs.c            ← 호스트 툴: 파일시스템 이미지 생성<br />
+├── *.lds             ← 커널 링크스크립트<br />
+└── README, LICENSE …</p>
+<h1 id="1-generator_2">1) Generator<a class="headerlink" href="#1-generator_2" title="Permanent link">&para;</a></h1>
+<p>손수 makefile파일 작성</p>
+<h1 id="2-builder_2">2) Builder<a class="headerlink" href="#2-builder_2" title="Permanent link">&para;</a></h1>
+<p>make</p>
+<h1 id="3-install_2">3) Install<a class="headerlink" href="#3-install_2" title="Permanent link">&para;</a></h1>
+<p>따로 경로는 안하고 이 소스파일안에 냅두고 qemu에 올려서 부팅(make qemu)</p>
+<h3 id="3">3&gt; 명령어 의미<a class="headerlink" href="#3" title="Permanent link">&para;</a></h3>
+<p>--prefix=$HOME/opt/qemu<br />
+설치 결과물을 시스템 루트(/usr)가 아닌 내 홈 폴더 아래에 복사해라. (안쓰면 디폴트는 /usr/local일거임) root 권한 없이, 다른 qemu 버전과 충돌 없이 관리 가능.</p>
+<p>echo 'export PATH=$HOME/opt/qemu/bin:$PATH' &gt;&gt; ~/.bashrc<br />
+source ~/.bashrc<br />
+셸은 기본적으로 /usr/bin, /usr/local/bin 같은 표준 디렉토리만 찾기 때문에, 홈 안에 설치했으면 이 디렉터리를 PATH에 넣어야 편하게 호출가능. 아니면 매번 경로 입력해 호출해야함.</p>
+<p>이거 안해줄거면 그냥 디폴트로 하나만 쓰고 루트 디렉토리로 sudo make install 해주면 됨.</p>
+<h3 id="4">4&gt; 크로스 툴체인 위치<a class="headerlink" href="#4" title="Permanent link">&para;</a></h3>
+<p>호스트 툴체인 실행파일은 usr/bin에 있음. 크로스 툴체인은 usr/riscv64-linux-gnu/bin에 저장되기에 구분</p>
+<h3 id="5">5&gt; 삭제 방법<a class="headerlink" href="#5" title="Permanent link">&para;</a></h3>
+<p>riscv-gnu-toolchain<br />
+설치 실행파일 제거 rm -rf usr/riscv-gnu-toolchain<br />
+path 되돌리기 nano ~/.bashrc에서 export PATH 라인 삭제<br />
+빌드 산출물 삭제 make clean<br />
+소스 트리 초기화 make distclean<br />
+소스 폴더 삭제 rm -rf ~/riscv-gnu-toolchain</p>
+<p>qemu<br />
+설치 실행파일 제거 rm -rf usr/local/bin/qemu<br />
+path 되돌리기 nano ~/.bashrc에서 export PATH 라인 삭제<br />
+빌드 산출물 삭제 ninja -C build clean<br />
+소스 트리 초기화 rm -rf build meson-logs meson-private<br />
+소스 폴더 삭제 rm -rf ~/qemu</p>
+<p>xv6-riscv<br />
+설치 실행파일 제거  # 소스 폴더에 그대로 있음(공유 라이브러리가 필요하지 않기때문)<br />
+path 되돌리기 nano ~/.bashrc에서 export PATH 라인 삭제<br />
+빌드 산출물 삭제 make clean<br />
+소스 트리 초기화 make distclean<br />
+소스 폴더 삭제 rm -rf ~/xv6-riscv</p>
+<div class="highlight"><pre><span></span><code>~$ ps aux | grep qemu           #실행중인 프로세스 번호
+~$ kill 숫자                     #강제종료
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

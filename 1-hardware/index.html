@@ -1,0 +1,761 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../0-vm/">
+      
+      
+        <link rel="next" href="../2-kernel/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>h/w - make-os</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#xv6-riscv" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="make-os" class="md-header__button md-logo" aria-label="make-os" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            make-os
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              h/w
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="make-os" class="md-nav__button md-logo" aria-label="make-os" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    make-os
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    vm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    h/w
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    h/w
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#xv6-riscv" class="md-nav__link">
+    <span class="md-ellipsis">
+      xv6-riscv의 하드웨어 구조를 알아보자
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="xv6-riscv의 하드웨어 구조를 알아보자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#soc" class="md-nav__link">
+    <span class="md-ellipsis">
+      목표: SoC칩 이해
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      0&gt; 구조
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-cpu-csr" class="md-nav__link">
+    <span class="md-ellipsis">
+      1&gt; CPU 내부 유닛(CSR)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-cpu-mmio" class="md-nav__link">
+    <span class="md-ellipsis">
+      2&gt; CPU 외부 유닛(MMIO)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-clint-vs-plic" class="md-nav__link">
+    <span class="md-ellipsis">
+      3&gt; CLINT vs PLIC
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-mmu" class="md-nav__link">
+    <span class="md-ellipsis">
+      4&gt; MMU
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-kernel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    kernel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-MMU/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MMU
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-trap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    trap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5-PCB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PCB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6-uart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    uart
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7-mkfs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mkfs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8-mini-os/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mini-os
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../9-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    build
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#xv6-riscv" class="md-nav__link">
+    <span class="md-ellipsis">
+      xv6-riscv의 하드웨어 구조를 알아보자
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="xv6-riscv의 하드웨어 구조를 알아보자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#soc" class="md-nav__link">
+    <span class="md-ellipsis">
+      목표: SoC칩 이해
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      0&gt; 구조
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-cpu-csr" class="md-nav__link">
+    <span class="md-ellipsis">
+      1&gt; CPU 내부 유닛(CSR)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-cpu-mmio" class="md-nav__link">
+    <span class="md-ellipsis">
+      2&gt; CPU 외부 유닛(MMIO)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-clint-vs-plic" class="md-nav__link">
+    <span class="md-ellipsis">
+      3&gt; CLINT vs PLIC
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-mmu" class="md-nav__link">
+    <span class="md-ellipsis">
+      4&gt; MMU
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>h/w</h1>
+
+<h2 id="xv6-riscv">xv6-riscv의 하드웨어 구조를 알아보자<a class="headerlink" href="#xv6-riscv" title="Permanent link">&para;</a></h2>
+<h3 id="soc">목표: SoC칩 이해<a class="headerlink" href="#soc" title="Permanent link">&para;</a></h3>
+<p>작성자: kkongnyang2 작성일: 2025-06-25</p>
+<hr />
+<h3 id="0">0&gt; 구조<a class="headerlink" href="#0" title="Permanent link">&para;</a></h3>
+<p>┌────────────────────────────────────────────────────────────────────────────┐<br />
+│                               SoC / 칩 전체                                │<br />
+│                                                                            │<br />
+│  ┌────────────────────────── CPU Core ───────────────────────────┐         │<br />
+│  │ ┌──────┐   ┌───────────┐   ┌────────┐   ┌────────┐            │         │<br />
+│  │ │L1 I$ │──▶│Fetch / BP │──▶│ Decode │──▶│ Rename │──┐         │         │<br />
+│  │ └──────┘   └───────────┘   └────────┘   └────────┘  │         │         │<br />
+│  │                                                   ┌─▼────────┐│         │<br />
+│  │ ┌──────┐   ┌───────────┐   ┌────────┐   ┌──────┐ │ Reorder   │         │<br />
+│  │ │L1 D$ │◀──│Load/Store │◀──│  TLB   │──▶│ MMU  │ │  Buffer   │         │<br />
+│  │ └──────┘   └───────────┘   └────────┘   └──────┘ └─▲────────┘│         │<br />
+│  │              ▲           ▲             ▲            │         │         │<br />
+│  │              │           │             │            │         │         │<br />
+│  │ ┌──────┐   ┌─┴───┐   ┌───┴───┐   ┌────┴──┐   ┌─────┴───┐     │         │<br />
+│  │ │ Int  │   │ SIMD │   │  FPU  │   │  ALU  │   │Branch   │     │         │<br />
+│  │ │ ALU  │   │/Vec  │   │        │   │ (INT) │   │Exec/Pred│     │         │<br />
+│  │ └──────┘   └──────┘   └────────┘   └────────┘   └────────┘     │         │<br />
+│  └─────────────────────────────────────────────────────────────────┘         │<br />
+│            │              │                              │                  │<br />
+│            │              │                      인터럽트 라인              │<br />
+│            │              ▼                              │                  │<br />
+│  ┌──────────────────────── System Interconnect / 버스 ─────────────────────┐│<br />
+│  │   L2/L3 Cache   │   DRAM Controller   │   Coherent / Non-coherent NoC   ││<br />
+│  └──────────────────────────────────────────────────────────────────────────┘│<br />
+│            │                                                                │<br />
+│  ┌────────────────────────── Memory-Mapped I/O (MMIO) ─────────────────────┐│<br />
+│  │  UART │ GPIO │ SPI │ I2C │ Timer │ Interrupt Ctrl │ PCIe │ …            ││<br />
+│  └──────────────────────────────────────────────────────────────────────────┘│<br />
+└──────────────────────────────────────────────────────────────────────────────┘<br />
+Legend:<br />
+  I$ / D$ : Instruction / Data Cache<br />
+  BP      : Branch Predictor<br />
+  TLB     : Translation Lookaside Buffer<br />
+  MMU     : Memory Management Unit</p>
+<h3 id="1-cpu-csr">1&gt; CPU 내부 유닛(CSR)<a class="headerlink" href="#1-cpu-csr" title="Permanent link">&para;</a></h3>
+<p>연산블록 ALU, FPU /모든 모드<br />
+제어블록 MMU /M모드가 껐다킴. S나 U는 설정된 테이블 하에서 사용<br />
+캐시블록 L1/L2 Cache <br />
+타이머블록 timer CSR /원래는 M모드만이지만 S로 확장됨<br />
+인터럽트블록 CLINT /M S 모두</p>
+<p>이걸 동작하는 방법. CSR들 활용. cpu 코어 안에 하드웨어로 존재하는 특수 레지스터들<br />
+csrr rd, <csr#>로 읽고 씀<br />
+mstatus, sstatus : 특권 모드, 인터럽트 활성 플래그<br />
+stvec, mtvec : trap/interrupt 벡터 주소<br />
+satp : MMU 루트 페이지테이블<br />
+mtime, stimecmp : 사이클, 카운터, 타이머 비교<br />
+scause, sepc, stval : trap 원인, 복귀 pc, 오류 값</p>
+<h3 id="2-cpu-mmio">2&gt; CPU 외부 유닛(MMIO)<a class="headerlink" href="#2-cpu-mmio" title="Permanent link">&para;</a></h3>
+<p>MMIO들은 그냥 주소를 읽으면 레지스터에 연결되어 동작 가능<br />
+lw rd, 0(xaddr) (일반 메모리 Load/Store)<br />
+CPU ──(AXI/AHB/TileLink 버스)──►<br />
+       ├─ DRAM 컨트롤러 (0x8000_0000…)<br />
+       ├─ UART0 (0x1000_0000) : 시리얼 콘솔이라는 단순 I/O<br />
+       ├─ VirtIO 블록 (0x1000_1000) : paravirtual 장치 표준<br />
+       └─ PLIC(외부 인터럽트) (0x0C00_0000)</p>
+<h3 id="3-clint-vs-plic">3&gt; CLINT vs PLIC<a class="headerlink" href="#3-clint-vs-plic" title="Permanent link">&para;</a></h3>
+<p>CLINT는 MSIP/SSIP/MTIP/STIP 소프트웨어와 타이머 인터럽트를 처리하고, 코어 내부의 0x02000000에 있다.<br />
+PLIC는 외부 디바이스 IRQ (UART, VirtIO) 를 처리하고, 0x0C000000에 있다.</p>
+<h3 id="4-mmu">4&gt; MMU<a class="headerlink" href="#4-mmu" title="Permanent link">&para;</a></h3>
+<p>물리 주소 = DRAM 칩, MMIO 레지스터를 전선 번호로 직접 가리키는 값<br />
+가상 주소 = CPU에서 실행 중인 프로그램이 보는 주소<br />
+MMU = CPU 안에 붙어 있는 유닛. 주소 매핑 및 권한 체크.</p>
+<p>왜 가상 주소가 필요할까?<br />
+실행 파일을 항상 가상주소 0x400000에 배치한다 해도 실제 물리는 RAM 빈곳으로 매핑만 하면 끝</p>
+<p>risc-v 64비트 예<br />
+Sv39 = 가상주소 39bit(9+9+9+12) 구조<br />
+나머지 [64:39] 비트는 sign-extension(최상위 비트 복제)<br />
+[38:30] 은 vpn[2] level2(루트) PTE 인덱스<br />
+[29:21] 은 vpn[1] level1 PTE 인덱스<br />
+[20:12] 은 vpn[0] level0 PTE 인덱스<br />
+[11:0] 은 page offset 페이지(4KB) 내부 바이트 위치</p>
+<p>따라서 256TB 주소공간.</p>
+<p>커널을 로드하는 0x80000000은 물리 주소, 프로세스를 실행하는 0x00000000은 가상 주소이다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

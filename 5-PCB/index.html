@@ -1,0 +1,1393 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../4-trap/">
+      
+      
+        <link rel="next" href="../6-uart/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>PCB - make-os</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#xv6-riscv-procc" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="make-os" class="md-header__button md-logo" aria-label="make-os" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            make-os
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PCB
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="make-os" class="md-nav__button md-logo" aria-label="make-os" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    make-os
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    vm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-hardware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    h/w
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-kernel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    kernel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-MMU/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MMU
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-trap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    trap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    PCB
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    PCB
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#xv6-riscv-procc" class="md-nav__link">
+    <span class="md-ellipsis">
+      xv6-riscv의 proc.c 파일을 읽어보자
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="xv6-riscv의 proc.c 파일을 읽어보자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pcb" class="md-nav__link">
+    <span class="md-ellipsis">
+      목표: PCB 이해
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      0&gt; 개념 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1&gt; 용어 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2&gt; 흐름 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-procc" class="md-nav__link">
+    <span class="md-ellipsis">
+      3&gt; proc.c
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6-uart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    uart
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7-mkfs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mkfs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8-mini-os/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mini-os
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../9-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    build
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#xv6-riscv-procc" class="md-nav__link">
+    <span class="md-ellipsis">
+      xv6-riscv의 proc.c 파일을 읽어보자
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="xv6-riscv의 proc.c 파일을 읽어보자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pcb" class="md-nav__link">
+    <span class="md-ellipsis">
+      목표: PCB 이해
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      0&gt; 개념 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1&gt; 용어 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2&gt; 흐름 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-procc" class="md-nav__link">
+    <span class="md-ellipsis">
+      3&gt; proc.c
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>PCB</h1>
+
+<h2 id="xv6-riscv-procc">xv6-riscv의 proc.c 파일을 읽어보자<a class="headerlink" href="#xv6-riscv-procc" title="Permanent link">&para;</a></h2>
+<h3 id="pcb">목표: PCB 이해<a class="headerlink" href="#pcb" title="Permanent link">&para;</a></h3>
+<p>작성자: kkongnyang2 작성일: 2025-06-26</p>
+<hr />
+<h3 id="0">0&gt; 개념 정리<a class="headerlink" href="#0" title="Permanent link">&para;</a></h3>
+<p>PCB? 커널이 한 프로세스를 식별하는 구조체이다. pagetable, kstack, context, trapframe, state, pid 등의 정보를 담고 있다.</p>
+<p>그리고 여러 PCB를 미리 고정된 크기의 배열로 할당해 둔 공간을 PCB 풀이라고 한다. 부팅 시 PCB풀 + kstack풀 + trapframe 등 프로세스 자원을 부팅 시 전부 예약해둔다.</p>
+<p>struct proc proc[NPROC]   // .bss 영역에 한꺼번에 자리 예약<br />
+┌──────────────┬──────────────┬── … ──┬──────────────┐<br />
+│ proc[0]      │ proc[1]      │       │ proc[NPROC-1]│<br />
+│ state=UNUSED │ state=UNUSED │       │ state=UNUSED │<br />
+│ kstack=…     │ kstack=…     │       │ kstack=…     │<br />
+└──────────────┴──────────────┴── … ──┴──────────────┘</p>
+<p>스케줄러는 이러한 PCB를 생성/파괴하고 스위치하고 clock 기반 스케줄링, sleep/wakeup을 맡는다.</p>
+<h3 id="1">1&gt; 용어 정리<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<p>PCB(process control block)  // 커널이 프로레스를 관리하는 구조체<br />
+PID(process ID)             // 고유 정수 ID<br />
+RUNNABLE                    // cpu를 받을 준비 완료(런 큐에 존재)<br />
+SLEEPING                    // sleep으로 블록, chan 이벤트 대기<br />
+ZOMBIE                      // exit 후 부모가 wait 할때까지<br />
+kstack(kernel stack)        // 하트가 S 모드에서 사용하는 perprocess 스택<br />
+swtch                       // 어셈 수준 레지스터 교환 루틴(scheduler&lt;-&gt;proc)<br />
+chan                        // 슬립 큐 키 - 임의의 void* 값<br />
+KERNBASE                    // 커널 가상주소 시작점. 0x80000000<br />
+NPROC                       // 동시에 존재할 최대 프로세스 수. 64<br />
+lock                        // 둘 이상의 CPU가 동시에 같은 자료를 건드려 깨지는 상황을 막는 문지기 객체.<br />
+spin_lock                   // 락을 누군가 쓰고 있으면 CPU가 짧은 루프(spin)로 기다렸다가 빈 순간 바로 잡음</p>
+<p>// PCB: 프로세스의 모든 커널측 정보 보관<br />
+struct proc -&gt; pagetable, kstack, context, trapframe, state, pid<br />
+// 커널 컨텍스트: switch()가 저장/복원하는 최소 레지스터 집합<br />
+struct context -&gt; ra, sp, s0~11<br />
+// 사용자 &lt;-&gt; 커널 경계 레지스터 백업 버퍼<br />
+struct trapframe -&gt; 31개 일반레지스터 + sepc, sstatus, satp, kernel_sp<br />
+// 하트 당 전역: 현재 프로세스, 중첩 깊이<br />
+struct cpu -&gt; proc, context, noff</p>
+<h3 id="2">2&gt; 흐름 정리<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>CPU 하트
+┌─────────────────────────────────────────────┐
+│   사용자 모드 (U)                             │
+│     └─ Trap                                 │
+│   커널 모드 (S)                               │
+│     ├─ 스케줄러(scheduler)  ◀─┐             │
+│     │   └─ swtch.S          │ Context     │
+│     ├─ 프로세스 코드(syscall)  │  Switch     │
+│     └─ 드라이버               └─┬───────────┘
+└─────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="3-procc">3&gt; proc.c<a class="headerlink" href="#3-procc" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;types.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;param.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;memlayout.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;riscv.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;spinlock.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;proc.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;defs.h&quot;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">cpu</span><span class="w"> </span><span class="n">cpus</span><span class="p">[</span><span class="n">NCPU</span><span class="p">];</span><span class="w">          </span><span class="c1">// 하트별</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="n">proc</span><span class="p">[</span><span class="n">NPROC</span><span class="p">];</span><span class="w">        </span><span class="c1">// PCB 풀.</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">initproc</span><span class="p">;</span><span class="w">          </span><span class="c1">// PID 1(userinit())을 가리키는 포인</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">nextpid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">spinlock</span><span class="w"> </span><span class="n">pid_lock</span><span class="p">;</span>
+
+<span class="k">extern</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">forkret</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">freeproc</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">);</span>
+
+<span class="k">extern</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">trampoline</span><span class="p">[];</span><span class="w"> </span><span class="c1">// trampoline.S</span>
+
+<span class="c1">// helps ensure that wakeups of wait()ing</span>
+<span class="c1">// parents are not lost. helps obey the</span>
+<span class="c1">// memory model when using p-&gt;parent.</span>
+<span class="c1">// must be acquired before any p-&gt;lock.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">spinlock</span><span class="w"> </span><span class="n">wait_lock</span><span class="p">;</span>
+
+<span class="c1">// 프로세스용 커널 스택 2페이지 영역을 예약 및 매핑</span>
+<span class="c1">// xv6은 고정 pcb 풀이므로 프로세스 개수와 스택 공간을 일괄 예약해두면 런타임 kalloc 오버헤드를 피할 수 있다.</span>
+<span class="kt">void</span>
+<span class="nf">proc_mapstacks</span><span class="p">(</span><span class="n">pagetable_t</span><span class="w"> </span><span class="n">kpgtbl</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">;</span><span class="w">                 </span><span class="c1">// for문 용</span>
+
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proc</span><span class="p">;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">proc</span><span class="p">[</span><span class="n">NPROC</span><span class="p">];</span><span class="w"> </span><span class="n">p</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// PCB 별로</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kalloc</span><span class="p">();</span><span class="w">          </span><span class="c1">// 4KB 물리페이지 할당</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">pa</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;kalloc&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">uint64</span><span class="w"> </span><span class="n">va</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KSTACK</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">proc</span><span class="p">));</span><span class="w">     </span><span class="c1">// 그 물리페이지를 가리킬 VA 계산. KERNBASE 상단부</span>
+<span class="w">    </span><span class="n">kvmmap</span><span class="p">(</span><span class="n">kpgtbl</span><span class="p">,</span><span class="w"> </span><span class="n">va</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">uint64</span><span class="p">)</span><span class="n">pa</span><span class="p">,</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">,</span><span class="w"> </span><span class="n">PTE_R</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">PTE_W</span><span class="p">);</span><span class="w">  </span><span class="c1">// 커널 PT에 1:1 매핑</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// PCB 풀 초기화</span>
+<span class="kt">void</span>
+<span class="nf">procinit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">initlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pid_lock</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;nextpid&quot;</span><span class="p">);</span><span class="w">     </span><span class="c1">// 커널 부트 단계에서 pid 스핀락을 0으로 초기화하고 디버그용 식별 이름 지어줌.</span>
+<span class="w">  </span><span class="n">initlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">wait_lock</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wait_lock&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// wait/exit 락</span>
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proc</span><span class="p">;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">proc</span><span class="p">[</span><span class="n">NPROC</span><span class="p">];</span><span class="w"> </span><span class="n">p</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">initlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;proc&quot;</span><span class="p">);</span><span class="w">     </span><span class="c1">// 각 PCB 전용 스핀락</span>
+<span class="w">      </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UNUSED</span><span class="p">;</span><span class="w">              </span><span class="c1">// 아직 미사용 슬롯</span>
+<span class="w">      </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">kstack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KSTACK</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">proc</span><span class="p">));</span><span class="w"> </span><span class="c1">// 해당 프로세스의 커널 스택 VA</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 하트 id 반환. 다른 하트로 프로세스가 넘어가는 인터럽트 비활성화 상태가 필요하기에 이렇게 고정.</span>
+<span class="kt">int</span>
+<span class="nf">cpuid</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_tp</span><span class="p">();</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 현재 하트의 struct cpu 주소 확보. 인터럽트 비활성화 상태가 필요하기에 이렇게 고정.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">cpu</span><span class="o">*</span>
+<span class="n">mycpu</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cpuid</span><span class="p">();</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">cpu</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">cpus</span><span class="p">[</span><span class="n">id</span><span class="p">];</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 현재 하트의 PCB 포인터 반환</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="o">*</span>
+<span class="n">myproc</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">push_off</span><span class="p">();</span><span class="w">               </span><span class="c1">// 인터럽트 off</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">cpu</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mycpu</span><span class="p">();</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="o">-&gt;</span><span class="n">proc</span><span class="p">;</span>
+<span class="w">  </span><span class="n">pop_off</span><span class="p">();</span><span class="w">                </span><span class="c1">// 복원</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 전역 PID 발급</span>
+<span class="kt">int</span>
+<span class="n">allocpid</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">pid</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pid_lock</span><span class="p">);</span><span class="w">     </span><span class="c1">// 스핀락으로 동시 증가 충돌 방지</span>
+<span class="w">  </span><span class="n">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nextpid</span><span class="p">;</span>
+<span class="w">  </span><span class="n">nextpid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nextpid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pid_lock</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">pid</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// UNUSED PCB 한칸을 커널에서 실행할 준비로 셋업</span>
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="o">*</span>
+<span class="n">allocproc</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// USUSED 슬롯 찾기</span>
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proc</span><span class="p">;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">proc</span><span class="p">[</span><span class="n">NPROC</span><span class="p">];</span><span class="w"> </span><span class="n">p</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">UNUSED</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">goto</span><span class="w"> </span><span class="n">found</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="nl">found</span><span class="p">:</span>
+<span class="w">  </span><span class="c1">// 슬롯확보</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">allocpid</span><span class="p">();</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">USED</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// trapframe 할당</span>
+<span class="w">  </span><span class="k">if</span><span class="p">((</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">trapframe</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">kalloc</span><span class="p">())</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">    </span><span class="n">freeproc</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 유저 PT 마련</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proc_pagetable</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">    </span><span class="n">freeproc</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 커널 컨텍스트 초기화</span>
+<span class="w">  </span><span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">context</span><span class="p">));</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">context</span><span class="p">.</span><span class="n">ra</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">uint64</span><span class="p">)</span><span class="n">forkret</span><span class="p">;</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">context</span><span class="p">.</span><span class="n">sp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">kstack</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">p</span><span class="p">;</span><span class="w">               </span><span class="c1">// 아직 p-&gt;lock은 유지된 상태</span>
+<span class="p">}</span>
+
+<span class="c1">// free</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span>
+<span class="n">freeproc</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="p">)</span>
+<span class="w">    </span><span class="n">kfree</span><span class="p">((</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="p">);</span><span class="w">   </span><span class="c1">// 더이상 U/S 전환 안하므로 4KB 물리페이지 회수</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="p">)</span>
+<span class="w">    </span><span class="n">proc_freepagetable</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">sz</span><span class="p">);</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">sz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">chan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">killed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">xstate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UNUSED</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// PCB용 사용자 PT 생성</span>
+<span class="n">pagetable_t</span>
+<span class="n">proc_pagetable</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">pagetable_t</span><span class="w"> </span><span class="n">pagetable</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">pagetable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uvmcreate</span><span class="p">();</span><span class="w">      </span><span class="c1">// 루트 PT 확보.</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">pagetable</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// trampoline(0xFFFF_FFFF_FFFF_F000) 매핑</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">mappages</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">TRAMPOLINE</span><span class="p">,</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">,</span>
+<span class="w">              </span><span class="p">(</span><span class="n">uint64</span><span class="p">)</span><span class="n">trampoline</span><span class="p">,</span><span class="w"> </span><span class="n">PTE_R</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">PTE_X</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">    </span><span class="n">uvmfree</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// trapframe(trampoline 아래 1페이지) 매핑</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">mappages</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">TRAPFRAME</span><span class="p">,</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">,</span>
+<span class="w">              </span><span class="p">(</span><span class="n">uint64</span><span class="p">)(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="p">),</span><span class="w"> </span><span class="n">PTE_R</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">PTE_W</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">    </span><span class="n">uvmunmap</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">TRAMPOLINE</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">uvmfree</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">pagetable</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// PT와 물리메모리 free</span>
+<span class="kt">void</span>
+<span class="n">proc_freepagetable</span><span class="p">(</span><span class="n">pagetable_t</span><span class="w"> </span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">uint64</span><span class="w"> </span><span class="n">sz</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">uvmunmap</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">TRAMPOLINE</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="n">uvmunmap</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">TRAPFRAME</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="n">uvmfree</span><span class="p">(</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">sz</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 길이 53바이트 RISC-V 기계어. 최초 사용자 바이트코드.</span>
+<span class="c1">// user/initcode.S를 통해 커널에 포함된다</span>
+<span class="c1">// exec(&quot;/init&quot;) 시스템콜.</span>
+<span class="n">uchar</span><span class="w"> </span><span class="n">initcode</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="mh">0x17</span><span class="p">,</span><span class="w"> </span><span class="mh">0x05</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x13</span><span class="p">,</span><span class="w"> </span><span class="mh">0x05</span><span class="p">,</span><span class="w"> </span><span class="mh">0x45</span><span class="p">,</span><span class="w"> </span><span class="mh">0x02</span><span class="p">,</span>
+<span class="w">  </span><span class="mh">0x97</span><span class="p">,</span><span class="w"> </span><span class="mh">0x05</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x93</span><span class="p">,</span><span class="w"> </span><span class="mh">0x85</span><span class="p">,</span><span class="w"> </span><span class="mh">0x35</span><span class="p">,</span><span class="w"> </span><span class="mh">0x02</span><span class="p">,</span>
+<span class="w">  </span><span class="mh">0x93</span><span class="p">,</span><span class="w"> </span><span class="mh">0x08</span><span class="p">,</span><span class="w"> </span><span class="mh">0x70</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x73</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span>
+<span class="w">  </span><span class="mh">0x93</span><span class="p">,</span><span class="w"> </span><span class="mh">0x08</span><span class="p">,</span><span class="w"> </span><span class="mh">0x20</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x73</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span>
+<span class="w">  </span><span class="mh">0xef</span><span class="p">,</span><span class="w"> </span><span class="mh">0xf0</span><span class="p">,</span><span class="w"> </span><span class="mh">0x9f</span><span class="p">,</span><span class="w"> </span><span class="mh">0xff</span><span class="p">,</span><span class="w"> </span><span class="mh">0x2f</span><span class="p">,</span><span class="w"> </span><span class="mh">0x69</span><span class="p">,</span><span class="w"> </span><span class="mh">0x6e</span><span class="p">,</span><span class="w"> </span><span class="mh">0x69</span><span class="p">,</span>
+<span class="w">  </span><span class="mh">0x74</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x24</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span>
+<span class="w">  </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span>
+<span class="p">};</span>
+
+<span class="c1">// PID 1 만들기</span>
+<span class="kt">void</span>
+<span class="nf">userinit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">allocproc</span><span class="p">();</span>
+<span class="w">  </span><span class="n">initproc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// 물리 페이지 할당하고 va 0 과 매핑하는 PT 만들고 initcode 넣어주기</span>
+<span class="w">  </span><span class="n">uvmfirst</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">initcode</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">initcode</span><span class="p">));</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">sz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// 첫 U모드 진입 세팅</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">epc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">      </span><span class="c1">// user program counter</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">sp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">;</span><span class="w">  </span><span class="c1">// user stack pointer</span>
+
+<span class="w">  </span><span class="c1">// 이름, 디렉터리, state 설정</span>
+<span class="w">  </span><span class="n">safestrcpy</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;initcode&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">));</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">cwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">namei</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RUNNABLE</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span><span class="w">                </span><span class="c1">// 이제 락 풀기</span>
+<span class="p">}</span>
+
+<span class="c1">// 유저 메모리 힙 증가/감소</span>
+<span class="kt">int</span>
+<span class="nf">growproc</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">sz</span><span class="p">;</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">sz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">sz</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">    </span><span class="k">if</span><span class="p">((</span><span class="n">sz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uvmalloc</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">sz</span><span class="p">,</span><span class="w"> </span><span class="n">sz</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">PTE_W</span><span class="p">))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">    </span><span class="n">sz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uvmdealloc</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">sz</span><span class="p">,</span><span class="w"> </span><span class="n">sz</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">sz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sz</span><span class="p">;</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Create a new process, copying the parent.</span>
+<span class="c1">// Sets up child kernel stack to return as if from fork() system call.</span>
+<span class="kt">int</span>
+<span class="nf">fork</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p">;</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">np</span><span class="p">;</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span>
+
+<span class="w">  </span><span class="c1">// Allocate process.</span>
+<span class="w">  </span><span class="k">if</span><span class="p">((</span><span class="n">np</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">allocproc</span><span class="p">())</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Copy user memory from parent to child.</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">uvmcopy</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">np</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">sz</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">    </span><span class="n">freeproc</span><span class="p">(</span><span class="n">np</span><span class="p">);</span>
+<span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">np</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">np</span><span class="o">-&gt;</span><span class="n">sz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">sz</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// copy saved user registers.</span>
+<span class="w">  </span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Cause fork to return 0 in the child.</span>
+<span class="w">  </span><span class="n">np</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">a0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// increment reference counts on open file descriptors.</span>
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NOFILE</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">ofile</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="w">      </span><span class="n">np</span><span class="o">-&gt;</span><span class="n">ofile</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">filedup</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">ofile</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="w">  </span><span class="n">np</span><span class="o">-&gt;</span><span class="n">cwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idup</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">cwd</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">safestrcpy</span><span class="p">(</span><span class="n">np</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">));</span>
+
+<span class="w">  </span><span class="n">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">np</span><span class="o">-&gt;</span><span class="n">pid</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">np</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">wait_lock</span><span class="p">);</span>
+<span class="w">  </span><span class="n">np</span><span class="o">-&gt;</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">wait_lock</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">np</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">  </span><span class="n">np</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RUNNABLE</span><span class="p">;</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">np</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">pid</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Pass p&#39;s abandoned children to init.</span>
+<span class="c1">// Caller must hold wait_lock.</span>
+<span class="kt">void</span>
+<span class="nf">reparent</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">pp</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="n">pp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proc</span><span class="p">;</span><span class="w"> </span><span class="n">pp</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">proc</span><span class="p">[</span><span class="n">NPROC</span><span class="p">];</span><span class="w"> </span><span class="n">pp</span><span class="o">++</span><span class="p">){</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">pp</span><span class="o">-&gt;</span><span class="n">parent</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">p</span><span class="p">){</span>
+<span class="w">      </span><span class="n">pp</span><span class="o">-&gt;</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">initproc</span><span class="p">;</span>
+<span class="w">      </span><span class="n">wakeup</span><span class="p">(</span><span class="n">initproc</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Exit the current process.  Does not return.</span>
+<span class="c1">// An exited process remains in the zombie state</span>
+<span class="c1">// until its parent calls wait().</span>
+<span class="kt">void</span>
+<span class="nf">exit</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">status</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span>
+
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">initproc</span><span class="p">)</span>
+<span class="w">    </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;init exiting&quot;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Close all open files.</span>
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">fd</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NOFILE</span><span class="p">;</span><span class="w"> </span><span class="n">fd</span><span class="o">++</span><span class="p">){</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">ofile</span><span class="p">[</span><span class="n">fd</span><span class="p">]){</span>
+<span class="w">      </span><span class="k">struct</span><span class="w"> </span><span class="nc">file</span><span class="w"> </span><span class="o">*</span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">ofile</span><span class="p">[</span><span class="n">fd</span><span class="p">];</span>
+<span class="w">      </span><span class="n">fileclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+<span class="w">      </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">ofile</span><span class="p">[</span><span class="n">fd</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">begin_op</span><span class="p">();</span>
+<span class="w">  </span><span class="n">iput</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">cwd</span><span class="p">);</span>
+<span class="w">  </span><span class="n">end_op</span><span class="p">();</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">cwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">wait_lock</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Give any children to init.</span>
+<span class="w">  </span><span class="n">reparent</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Parent might be sleeping in wait().</span>
+<span class="w">  </span><span class="n">wakeup</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">parent</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">xstate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">status</span><span class="p">;</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ZOMBIE</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">wait_lock</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Jump into the scheduler, never to return.</span>
+<span class="w">  </span><span class="n">sched</span><span class="p">();</span>
+<span class="w">  </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;zombie exit&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Wait for a child process to exit and return its pid.</span>
+<span class="c1">// Return -1 if this process has no children.</span>
+<span class="kt">int</span>
+<span class="nf">wait</span><span class="p">(</span><span class="n">uint64</span><span class="w"> </span><span class="n">addr</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">pp</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">havekids</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p">;</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">wait_lock</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">for</span><span class="p">(;;){</span>
+<span class="w">    </span><span class="c1">// Scan through table looking for exited children.</span>
+<span class="w">    </span><span class="n">havekids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="n">pp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proc</span><span class="p">;</span><span class="w"> </span><span class="n">pp</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">proc</span><span class="p">[</span><span class="n">NPROC</span><span class="p">];</span><span class="w"> </span><span class="n">pp</span><span class="o">++</span><span class="p">){</span>
+<span class="w">      </span><span class="k">if</span><span class="p">(</span><span class="n">pp</span><span class="o">-&gt;</span><span class="n">parent</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">p</span><span class="p">){</span>
+<span class="w">        </span><span class="c1">// make sure the child isn&#39;t still in exit() or swtch().</span>
+<span class="w">        </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pp</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">havekids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">pp</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ZOMBIE</span><span class="p">){</span>
+<span class="w">          </span><span class="c1">// Found one.</span>
+<span class="w">          </span><span class="n">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pp</span><span class="o">-&gt;</span><span class="n">pid</span><span class="p">;</span>
+<span class="w">          </span><span class="k">if</span><span class="p">(</span><span class="n">addr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">copyout</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">addr</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">pp</span><span class="o">-&gt;</span><span class="n">xstate</span><span class="p">,</span>
+<span class="w">                                  </span><span class="k">sizeof</span><span class="p">(</span><span class="n">pp</span><span class="o">-&gt;</span><span class="n">xstate</span><span class="p">))</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pp</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">            </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">wait_lock</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">          </span><span class="n">freeproc</span><span class="p">(</span><span class="n">pp</span><span class="p">);</span>
+<span class="w">          </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pp</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">          </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">wait_lock</span><span class="p">);</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="n">pid</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pp</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// No point waiting if we don&#39;t have any children.</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">havekids</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">killed</span><span class="p">(</span><span class="n">p</span><span class="p">)){</span>
+<span class="w">      </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">wait_lock</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Wait for a child to exit.</span>
+<span class="w">    </span><span class="n">sleep</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">wait_lock</span><span class="p">);</span><span class="w">  </span><span class="c1">//DOC: wait-sleep</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Per-CPU process scheduler.</span>
+<span class="c1">// Each CPU calls scheduler() after setting itself up.</span>
+<span class="c1">// Scheduler never returns.  It loops, doing:</span>
+<span class="c1">//  - choose a process to run.</span>
+<span class="c1">//  - swtch to start running that process.</span>
+<span class="c1">//  - eventually that process transfers control</span>
+<span class="c1">//    via swtch back to the scheduler.</span>
+<span class="kt">void</span>
+<span class="nf">scheduler</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">;</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">cpu</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mycpu</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">c</span><span class="o">-&gt;</span><span class="n">proc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="p">(;;){</span>
+<span class="w">    </span><span class="c1">// The most recent process to run may have had interrupts</span>
+<span class="w">    </span><span class="c1">// turned off; enable them to avoid a deadlock if all</span>
+<span class="w">    </span><span class="c1">// processes are waiting.</span>
+<span class="w">    </span><span class="n">intr_on</span><span class="p">();</span>
+
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proc</span><span class="p">;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">proc</span><span class="p">[</span><span class="n">NPROC</span><span class="p">];</span><span class="w"> </span><span class="n">p</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">RUNNABLE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Switch to chosen process.  It is the process&#39;s job</span>
+<span class="w">        </span><span class="c1">// to release its lock and then reacquire it</span>
+<span class="w">        </span><span class="c1">// before jumping back to us.</span>
+<span class="w">        </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RUNNING</span><span class="p">;</span>
+<span class="w">        </span><span class="n">c</span><span class="o">-&gt;</span><span class="n">proc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+<span class="w">        </span><span class="n">swtch</span><span class="p">(</span><span class="o">&amp;</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">context</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Process is done running for now.</span>
+<span class="w">        </span><span class="c1">// It should have changed its p-&gt;state before coming back.</span>
+<span class="w">        </span><span class="n">c</span><span class="o">-&gt;</span><span class="n">proc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="n">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">found</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// nothing to run; stop running on this core until an interrupt.</span>
+<span class="w">      </span><span class="n">intr_on</span><span class="p">();</span>
+<span class="w">      </span><span class="k">asm</span><span class="w"> </span><span class="k">volatile</span><span class="p">(</span><span class="s">&quot;wfi&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Switch to scheduler.  Must hold only p-&gt;lock</span>
+<span class="c1">// and have changed proc-&gt;state. Saves and restores</span>
+<span class="c1">// intena because intena is a property of this</span>
+<span class="c1">// kernel thread, not this CPU. It should</span>
+<span class="c1">// be proc-&gt;intena and proc-&gt;noff, but that would</span>
+<span class="c1">// break in the few places where a lock is held but</span>
+<span class="c1">// there&#39;s no process.</span>
+<span class="kt">void</span>
+<span class="nf">sched</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">intena</span><span class="p">;</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span>
+
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">holding</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">))</span>
+<span class="w">    </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;sched p-&gt;lock&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">mycpu</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">noff</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;sched locks&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">RUNNING</span><span class="p">)</span>
+<span class="w">    </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;sched running&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">intr_get</span><span class="p">())</span>
+<span class="w">    </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;sched interruptible&quot;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">intena</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mycpu</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">intena</span><span class="p">;</span>
+<span class="w">  </span><span class="n">swtch</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">mycpu</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">context</span><span class="p">);</span>
+<span class="w">  </span><span class="n">mycpu</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">intena</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">intena</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Give up the CPU for one scheduling round.</span>
+<span class="kt">void</span>
+<span class="nf">yield</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span>
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RUNNABLE</span><span class="p">;</span>
+<span class="w">  </span><span class="n">sched</span><span class="p">();</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// A fork child&#39;s very first scheduling by scheduler()</span>
+<span class="c1">// will swtch to forkret.</span>
+<span class="kt">void</span>
+<span class="nf">forkret</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Still holding p-&gt;lock from scheduler.</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">myproc</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">first</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// File system initialization must be run in the context of a</span>
+<span class="w">    </span><span class="c1">// regular process (e.g., because it calls sleep), and thus cannot</span>
+<span class="w">    </span><span class="c1">// be run from main().</span>
+<span class="w">    </span><span class="n">fsinit</span><span class="p">(</span><span class="n">ROOTDEV</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// ensure other cores see first=0.</span>
+<span class="w">    </span><span class="n">__sync_synchronize</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">usertrapret</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// Atomically release lock and sleep on chan.</span>
+<span class="c1">// Reacquires lock when awakened.</span>
+<span class="kt">void</span>
+<span class="nf">sleep</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">spinlock</span><span class="w"> </span><span class="o">*</span><span class="n">lk</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span>
+
+<span class="w">  </span><span class="c1">// Must acquire p-&gt;lock in order to</span>
+<span class="w">  </span><span class="c1">// change p-&gt;state and then call sched.</span>
+<span class="w">  </span><span class="c1">// Once we hold p-&gt;lock, we can be</span>
+<span class="w">  </span><span class="c1">// guaranteed that we won&#39;t miss any wakeup</span>
+<span class="w">  </span><span class="c1">// (wakeup locks p-&gt;lock),</span>
+<span class="w">  </span><span class="c1">// so it&#39;s okay to release lk.</span>
+
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span><span class="w">  </span><span class="c1">//DOC: sleeplock1</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="n">lk</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Go to sleep.</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">chan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chan</span><span class="p">;</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SLEEPING</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">sched</span><span class="p">();</span>
+
+<span class="w">  </span><span class="c1">// Tidy up.</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">chan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Reacquire original lock.</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="n">lk</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Wake up all processes sleeping on chan.</span>
+<span class="c1">// Must be called without any p-&gt;lock.</span>
+<span class="kt">void</span>
+<span class="nf">wakeup</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proc</span><span class="p">;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">proc</span><span class="p">[</span><span class="n">NPROC</span><span class="p">];</span><span class="w"> </span><span class="n">p</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">myproc</span><span class="p">()){</span>
+<span class="w">      </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">SLEEPING</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">chan</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">chan</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RUNNABLE</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Kill the process with the given pid.</span>
+<span class="c1">// The victim won&#39;t exit until it tries to return</span>
+<span class="c1">// to user space (see usertrap() in trap.c).</span>
+<span class="kt">int</span>
+<span class="nf">kill</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pid</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proc</span><span class="p">;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">proc</span><span class="p">[</span><span class="n">NPROC</span><span class="p">];</span><span class="w"> </span><span class="n">p</span><span class="o">++</span><span class="p">){</span>
+<span class="w">    </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pid</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">pid</span><span class="p">){</span>
+<span class="w">      </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">killed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">      </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">SLEEPING</span><span class="p">){</span>
+<span class="w">        </span><span class="c1">// Wake process from sleep().</span>
+<span class="w">        </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RUNNABLE</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span>
+<span class="nf">setkilled</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">killed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span>
+<span class="nf">killed</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">  </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">killed</span><span class="p">;</span>
+<span class="w">  </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">k</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Copy to either a user address, or kernel address,</span>
+<span class="c1">// depending on usr_dst.</span>
+<span class="c1">// Returns 0 on success, -1 on error.</span>
+<span class="kt">int</span>
+<span class="nf">either_copyout</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">user_dst</span><span class="p">,</span><span class="w"> </span><span class="n">uint64</span><span class="w"> </span><span class="n">dst</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="n">uint64</span><span class="w"> </span><span class="n">len</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">user_dst</span><span class="p">){</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">copyout</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">dst</span><span class="p">,</span><span class="w"> </span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">memmove</span><span class="p">((</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">dst</span><span class="p">,</span><span class="w"> </span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Copy from either a user address, or kernel address,</span>
+<span class="c1">// depending on usr_src.</span>
+<span class="c1">// Returns 0 on success, -1 on error.</span>
+<span class="kt">int</span>
+<span class="nf">either_copyin</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">dst</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">user_src</span><span class="p">,</span><span class="w"> </span><span class="n">uint64</span><span class="w"> </span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="n">uint64</span><span class="w"> </span><span class="n">len</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">user_src</span><span class="p">){</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">copyin</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="p">,</span><span class="w"> </span><span class="n">dst</span><span class="p">,</span><span class="w"> </span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">memmove</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Print a process listing to console.  For debugging.</span>
+<span class="c1">// Runs when user types ^P on console.</span>
+<span class="c1">// No lock to avoid wedging a stuck machine further.</span>
+<span class="kt">void</span>
+<span class="nf">procdump</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">states</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="p">[</span><span class="n">UNUSED</span><span class="p">]</span><span class="w">    </span><span class="s">&quot;unused&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">[</span><span class="n">USED</span><span class="p">]</span><span class="w">      </span><span class="s">&quot;used&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">[</span><span class="n">SLEEPING</span><span class="p">]</span><span class="w">  </span><span class="s">&quot;sleep &quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">[</span><span class="n">RUNNABLE</span><span class="p">]</span><span class="w">  </span><span class="s">&quot;runble&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">[</span><span class="n">RUNNING</span><span class="p">]</span><span class="w">   </span><span class="s">&quot;run   &quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">[</span><span class="n">ZOMBIE</span><span class="p">]</span><span class="w">    </span><span class="s">&quot;zombie&quot;</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">state</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">for</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proc</span><span class="p">;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">proc</span><span class="p">[</span><span class="n">NPROC</span><span class="p">];</span><span class="w"> </span><span class="n">p</span><span class="o">++</span><span class="p">){</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">UNUSED</span><span class="p">)</span>
+<span class="w">      </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NELEM</span><span class="p">(</span><span class="n">states</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">states</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="p">])</span>
+<span class="w">      </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">states</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="p">];</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="w">      </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;???&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d %s %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

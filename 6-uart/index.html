@@ -1,0 +1,930 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../5-PCB/">
+      
+      
+        <link rel="next" href="../7-mkfs/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>uart - make-os</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#xv6-riscv-uartc" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="make-os" class="md-header__button md-logo" aria-label="make-os" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            make-os
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              uart
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="make-os" class="md-nav__button md-logo" aria-label="make-os" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    make-os
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    vm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-hardware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    h/w
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-kernel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    kernel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-MMU/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MMU
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-trap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    trap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5-PCB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PCB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    uart
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    uart
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#xv6-riscv-uartc" class="md-nav__link">
+    <span class="md-ellipsis">
+      xv6-riscv의 uart.c 파일을 읽어보자
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="xv6-riscv의 uart.c 파일을 읽어보자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#uart" class="md-nav__link">
+    <span class="md-ellipsis">
+      목표: uart 이해
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      0&gt; 개념 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1&gt; 용어 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2&gt; 흐름 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-uartc" class="md-nav__link">
+    <span class="md-ellipsis">
+      3&gt; uart.c
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7-mkfs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mkfs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8-mini-os/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mini-os
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../9-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    build
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#xv6-riscv-uartc" class="md-nav__link">
+    <span class="md-ellipsis">
+      xv6-riscv의 uart.c 파일을 읽어보자
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="xv6-riscv의 uart.c 파일을 읽어보자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#uart" class="md-nav__link">
+    <span class="md-ellipsis">
+      목표: uart 이해
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      0&gt; 개념 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1&gt; 용어 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2&gt; 흐름 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-uartc" class="md-nav__link">
+    <span class="md-ellipsis">
+      3&gt; uart.c
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>uart</h1>
+
+<h2 id="xv6-riscv-uartc">xv6-riscv의 uart.c 파일을 읽어보자<a class="headerlink" href="#xv6-riscv-uartc" title="Permanent link">&para;</a></h2>
+<h3 id="uart">목표: uart 이해<a class="headerlink" href="#uart" title="Permanent link">&para;</a></h3>
+<p>작성자: kkongnyang2 작성일: 2025-06-26</p>
+<hr />
+<h3 id="0">0&gt; 개념 정리<a class="headerlink" href="#0" title="Permanent link">&para;</a></h3>
+<p>uart는 cpu, 메모리 쪽의 병렬 데이터를 두 가닥(TX보내기와 RX받기)의 직렬 신호로 바꿔 주는 컨버터다. 원래 칩 내부에서는 64개의 선으로 클럭마다 64비트를 보낸다. 하지만 외부에서는 클럭을 동기화할 수 없기에 비동기 직렬로 전송하고, 8비트(1바이트)마다 체크를 한다. 그리고 이러한 선들을 버스라고 부르는데, 이미 cpu에서는 하드웨어 제작 단계에서 이러한 uart mmio의 존재를 알고 있기에 주소 0x10000000으로 사용한다.</p>
+<p>CPU 파이프라인 (5~10 stage 예)          메모리·I/O<br />
+┌─ IF ─┬─ ID ─┬─ EX/AGU ─┬─ MEM  ─┬─ WB ─┐<br />
+| 명령  | 해석  | 주소계산   |캐시/TLB | 결과  |<br />
+└──────┴──────┴──────────┴────────┴──────┘<br />
+               ▲<br />
+               │ 가상주소(VA)<br />
+          ┌────┴────┐<br />
+          │ TLB HIT │ 1~2 cycle<br />
+          └────┬────┘<br />
+               │ 물리주소(PA)<br />
+               ▼<br />
+         L1 D-Cache HIT? 1~4 cycle<br />
+               │<br />
+        ┌──────┴───────┐<br />
+        │     MISS     │ (10~20 cyc L2, 30~50 cyc L3, 100~200 cyc DRAM…)<br />
+        └──────────────┘</p>
+<p>버스? 누가 언제 DRAM에 말을 걸 수 있는지 규정하는 교통로 규칙이다. CPU 말고도 디스크나 I/O 컨트롤러가 버스 마스터가 되어 직접 메모리를 읽고 쓰는 메커니즘이다. CPU는 목적지, 길이, 옵션을 레지스터에 써서 미션을 주고, 인터럽트가 올때까지 다른일을 하며 기다린다. 마스터는 "나 DRAM 0x12340000 4KB 읽을래" 라고 외치는 쪽,(과거에는 CPU 한명이었지만 현대에는 DMA,GPU,NIC 등 다수), 슬레이브는 주소가 자기사이즈 범위에 들어오면 "여긴 DRAM이야" "여긴 UART야" 응답하는 측이다. 만약 동시에 두 마스터가 버스를 요구하면 우선순위로 차례를 지정한다.</p>
+<p>층                      물리 폭               한번에 다루는 논리 단위<br />
+CPU &lt;-&gt; L1/L2/L3        64~512bit           캐리라인 64B를 버스트로 여러 클럭<br />
+CPU &lt;-&gt; DDRS DRAM       64bit+ECC           64bit<em>burst16 = 128B 메모리 버스트<br />
+PCle 4</em>4                4lane*1bit(복호시128)    126B TLP 페이로드, 256B MPS 추천<br />
+UART                    1bit(TX), 1bit(RX)      8bit payload+1start+1stop</p>
+<div class="highlight"><pre><span></span><code> ┌─ Start(0) │  bit0 … bit7 │ Stop(1) ─┐
+</code></pre></div>
+<p>TX───┤────────────┴─────────────┴───────────┤→ 시간</p>
+<div class="highlight"><pre><span></span><code>  ┌───── 물리층(선) ─────┐
+</code></pre></div>
+<p>ADDR[31:0]  DATA[63:0]  CLK  RESET …          ← parallel AXI 예시<br />
+TX   RX  GND  REFCLK                       ← serial PCIe 예시<br />
+      └────────────────────┘<br />
+              ▲<br />
+              ▼<br />
+      ┌─── 프로토콜층 ───┐<br />
+• 버스 요청/허가 (arbitration)<br />
+• 주소 → 타깃 장치 인식 (decoding)<br />
+• 읽기 vs 쓰기 구분 (control)<br />
+• 데이터 크기·정렬·burst 규칙 …<br />
+      └───────────────────┘</p>
+<h3 id="1">1&gt; 용어 정리<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<p>baud rate                       // 초당 전송 비트 수. xv6은 38.4kbis/s이다<br />
+THR/RHR(transmit/receive holding register)  // cpu에 오가는 바이트를 담는 8bit 레지스터<br />
+LSR(line status register)       // TX_IDLE, RX_READY 같은 플래그로 하드웨어 상태 보고<br />
+IER/ISR(interrupt enable/status)  // 어떤 이벤트로 인터럽트가 왔고 뭘 활성화햇는지 저장<br />
+LCR(line control)               // 데이터 길이, stop비트, parity, baud-latch 모드 전환 등을 지정<br />
+FIFO                            // 추가된 16B 하드웨어 버퍼. FCR_FIFO_ENABLE로 키고 FCR_FIFO_CLEAR로 초기<br />
+Uart interrupt                  // PLIC이 IRQ 10번으로 cpu에 전달<br />
+top/bottom half                 // 인터럽트 진입 직후 처리(top)과 버퍼 비우기 깨우기 등 후처리(bottom)<br />
+console subsystem               // 실제 하드웨어는 uart.c, 라인 처리는 console.c</p>
+<h3 id="2">2&gt; 흐름 정리<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>+-------------+        +-------------+         +----------------+
+| user space  | sys_write → consolewrite() →   | circular TX buf|
+|  printf()   |        |  (console.c) |         | uart_tx_buf[]  |
++-------------+        +-------------+         +----------------+
+                                     │ (1)enqueue &amp; uartstart()
+                                     ▼
+                                uartputc()
+                                     │            ┌─┐ HW raises
+                                     │ (top-half) │ │ IRQ
+                                     ▼            ▼ ▼
+                               uartstart()──▶[THR empty?]──▶ PLIC ─► devintr()
+                                     ▲                            │
+                                     │                            ▼
+ (2) sleep(&amp;uart_tx_r) &lt;── buffer full?                    uartintr()
+                                     ▲                            │
+    wakeup(&amp;uart_tx_r) ◄─────────────┘         while(uartgetc()!=-1) consoleintr()
+</code></pre></div>
+<h3 id="3-uartc">3&gt; uart.c<a class="headerlink" href="#3-uartc" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>//
+// low-level driver routines for 16550a UART.
+//
+
+#include &quot;types.h&quot;
+#include &quot;param.h&quot;
+#include &quot;memlayout.h&quot;
+#include &quot;riscv.h&quot;
+#include &quot;spinlock.h&quot;
+#include &quot;proc.h&quot;
+#include &quot;defs.h&quot;
+
+// the UART control registers are memory-mapped
+// at address UART0. this macro returns the
+// address of one of the registers.
+#define Reg(reg) ((volatile unsigned char *)(UART0 + (reg)))
+
+// the UART control registers.
+// some have different meanings for
+// read vs write.
+// see http://byterunner.com/16550.html
+#define RHR 0                 // receive holding register (for input bytes)
+#define THR 0                 // transmit holding register (for output bytes)
+#define IER 1                 // interrupt enable register
+#define IER_RX_ENABLE (1&lt;&lt;0)
+#define IER_TX_ENABLE (1&lt;&lt;1)
+#define FCR 2                 // FIFO control register
+#define FCR_FIFO_ENABLE (1&lt;&lt;0)
+#define FCR_FIFO_CLEAR (3&lt;&lt;1) // clear the content of the two FIFOs
+#define ISR 2                 // interrupt status register
+#define LCR 3                 // line control register
+#define LCR_EIGHT_BITS (3&lt;&lt;0)
+#define LCR_BAUD_LATCH (1&lt;&lt;7) // special mode to set baud rate
+#define LSR 5                 // line status register
+#define LSR_RX_READY (1&lt;&lt;0)   // input is waiting to be read from RHR
+#define LSR_TX_IDLE (1&lt;&lt;5)    // THR can accept another character to send
+
+#define ReadReg(reg) (*(Reg(reg)))
+#define WriteReg(reg, v) (*(Reg(reg)) = (v))
+
+// the transmit output buffer.
+struct spinlock uart_tx_lock;
+#define UART_TX_BUF_SIZE 32
+char uart_tx_buf[UART_TX_BUF_SIZE];
+uint64 uart_tx_w; // write next to uart_tx_buf[uart_tx_w % UART_TX_BUF_SIZE]
+uint64 uart_tx_r; // read next from uart_tx_buf[uart_tx_r % UART_TX_BUF_SIZE]
+
+extern volatile int panicked; // from printf.c
+
+void uartstart();
+
+void
+uartinit(void)
+{
+  // disable interrupts.
+  WriteReg(IER, 0x00);
+
+  // special mode to set baud rate.
+  WriteReg(LCR, LCR_BAUD_LATCH);
+
+  // LSB for baud rate of 38.4K.
+  WriteReg(0, 0x03);
+
+  // MSB for baud rate of 38.4K.
+  WriteReg(1, 0x00);
+
+  // leave set-baud mode,
+  // and set word length to 8 bits, no parity.
+  WriteReg(LCR, LCR_EIGHT_BITS);
+
+  // reset and enable FIFOs.
+  WriteReg(FCR, FCR_FIFO_ENABLE | FCR_FIFO_CLEAR);
+
+  // enable transmit and receive interrupts.
+  WriteReg(IER, IER_TX_ENABLE | IER_RX_ENABLE);
+
+  initlock(&amp;uart_tx_lock, &quot;uart&quot;);
+}
+
+// add a character to the output buffer and tell the
+// UART to start sending if it isn&#39;t already.
+// blocks if the output buffer is full.
+// because it may block, it can&#39;t be called
+// from interrupts; it&#39;s only suitable for use
+// by write().
+void
+uartputc(int c)
+{
+  acquire(&amp;uart_tx_lock);
+
+  if(panicked){
+    for(;;)
+      ;
+  }
+  while(uart_tx_w == uart_tx_r + UART_TX_BUF_SIZE){
+    // buffer is full.
+    // wait for uartstart() to open up space in the buffer.
+    sleep(&amp;uart_tx_r, &amp;uart_tx_lock);
+  }
+  uart_tx_buf[uart_tx_w % UART_TX_BUF_SIZE] = c;
+  uart_tx_w += 1;
+  uartstart();
+  release(&amp;uart_tx_lock);
+}
+
+
+// alternate version of uartputc() that doesn&#39;t 
+// use interrupts, for use by kernel printf() and
+// to echo characters. it spins waiting for the uart&#39;s
+// output register to be empty.
+void
+uartputc_sync(int c)
+{
+  push_off();
+
+  if(panicked){
+    for(;;)
+      ;
+  }
+
+  // wait for Transmit Holding Empty to be set in LSR.
+  while((ReadReg(LSR) &amp; LSR_TX_IDLE) == 0)
+    ;
+  WriteReg(THR, c);
+
+  pop_off();
+}
+
+// if the UART is idle, and a character is waiting
+// in the transmit buffer, send it.
+// caller must hold uart_tx_lock.
+// called from both the top- and bottom-half.
+void
+uartstart()
+{
+  while(1){
+    if(uart_tx_w == uart_tx_r){
+      // transmit buffer is empty.
+      ReadReg(ISR);
+      return;
+    }
+
+    if((ReadReg(LSR) &amp; LSR_TX_IDLE) == 0){
+      // the UART transmit holding register is full,
+      // so we cannot give it another byte.
+      // it will interrupt when it&#39;s ready for a new byte.
+      return;
+    }
+
+    int c = uart_tx_buf[uart_tx_r % UART_TX_BUF_SIZE];
+    uart_tx_r += 1;
+
+    // maybe uartputc() is waiting for space in the buffer.
+    wakeup(&amp;uart_tx_r);
+
+    WriteReg(THR, c);
+  }
+}
+
+// read one input character from the UART.
+// return -1 if none is waiting.
+int
+uartgetc(void)
+{
+  if(ReadReg(LSR) &amp; 0x01){
+    // input data is ready.
+    return ReadReg(RHR);
+  } else {
+    return -1;
+  }
+}
+
+// handle a uart interrupt, raised because input has
+// arrived, or the uart is ready for more output, or
+// both. called from devintr().
+void
+uartintr(void)
+{
+  // read and process incoming characters.
+  while(1){
+    int c = uartgetc();
+    if(c == -1)
+      break;
+    consoleintr(c);
+  }
+
+  // send buffered characters.
+  acquire(&amp;uart_tx_lock);
+  uartstart();
+  release(&amp;uart_tx_lock);
+}
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

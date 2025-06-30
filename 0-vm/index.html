@@ -1,0 +1,779 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+        <link rel="next" href="../1-hardware/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>vm - make-os</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#qemu" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="make-os" class="md-header__button md-logo" aria-label="make-os" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            make-os
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              vm
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="make-os" class="md-nav__button md-logo" aria-label="make-os" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    make-os
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    vm
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    vm
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#qemu" class="md-nav__link">
+    <span class="md-ellipsis">
+      qemu의 구조를 알아보자
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="qemu의 구조를 알아보자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      목표: 가상머신 이해
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      0&gt; 개념 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1&gt; 분류
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2&gt; 구성요소
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-qemu-kvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      3&gt; QEMU-KVM 흐름
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-hardware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    h/w
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-kernel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    kernel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-MMU/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MMU
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-trap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    trap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5-PCB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PCB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6-uart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    uart
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7-mkfs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mkfs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8-mini-os/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mini-os
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../9-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    build
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#qemu" class="md-nav__link">
+    <span class="md-ellipsis">
+      qemu의 구조를 알아보자
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="qemu의 구조를 알아보자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      목표: 가상머신 이해
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      0&gt; 개념 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1&gt; 분류
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2&gt; 구성요소
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-qemu-kvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      3&gt; QEMU-KVM 흐름
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>vm</h1>
+
+<h2 id="qemu">qemu의 구조를 알아보자<a class="headerlink" href="#qemu" title="Permanent link">&para;</a></h2>
+<h3 id="_1">목표: 가상머신 이해<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>작성자: kkongnyang2 작성일: 2025-06-20</p>
+<hr />
+<h3 id="0">0&gt; 개념 정리<a class="headerlink" href="#0" title="Permanent link">&para;</a></h3>
+<p>가상머신? 물리적 컴퓨터 위에서 돌아가는 소프트웨어 컴퓨터</p>
+<p>하이퍼바이저 -&gt; 그 가짜 컴퓨터를 관리하는 관리자</p>
+<h3 id="1">1&gt; 분류<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<p>하이퍼바이저 위치</p>
+<p>type 1. bare-metal<br />
+하드웨어 바로 위에 하이퍼바이저가 동작. os 설치 없이 바로 vm 실행 가능</p>
+<p>[물리 컴퓨터]<br />
+ ┌────────────────────────────┐<br />
+ │        Hypervisor          │  ← 하이퍼바이저 (Xen, VMware ESXi, Hyper-V)<br />
+ │  ┌────────────┐ ┌────────┐ │<br />
+ │  │ VM #1      │ │ VM #2 │ │<br />
+ │  │ Ubuntu     │ │ Win10 │ │  ← 가상머신 (게스트 OS + 커널)<br />
+ │  └────────────┘ └────────┘ │<br />
+ └────────────────────────────┘</p>
+<p>type 2. hosted<br />
+일반 os 위에서 프로그램처럼 실행되는 하이퍼바이저</p>
+<p>[물리 컴퓨터]<br />
+ ┌────────────────────────────┐<br />
+ │       Host OS              │  ← 일반 데스크탑 OS<br />
+ │  ┌──────────────────────┐  │<br />
+ │  │ Hypervisor           │  │  ← 소프트웨어 기반 (QEMU, VirtualBox)<br />
+ │  │  ┌────────────┐      │  │<br />
+ │  │  │ VM #1      │      │  │<br />
+ │  │  │ Fedora     │      │  │  ← 게스트 OS<br />
+ │  │  └────────────┘      │  │<br />
+ │  └──────────────────────┘  │<br />
+ └────────────────────────────┘</p>
+<p>별첨. 컨테이너<br />
+모두 호스트 커널 공유</p>
+<p>[물리 컴퓨터]<br />
+ ┌────────────────────────────┐<br />
+ │     Host OS (리눅스)        │  ← 커널 공유<br />
+ │  ┌──────────────────────┐  │<br />
+ │  │ 컨테이너 런타임       │  │  ← Docker<br />
+ │  └───────┬──────────────┘  │<br />
+ │     ┌────▼────┐  ┌────▼────┐<br />
+ │     │ Container│ │ Container│  ← 가벼운 격리 환경<br />
+ │     │  Nginx   │ │  Python  │  ← rootfs + 라이브러리 + 앱<br />
+ │     └──────────┘ └──────────┘<br />
+ └────────────────────────────┘</p>
+<p>cpu 가상화 기법</p>
+<p>trap-and-emulate<br />
+특권 명령 -&gt; 트랩 발생 -&gt; 하이퍼바이저가 소프트웨어로 에뮬레이션. 쉽게 말해 울면 어른이 대신 처리.</p>
+<p>binary translation<br />
+실행 코드를 동적 재작성. 쉽게 말해 안울도록 미리 사전 작업.</p>
+<p>HW-assist<br />
+intel VT-x, AMD-V 등 하드웨어가 명령-페이지테이블 가상화 지원. 쉽게 말해 아이 전용방이 따로 있음.</p>
+<p>장치 가상화</p>
+<p>풀 에뮬레이션<br />
+qemu가 소프트웨어로 가상 하드웨어 구현. 쉽게 말해 가짜 수취함</p>
+<p>파라가상화<br />
+게스트가 virtio 통신. 전용 고속 택배 전용</p>
+<p>패스-스루<br />
+실제 장치 기능 직접 넘김. 집 열쇠를 통째로 줌.</p>
+<h3 id="2">2&gt; 구성요소<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<p>vcpu<br />
+실제 cpu 코어와 논리 코어 매핑. 컨텍스트 스위치, 타미어 인터럽트, TLB flush 등.<br />
+┌─ Host CPU Core ──────────────────────────┐<br />
+│  …실행 중…                               │<br />
+│  (호스트 코드)                           │<br />
+│  ↙ 「World-switch」 ↘                   │<br />
+│  게스트 레지스터 세트 로드              │<br />
+│  게스트 코드 실행 (user → kernel → …)   │<br />
+│  VM-Exit (트랩 발생)                    │<br />
+│  …다시 호스트 코드…                     │<br />
+└──────────────────────────────────────────┘<br />
+world-switch= 레지스터,TLB를 싹 바꿔 끼우는 순간<br />
+스케줄러가 이번 타임슬라이스는 vCPU #2라고 결정하여 실 cpu에 태우는 형식</p>
+<p>가상 메모리<br />
+nested page table</p>
+<p>게스트 가상 addr 0x7fff_1234<br />
+   │ (게스트 페이지 테이블)          ← xv6가 아는 세계<br />
+   ▼<br />
+게스트-물리 addr 0x8010_1234<br />
+   │ (Nested page table / EPT)      ← 하이퍼바이저가 속임<br />
+   ▼<br />
+호스트-물리 addr 0x3c20_51234<br />
+   │ (MMU 실제 DRAM)                ← 진짜 하드웨어</p>
+<p>i/o 가상화<br />
+mmio 트랩, DMA 리맵, virtio ring buffer<br />
+1. 게스트 커널이 store 0x10001014 &lt;- 0x1 (virtio 디스크 큐 등록)<br />
+2. MMIO 주소이므로 VM-Exit -&gt; QEMU에게 디스크 쓰자 요청<br />
+3. QEMU가 호스트 파일(fs.img)에 write -&gt; 완료 후 가짜 인터럽트 재주입<br />
+4. 게스트에서 ISR 실행 -&gt; 시스템콜로 사용자에게 쓰기 완료 알림</p>
+<p>이때 virtio는 2,3단계에서 링 버퍼/IOVRING을 써서 트랩 횟수를 확 줄이는 최적화</p>
+<p>스토리지 네트워킹<br />
+QCOW2같은 이미지 형식</p>
+<h3 id="3-qemu-kvm">3&gt; QEMU-KVM 흐름<a class="headerlink" href="#3-qemu-kvm" title="Permanent link">&para;</a></h3>
+<p>qemu? type2 풀 에뮬레이션 하이퍼바이저<br />
+kvm? HW-assist 방식 전용 커널 모듈(type 1)<br />
+큰 틀은 qemu를 쓰고 cpu 가상화를 추가로 진행하여 qemu+kvm 방식으로 많이 씀.</p>
+<p>A. 부팅 전 <code>make qemu</code><br />
+qemu가 risc-v virt 머신을 생성 -&gt; /dev/kvm에 vCPU 3개 요청<br />
+B. vCPU 진입 <code>hart 2 starting</code><br />
+kvm 모듈이 KVM_RUN 진입 -&gt; mepc=0x80000000 로드. 게스트 첫 명령 실행<br />
+C. 시계 인터럽트 <code>tick</code><br />
+RISC-V mtimecmp 만료 -&gt; 하드웨어가 'supervisor timer interrupt' -&gt; VM-Exit -&gt; KVM가 인터럽트 재주입<br />
+D. 시스템콜 <code>read</code><br />
+사용자 프로그램이 ecall -&gt; trap -&gt; xv6-kernel sys_open -&gt; I/O 요청 생성<br />
+E. 디스크 I/O<br />
+virtio-blk MMIO 접근 -&gt; VM-Exit -&gt; QEMU가 fs.img에 블록 read -&gt; 종료 IRQ 재주입<br />
+F. 콘솔 출력 <code>$ls</code><br />
+게스트가 UART MMIO(0x10000000) write -&gt; QEMU가 호스트 stderr로 바로 프린트<br />
+G. 호스트로 복귀<br />
+단축키 Ctrl-a x 누르면 QEMU 종료 -&gt; vCPU context 저장, 파일 flush 후 make 종료</p>
+<p>cpu 권한 레벨</p>
+<p>x86에서는 Ring0(커널) Ring3(유저)<br />
+ARM에서는 EL0(유저) EL1(커널) EL2(하이퍼바이저) EL3(보안)<br />
+RISC-V에서는 U(유저) S(커널) M(최상위)</p>
+<p>게스트 OS -&gt; 직접 CPU에서 실행 (EL1)<br />
+특권 명령어 -&gt; trap -&gt; EL2 -&gt; KVM -&gt; 결과처리 -&gt; 복귀</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1095 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../3-MMU/">
+      
+      
+        <link rel="next" href="../5-PCB/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>trap - make-os</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#xv6-riscv-trapc" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="make-os" class="md-header__button md-logo" aria-label="make-os" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            make-os
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              trap
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="make-os" class="md-nav__button md-logo" aria-label="make-os" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    make-os
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    vm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-hardware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    h/w
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-kernel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    kernel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-MMU/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MMU
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    trap
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    trap
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#xv6-riscv-trapc" class="md-nav__link">
+    <span class="md-ellipsis">
+      xv6-riscv의 trap.c 파일을 읽어보자
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="xv6-riscv의 trap.c 파일을 읽어보자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      목표: trap 이해
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      0&gt; 개념 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1&gt; 용어 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2&gt; 흐름 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-kerneltrampolines" class="md-nav__link">
+    <span class="md-ellipsis">
+      3&gt; kernel/trampoline.S
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-kerneltrapc" class="md-nav__link">
+    <span class="md-ellipsis">
+      4 &gt; kernel/trap.c
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5-PCB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PCB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6-uart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    uart
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7-mkfs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mkfs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8-mini-os/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mini-os
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../9-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    build
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#xv6-riscv-trapc" class="md-nav__link">
+    <span class="md-ellipsis">
+      xv6-riscv의 trap.c 파일을 읽어보자
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="xv6-riscv의 trap.c 파일을 읽어보자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      목표: trap 이해
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      0&gt; 개념 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1&gt; 용어 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2&gt; 흐름 정리
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-kerneltrampolines" class="md-nav__link">
+    <span class="md-ellipsis">
+      3&gt; kernel/trampoline.S
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-kerneltrapc" class="md-nav__link">
+    <span class="md-ellipsis">
+      4 &gt; kernel/trap.c
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>trap</h1>
+
+<h2 id="xv6-riscv-trapc">xv6-riscv의 trap.c 파일을 읽어보자<a class="headerlink" href="#xv6-riscv-trapc" title="Permanent link">&para;</a></h2>
+<h3 id="trap">목표: trap 이해<a class="headerlink" href="#trap" title="Permanent link">&para;</a></h3>
+<p>작성자: kkongnyang2 작성일: 2025-06-23</p>
+<h3 id="0">0&gt; 개념 정리<a class="headerlink" href="#0" title="Permanent link">&para;</a></h3>
+<p>트랩? CPU가 현재 흐름을 즉시 끊고 커널로 점프하는 모든 사건의 총칭이다.<br />
+종류는 시스템 콜(8번), 페이지 폴트(12,13,15번), 0 나누기 등 명령어에 기인하는 exception 와 타이머(7번), 디바이스, 외부 인터럽트(5번) 등 외부에 기인하는 interrupt 가 있다.<br />
+RISC-V는 둘 모두를 scause 코드로 구분하고 같은 통로로 들어온다.</p>
+<p>유저/커널을 U/S 모드로 구분해 실행하고, 트랩 진입 시 PC와 레지스터 일부를 CSR에 잠깐 보관한 후<br />
+trampoline.S(가장 높은 VA 페이지 0xFFFF..F000) 코드가 전체 레지스터를 struct trapframe(그 바로 아래 VA이고 스택구조)으로 푸시하고 C함수 kernel_trap() 호출.<br />
+커널이 원인 처리 후 usertrapret()을 거쳐 다시 트램펄린으로 돌아가 레지스터를 복원하고 sret으로 U 복귀.</p>
+<h3 id="1">1&gt; 용어 정리<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>stvec (Supervisor Trap-Vector)      // 트랩 진입 시 점프할 VA를 담는 CSR
+sepc (Supervisor Exception PC)      // 트랩 직전 PC 보관 CSR
+scause(Supervisor Cause)            // 트랩 원인 코드 &amp; 인터럽트 플래그
+sstatus.SPP/SPIE                    // 트랩 전 실행 모드·인터럽트 상태 비트
+sscratch                            // xv6는 여기다 커널 스택 VA를 보관
+SRET (Supervisor RETurn)            // sepc→PC, SPP 모드로 복귀하는 명령
+trapframe                           // 레지스터 31개+α를 담는 구조체(최고 바로 아래 VA)
+trampoline.S                        // 진입/복귀 1 page 어셈블리(최고 VA)
+kernel_trap()                       // trap.c 공통 C 처리 함수
+usertrap()/usertrapret()            // U-mode 전용 예외 처리 &amp; 복귀 준비
+devintr()                           // PLIC·CLINT 인터럽트 번호 판별 헬퍼
+PLIC (Platform-Level Int. Ctrl.)    // 외부 디바이스 인터럽트 컨트롤러
+CLINT (Core-Local Int. Ctrl.)       // 타이머·소프트웨어 인터럽트 MMIO
+SPP (Previous Privilege)            // sstatus 내 ‘트랩 전 모드(U/S)’ 비트
+SPIE (Previous Interrupt Enable)    // sstatus 내 ‘U-mode에서의 인터럽트 허용’ 비트
+</code></pre></div>
+<h3 id="2">2&gt; 흐름 정리<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<p><div class="highlight"><pre><span></span><code>┌─────────────┐          ┌────────────────────┐
+│ User space  │  trap    │  trampoline.S      │
+│   code      │─────────▶│  (VA 0x...FFF000)  │
+└─────────────┘          │ 1) sscratch → sp   │
+                         │ 2) RA/GP…  push    │
+                         │ 3) sp = kernel_sp  │
+                         │ 4) call kernel_trap│
+                         └─────────┬──────────┘
+                                   │C 함수
+                         ┌─────────▼──────────┐
+                         │   trap.c           │
+                         │ kernel_trap():     │
+                         │  ├─ if (U-mode) → usertrap() │
+                         │  └─ else        → kern-trap  │
+                         ├── usertrap():              │
+                         │  · 시스콜? dev? fault?     │
+                         │  · devintr()               │
+                         │  · usertrapret()           │
+                         └─────────┬──────────┘
+                                   │
+                         ┌─────────▼──────────┐
+                         │ trampoline.S       │
+                         │ 1) trapframe pop   │
+                         │ 2) sstatus.SPP=U   │
+                         │ 3) sret (PC=sepc)  │
+                         └─────────▼──────────┘
+                         ┌─────────────┐
+                         │ User space  │  ← 복귀
+                         └─────────────┘
+</code></pre></div><br />
+uservec/kernelvec -&gt; vector라는 뜻. stvec이 가르키는 주소<br />
+trampoline -&gt; 도약판<br />
+userret/usertrapret -&gt; return이라는 뜻.</p>
+<p>한줄정리 : 유저 모드에서 trap이 발생! stvec 보기! 보통 uservec(최고 VA인 trampoline 페이지)이 써져있음!<br />
+가서 모든 레지스터를 커널의 trapframe 스택에 저장! (a0는 잠깐 딴데에 저장해놨다가 저장) trapframe에 넣어놨던 커널의 sp, tp, usertrap주소, satp을 불러와 레지스터에 저장! 펜스 설치하고 satp CSR을 커널 satp로 갈아끼고 tlb를 비우고 usertrap으로 진입!<br />
+stvec을 kernelvec로 갈아껴서 내부 trap 대비! trapframe에 돌아갈 유저 pc를 저장! 어떤 트랩인지 scause를 읽어와 진짜 핸들러를 실행하고 이제 리턴으로 진입!<br />
+usertrapret에서는 다시 원상태로 세팅해주는 거! stvec을 다시 uservec으로 써놔! trapframe에 커널의 satp, sp, usertrap주소, tp를 넣어줘! sstatus를 U로 바꾸고 sepc CSR에 아까 trapframe에 넣어둔 프로세스 pc를 써넣어. 유저 페이지테이블을 인자로 넘기면서 userret을 호출해.<br />
+아까 uservec에서 스택에 담아뒀던 걸 다 꺼내! 그리고 satp CSR을 유저 satp로 갈아껴.</p>
+<div class="highlight"><pre><span></span><code>0   kernel_satp      // 커널 페이지테이블 주소
+8   kernel_sp        // 커널 스택 꼭대기
+16  kernel_trap      // usertrap() 주소
+24  padding
+32  kernel_hartid    // hartid
+40  ra               &lt;-- 여기서부터 34개 사용자 레지스터
+
+112 a0               &lt;-- 특별히 a0 백업 위치
+
+280 t6
+</code></pre></div>
+<h3 id="3-kerneltrampolines">3&gt; kernel/trampoline.S<a class="headerlink" href="#3-kerneltrampolines" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>#include &quot;riscv.h&quot;
+#include &quot;memlayout.h&quot;
+
+# tramsec라는 새 섹션으로 전환.
+# 이 전체를 trampoline 가상주소(가장 높은 VA 한 페이지)에 정렬해 넣도록.
+# 커널, 유저 페이지테이블 모두 같은 VA로 매핑해 페이지테이블 스위치 후에도 코드 주소가 변하지 않도록
+.section trampsec
+
+# 두개 다 전역으로 공개해 다른 오브젝트에서 이 섹션의 시작 주소를 참조할 수 있게
+.globl trampoline
+.globl usertrap
+
+# trampsec 섹션의 맨 첫 바이트에 심볼 trampoline 이름 부여
+trampoline:
+# 2^4 = 16Byte로 다음 코드 정렬. 4바이트로 해도 되지만 넉넉히 잡아 캐시 성능 향상
+.align 4
+.globl uservec
+
+uservec:    
+        # 유저 -&gt; 커널
+
+        # sscratch는 s모드의 임시 저장소, a0는 함수 인자 레지스터
+        # trap 발생 직전의 유저 함수 인자 레지스터를 임시로 sscratch에 보관
+        csrw sscratch, a0
+
+        # TRAPFRAME = 커널이 모든 프로세스 페이지테이블에서 같은 가상주소(0xFFFFFFFFE000)로 매핑해둔 상수.
+        # a0에 TRAPFRAME 즉시값 넣기
+        li a0, TRAPFRAME
+
+        # 34개 레지스터(ra~t6)값을 TRAPFRAME+40~280 위치에 저장하여 유저 컨텍스트 보존
+        sd ra, 40(a0)
+        sd sp, 48(a0)
+        sd gp, 56(a0)
+        sd tp, 64(a0)
+        sd t0, 72(a0)
+        sd t1, 80(a0)
+        sd t2, 88(a0)
+        sd s0, 96(a0)
+        sd s1, 104(a0)
+        sd a1, 120(a0)
+        sd a2, 128(a0)
+        sd a3, 136(a0)
+        sd a4, 144(a0)
+        sd a5, 152(a0)
+        sd a6, 160(a0)
+        sd a7, 168(a0)
+        sd s2, 176(a0)
+        sd s3, 184(a0)
+        sd s4, 192(a0)
+        sd s5, 200(a0)
+        sd s6, 208(a0)
+        sd s7, 216(a0)
+        sd s8, 224(a0)
+        sd s9, 232(a0)
+        sd s10, 240(a0)
+        sd s11, 248(a0)
+        sd t3, 256(a0)
+        sd t4, 264(a0)
+        sd t5, 272(a0)
+        sd t6, 280(a0)
+
+          # sscratch를 읽어와 t0로 복사하고 그걸 TRAPFRAME+112에 저장
+        csrr t0, sscratch
+        sd t0, 112(a0)
+
+        # sp에 kernel_sp 저장
+        ld sp, 8(a0)
+
+        # tp에 kernel_hartid 저장
+        ld tp, 32(a0)
+
+        # t0에 kernel_trap(usertrap()주소) 저장
+        ld t0, 16(a0)
+
+        # t1에 kernel_satp(커널 페이지테이블 주소) 저장
+        ld t1, 0(a0)
+
+        # satp가 아직 유저 테이블을 가리키므로 지금까지 연산은 확실히 끝내라.(펜스 역할)
+        sfence.vma zero, zero
+
+        # satp에 커널 페이지테이블 주소를 써서 전환하라
+        csrw satp, t1
+
+        # 유저 -&gt; 커널 전환 위해 TLB 비우기.
+        # 트램폴린 그 한페이지만 커널 유저 VA가 동일할 뿐 나머진 다르기 때문에 혼동없게 비워야 함
+        # TLB란? 페이지테이블 캐시. 자주 쓰이는 전화번호부 즐겨찾기 해놓은거.
+        sfence.vma zero, zero
+
+        # usertrap()로 진입 (S모드)
+        jr t0
+
+        # usertrap() -&gt; 커널 처리 -&gt; usertrapret() -&gt; userret
+
+.globl userret
+userret:
+        # 커널 -&gt; 유저.
+
+        # a0: 유저 페이지 테이블 주소 적혀있음
+        # 펜스 치고 satp에 유저 페이지테이블 주소 써서 전환하고 TLB 비우기
+        sfence.vma zero, zero
+        csrw satp, a0
+        sfence.vma zero, zero
+
+        # a0에 TRAPFRAME 베이스 값 넣기
+        li a0, TRAPFRAME
+
+        # 다시 레지스터 값 restore하기
+        ld ra, 40(a0)
+        ld sp, 48(a0)
+        ld gp, 56(a0)
+        ld tp, 64(a0)
+        ld t0, 72(a0)
+        ld t1, 80(a0)
+        ld t2, 88(a0)
+        ld s0, 96(a0)
+        ld s1, 104(a0)
+        ld a1, 120(a0)
+        ld a2, 128(a0)
+        ld a3, 136(a0)
+        ld a4, 144(a0)
+        ld a5, 152(a0)
+        ld a6, 160(a0)
+        ld a7, 168(a0)
+        ld s2, 176(a0)
+        ld s3, 184(a0)
+        ld s4, 192(a0)
+        ld s5, 200(a0)
+        ld s6, 208(a0)
+        ld s7, 216(a0)
+        ld s8, 224(a0)
+        ld s9, 232(a0)
+        ld s10, 240(a0)
+        ld s11, 248(a0)
+        ld t3, 256(a0)
+        ld t4, 264(a0)
+        ld t5, 272(a0)
+        ld t6, 280(a0)
+
+          # 유저 a0 값도 restore
+        ld a0, 112(a0)
+
+        sret
+</code></pre></div>
+<h3 id="4-kerneltrapc">4 &gt; kernel/trap.c<a class="headerlink" href="#4-kerneltrapc" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;types.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;param.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;memlayout.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;riscv.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;spinlock.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;proc.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;defs.h&quot;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">spinlock</span><span class="w"> </span><span class="n">tickslock</span><span class="p">;</span><span class="w">              </span><span class="c1">// 타이머 인터럽트 보호용 스핀락</span>
+<span class="n">uint</span><span class="w"> </span><span class="n">ticks</span><span class="p">;</span><span class="w">                             </span><span class="c1">// 시스템 틱 수(시계 단위)</span>
+
+<span class="k">extern</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">trampoline</span><span class="p">[],</span><span class="w"> </span><span class="n">uservec</span><span class="p">[],</span><span class="w"> </span><span class="n">userret</span><span class="p">[];</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">kernelvec</span><span class="p">();</span>
+
+<span class="k">extern</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">devintr</span><span class="p">();</span>
+
+<span class="c1">// 부팅시 hart 0에서 단 한번 initalize</span>
+<span class="kt">void</span>
+<span class="nf">trapinit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="c1">// tickslock: ticks(타이머 인터럽트마다 +1)을 보호하는 스핀락</span>
+<span class="w">  </span><span class="c1">// 락 구조체 내부 필드를 0으로 초기화하고 디버깅용으로 &#39;time&#39;이름 설정</span>
+<span class="w">  </span><span class="n">initlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tickslock</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;time&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 부팅시 각 하트마다 단 한번 initalize</span>
+<span class="kt">void</span>
+<span class="nf">trapinithart</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="c1">// trap이 발생했을 때 어디서 처리를 시작할지 알려주는 CSR 레지스터</span>
+<span class="w">  </span><span class="c1">// 현재 커널상태이기에 지금 발생하는 모든 트랩은 kernelvec으로 가야하기 때문</span>
+<span class="w">  </span><span class="n">w_stvec</span><span class="p">((</span><span class="n">uint64</span><span class="p">)</span><span class="n">kernelvec</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="c1">// 유저 프로그램이 trap 걸릴때</span>
+<span class="kt">void</span>
+<span class="nf">usertrap</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">which_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">                    </span><span class="c1">// 디바이스 인터럽트 식별용 변수</span>
+
+<span class="w">  </span><span class="k">if</span><span class="p">((</span><span class="n">r_sstatus</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">SSTATUS_SPP</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">      </span><span class="c1">// 진짜 유저 모드에서 온게 맞는지 확인</span>
+<span class="w">    </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;usertrap: not from user mode&quot;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">w_stvec</span><span class="p">((</span><span class="n">uint64</span><span class="p">)</span><span class="n">kernelvec</span><span class="p">);</span><span class="w">               </span><span class="c1">// trap이 들어왔으니 stvec을 커널모드로 전환</span>
+
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span><span class="w">                </span><span class="c1">// 현재 실행 중인 프로세스 포인터</span>
+
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">epc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_sepc</span><span class="p">();</span><span class="w">             </span><span class="c1">// 유저의 pc를 저장 (복귀 시 필요)</span>
+<span class="w">                                            </span><span class="c1">// 이 trapframe은 아까 TRAPFRAME 상수로 불렀던 거하고 같은 거임.</span>
+
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">r_scause</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8</span><span class="p">){</span><span class="w">                      </span><span class="c1">// 8번은 시스템 콜(ecall)</span>
+
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">killed</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="w">      </span><span class="n">exit</span><span class="p">(</span><span class="mi">-1</span><span class="p">);</span><span class="w">                             </span><span class="c1">// 이미 죽은 프로세스면 즉시 종료</span>
+
+<span class="w">    </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">epc</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w">                 </span><span class="c1">// pc+4 (다음 명령어)</span>
+
+<span class="w">    </span><span class="n">intr_on</span><span class="p">();</span><span class="w">                              </span><span class="c1">// syscall 도중 인터럽트 허용</span>
+
+<span class="w">    </span><span class="n">syscall</span><span class="p">();</span><span class="w">                              </span><span class="c1">// 시스템 콜 핸들링</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">((</span><span class="n">which_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">devintr</span><span class="p">())</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">                                  </span><span class="c1">// 알 수 없는 예외 발생</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;usertrap(): unexpected scause 0x%lx pid=%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">r_scause</span><span class="p">(),</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pid</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;            sepc=0x%lx stval=0x%lx</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">r_sepc</span><span class="p">(),</span><span class="w"> </span><span class="n">r_stval</span><span class="p">());</span>
+<span class="w">    </span><span class="n">setkilled</span><span class="p">(</span><span class="n">p</span><span class="p">);</span><span class="w">                           </span><span class="c1">// 프로세스 종료 예약</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">killed</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="w">    </span><span class="n">exit</span><span class="p">(</span><span class="mi">-1</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">which_dev</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w">                        </span><span class="c1">// 2번은 타이머 인터럽트</span>
+<span class="w">    </span><span class="n">yield</span><span class="p">();</span><span class="w">                                </span><span class="c1">// CPU를 양보함</span>
+
+<span class="w">  </span><span class="n">usertrapret</span><span class="p">();</span><span class="w">                            </span><span class="c1">// 유저 공간 복귀 준비</span>
+<span class="p">}</span>
+
+<span class="c1">// 유저 모드로 복귀할 준비</span>
+<span class="kt">void</span>
+<span class="nf">usertrapret</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">intr_off</span><span class="p">();</span><span class="w">                                 </span><span class="c1">// 복귀 도중 trap 발생하지 않게 인터럽트 비활성화</span>
+
+<span class="w">  </span><span class="c1">// stvec을 다시 다시 trampoline의 uservec으로 설정</span>
+<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">trampoline_uservec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TRAMPOLINE</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">uservec</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">trampoline</span><span class="p">);</span>
+<span class="w">  </span><span class="n">w_stvec</span><span class="p">(</span><span class="n">trampoline_uservec</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// uservec에서 사용할 정보들을 trapframe에 세팅</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">kernel_satp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_satp</span><span class="p">();</span><span class="w">         </span><span class="c1">// 커널 페이지 테이블</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">kernel_sp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">kstack</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">;</span><span class="w"> </span><span class="c1">// 커널 스택 최상단</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">kernel_trap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">uint64</span><span class="p">)</span><span class="n">usertrap</span><span class="p">;</span><span class="w"> </span><span class="c1">// 다시 trap 들어올 때 실행할 함수</span>
+<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">kernel_hartid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_tp</span><span class="p">();</span><span class="w">         </span><span class="c1">// 하트 번호</span>
+
+
+<span class="w">  </span><span class="c1">// 유저 모드 복귀를 위한 sstatus 설정</span>
+<span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_sstatus</span><span class="p">();</span>
+<span class="w">  </span><span class="n">x</span><span class="w"> </span><span class="o">&amp;=</span><span class="w"> </span><span class="o">~</span><span class="n">SSTATUS_SPP</span><span class="p">;</span><span class="w"> </span><span class="c1">// SPP=0(U)로</span>
+<span class="w">  </span><span class="n">x</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="n">SSTATUS_SPIE</span><span class="p">;</span><span class="w"> </span><span class="c1">// SPIE=1 유저 모드에서 인터럽트 허용</span>
+<span class="w">  </span><span class="n">w_sstatus</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// 실행 재개 위치 설정</span>
+<span class="w">  </span><span class="n">w_sepc</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">epc</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// 유저 페이지 테이블 설정</span>
+<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">satp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MAKE_SATP</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// trampoline 상단에 있는 userret()을 호출하여 실제 복귀 수행</span>
+<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">trampoline_userret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TRAMPOLINE</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">userret</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">trampoline</span><span class="p">);</span>
+<span class="w">  </span><span class="p">((</span><span class="kt">void</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="n">uint64</span><span class="p">))</span><span class="n">trampoline_userret</span><span class="p">)(</span><span class="n">satp</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 커널 모드에서 trap 발생 시 호출</span>
+<span class="kt">void</span><span class="w"> </span>
+<span class="nf">kerneltrap</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">which_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">sepc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_sepc</span><span class="p">();</span>
+<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">sstatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_sstatus</span><span class="p">();</span>
+<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">scause</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_scause</span><span class="p">();</span>
+
+<span class="w">  </span><span class="k">if</span><span class="p">((</span><span class="n">sstatus</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">SSTATUS_SPP</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;kerneltrap: not from supervisor mode&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">intr_get</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;kerneltrap: interrupts enabled&quot;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">if</span><span class="p">((</span><span class="n">which_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">devintr</span><span class="p">())</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">    </span><span class="c1">// 원인을 알 수 없는 인터럽트</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;scause=0x%lx sepc=0x%lx stval=0x%lx</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">scause</span><span class="p">,</span><span class="w"> </span><span class="n">r_sepc</span><span class="p">(),</span><span class="w"> </span><span class="n">r_stval</span><span class="p">());</span>
+<span class="w">    </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;kerneltrap&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">which_dev</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">myproc</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">       </span><span class="c1">// 타이머 인터럽트면 CPU 양보</span>
+<span class="w">    </span><span class="n">yield</span><span class="p">();</span>
+
+<span class="w">  </span><span class="c1">// trap 전 레지스터 복원</span>
+<span class="w">  </span><span class="n">w_sepc</span><span class="p">(</span><span class="n">sepc</span><span class="p">);</span>
+<span class="w">  </span><span class="n">w_sstatus</span><span class="p">(</span><span class="n">sstatus</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 타이머 인터럽트 핸들러</span>
+<span class="kt">void</span>
+<span class="nf">clockintr</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">cpuid</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span><span class="w">                     </span><span class="c1">// 0번 하트만 ticks 증가 및 wakeup. 0번 하트는 초기화 담당인 동시에 전역 시계(ticks) 기준 하트임.</span>
+<span class="w">    </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tickslock</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ticks</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="n">wakeup</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ticks</span><span class="p">);</span>
+<span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tickslock</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 100만 cpu 사이클 뒤에 또 깨워줘, 즉 1 tick = 1 timer interrupt = 100Hz = 약  10ms</span>
+<span class="w">  </span><span class="n">w_stimecmp</span><span class="p">(</span><span class="n">r_time</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1000000</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 다른 디바이스면 1, 모르면 0, 타이머 인터럽트면 2</span>
+<span class="kt">int</span>
+<span class="nf">devintr</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">scause</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_scause</span><span class="p">();</span><span class="w">       </span><span class="c1">// scause 레지스터. 현재 trap의 원인을 나타냄</span>
+
+<span class="w">  </span><span class="c1">// 외부 인터럽트 (PLIC을 통해 들어오는 디바이스 인터럽트)</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">scause</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">0x8000000000000009L</span><span class="p">){</span><span class="w">      </span><span class="c1">// 이 값이면 Supervisor external interrupt</span>
+
+<span class="w">    </span><span class="c1">// 어떤 장치가 인터럽트를 발생시켰는지 확인.</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">irq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">plic_claim</span><span class="p">();</span><span class="w">               </span><span class="c1">// PLIC에서 IRQ 번호 확인</span>
+
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">irq</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">UART0_IRQ</span><span class="p">){</span><span class="w">                 </span><span class="c1">// UART(시리얼 통신 장치)에서 인터럽트 발생</span>
+<span class="w">      </span><span class="n">uartintr</span><span class="p">();</span><span class="w">                         </span><span class="c1">// UART 관련 인터럽트 핸들러 실행</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">irq</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">VIRTIO0_IRQ</span><span class="p">){</span><span class="w">        </span><span class="c1">// VirtIO 디스크에서 인터럽트 발생</span>
+<span class="w">      </span><span class="n">virtio_disk_intr</span><span class="p">();</span><span class="w">                 </span><span class="c1">// 디스크 인터럽트 핸들러 실행</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">irq</span><span class="p">){</span><span class="w">                       </span><span class="c1">// 알 수 없는 장치에서 인터럽트 발생</span>
+<span class="w">      </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;unexpected interrupt irq=%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">irq</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">irq</span><span class="p">)</span><span class="w">                               </span><span class="c1">// 인터럽트 처리가 끝났음을 PLIC에 알림</span>
+<span class="w">      </span><span class="n">plic_complete</span><span class="p">(</span><span class="n">irq</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">                             </span><span class="c1">// 장치 인터럽트 처리 완료</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">scause</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">0x8000000000000005L</span><span class="p">){</span><span class="w">   </span><span class="c1">// 이 값이면 Supervisor timer interrupt</span>
+<span class="w">    </span><span class="n">clockintr</span><span class="p">();</span><span class="w">                           </span><span class="c1">// 타이머 인터럽트 핸들러 실행</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w">                         </span><span class="c1">// 타이머 인터럽트 처리 완료</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">                   </span><span class="c1">// 알 수 없는 인터럽트</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

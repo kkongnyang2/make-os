@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../vm/">
+        <link rel="prev" href="../1-hardware/">
       
       
-        <link rel="next" href="../go/">
+        <link rel="next" href="../3-MMU/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>xv6-riscv - make-os</title>
+        <title>kernel - make-os</title>
       
     
     
@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#xv6-riscv" class="md-skip">
           Skip to content
         </a>
       
@@ -98,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              xv6-riscv
+              kernel
             
           </span>
         </div>
@@ -194,12 +194,34 @@
   
   
     <li class="md-nav__item">
-      <a href="../vm/" class="md-nav__link">
+      <a href="../0-vm/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     vm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-hardware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    h/w
     
   </span>
   
@@ -228,7 +250,7 @@
   
   
   <span class="md-ellipsis">
-    xv6-riscv
+    kernel
     
   </span>
   
@@ -241,7 +263,7 @@
   
   
   <span class="md-ellipsis">
-    xv6-riscv
+    kernel
     
   </span>
   
@@ -262,60 +284,79 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#xv6-riscv" class="md-nav__link">
+    <span class="md-ellipsis">
+      xv6-riscv의 시작 파일을 읽어보자
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="xv6-riscv의 시작 파일을 읽어보자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      &gt; 파일 구조
+      목표: 커널의 이해
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#kernelkernelld" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
     <span class="md-ellipsis">
-      &gt; 메모리 배치 kernel/kernel.ld
+      0&gt; 파일 구조
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#m-kernelentrys" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#1-kernelkernelld" class="md-nav__link">
     <span class="md-ellipsis">
-      &gt; M모드 및 스택 설정 kernel/entry.S
+      1&gt; 메모리 배치 kernel/kernel.ld
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#m-s-timer-kernelstartc" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#2-m-kernelentrys" class="md-nav__link">
     <span class="md-ellipsis">
-      &gt; M-&gt;S 전환, timer 세팅 kernel/start.c
+      2&gt; M모드 및 스택 설정 kernel/entry.S
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#kernelmainc" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#3-m-s-timer-kernelstartc" class="md-nav__link">
     <span class="md-ellipsis">
-      &gt; 커널 초기화 루틴 kernel/main.c
+      3&gt; M-&gt;S 전환, timer 세팅 kernel/start.c
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#4-kernelmainc" class="md-nav__link">
     <span class="md-ellipsis">
-      &gt; 모드 전환
+      4&gt; 커널 초기화 루틴 kernel/main.c
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5&gt; 모드 전환
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#makefile" class="md-nav__link">
     <span class="md-ellipsis">
       &gt; makefile
@@ -323,13 +364,9 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#kerneltrapc" class="md-nav__link">
-    <span class="md-ellipsis">
-      &gt; kernel/trap.c
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -348,12 +385,144 @@
   
   
     <li class="md-nav__item">
-      <a href="../go/" class="md-nav__link">
+      <a href="../3-MMU/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    go
+    MMU
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-trap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    trap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5-PCB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PCB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6-uart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    uart
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7-mkfs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mkfs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8-mini-os/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mini-os
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../9-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    build
     
   </span>
   
@@ -388,60 +557,79 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#xv6-riscv" class="md-nav__link">
+    <span class="md-ellipsis">
+      xv6-riscv의 시작 파일을 읽어보자
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="xv6-riscv의 시작 파일을 읽어보자">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      &gt; 파일 구조
+      목표: 커널의 이해
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#kernelkernelld" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
     <span class="md-ellipsis">
-      &gt; 메모리 배치 kernel/kernel.ld
+      0&gt; 파일 구조
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#m-kernelentrys" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#1-kernelkernelld" class="md-nav__link">
     <span class="md-ellipsis">
-      &gt; M모드 및 스택 설정 kernel/entry.S
+      1&gt; 메모리 배치 kernel/kernel.ld
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#m-s-timer-kernelstartc" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#2-m-kernelentrys" class="md-nav__link">
     <span class="md-ellipsis">
-      &gt; M-&gt;S 전환, timer 세팅 kernel/start.c
+      2&gt; M모드 및 스택 설정 kernel/entry.S
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#kernelmainc" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#3-m-s-timer-kernelstartc" class="md-nav__link">
     <span class="md-ellipsis">
-      &gt; 커널 초기화 루틴 kernel/main.c
+      3&gt; M-&gt;S 전환, timer 세팅 kernel/start.c
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#4-kernelmainc" class="md-nav__link">
     <span class="md-ellipsis">
-      &gt; 모드 전환
+      4&gt; 커널 초기화 루틴 kernel/main.c
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5&gt; 모드 전환
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#makefile" class="md-nav__link">
     <span class="md-ellipsis">
       &gt; makefile
@@ -449,13 +637,9 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#kerneltrapc" class="md-nav__link">
-    <span class="md-ellipsis">
-      &gt; kernel/trap.c
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -475,9 +659,13 @@
 
 
 
-  <h1>xv6-riscv</h1>
+  <h1>kernel</h1>
 
-<h3 id="_1">&gt; 파일 구조<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<h2 id="xv6-riscv">xv6-riscv의 시작 파일을 읽어보자<a class="headerlink" href="#xv6-riscv" title="Permanent link">&para;</a></h2>
+<h3 id="_1">목표: 커널의 이해<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>작성자: kkongnyang2 작성일: 2025-06-21</p>
+<hr />
+<h3 id="0">0&gt; 파일 구조<a class="headerlink" href="#0" title="Permanent link">&para;</a></h3>
 <p>[1] 부트 진입<br />
 [2] 커널 초기화<br />
 [3] 트랩 핸들러 등록<br />
@@ -511,7 +699,7 @@
 │   └── *.h<br />
 ├── .gdbinit           ← GDB 초기화 설정<br />
 └── README.md</p>
-<h3 id="kernelkernelld">&gt; 메모리 배치 kernel/kernel.ld<a class="headerlink" href="#kernelkernelld" title="Permanent link">&para;</a></h3>
+<h3 id="1-kernelkernelld">1&gt; 메모리 배치 kernel/kernel.ld<a class="headerlink" href="#1-kernelkernelld" title="Permanent link">&para;</a></h3>
 <p>링커 스크립트란? .o 들을 하나로 묶어 실행 가능한 .elf 바이너리를 만들때, 어떤 섹션을 어디에 배치할지 결정하는 배치도 역할을 한다.<br />
 <div class="highlight"><pre><span></span><code>OUTPUT_ARCH( &quot;riscv&quot; )
 ENTRY( _entry )
@@ -592,7 +780,7 @@ SECTIONS
 각 섹션들은 링커가 .o들을 모아 하나의 elf를 생성하며 그때 크기가 결정된다.<br />
 커널 heap은 런타임 공간이라 섹션이 아님. 저주소부터 증가하며 요청 시 크기만큼 동적으로 메모리를 할당한다.<br />
 c언어 함수들을 위해 사용하는 stack0은 초기화되지 않았으므로 .bss 섹션에 포함</p>
-<h3 id="m-kernelentrys">&gt; M모드 및 스택 설정 kernel/entry.S<a class="headerlink" href="#m-kernelentrys" title="Permanent link">&para;</a></h3>
+<h3 id="2-m-kernelentrys">2&gt; M모드 및 스택 설정 kernel/entry.S<a class="headerlink" href="#2-m-kernelentrys" title="Permanent link">&para;</a></h3>
 <p>cpu가 제일 먼저 읽는 파일은? _entry 라벨.</p>
 <p><div class="highlight"><pre><span></span><code>        # qemu는 커널을 0x80000000에 로드
         # 각 하트(CPU)가 해당 위치로 점프하도록 함.
@@ -621,7 +809,7 @@ spin:
          │                    │
          └────────────────────┘ ← sp 설정 (최상단 = stack0 + STACK_SIZE)
 </code></pre></div></p>
-<h3 id="m-s-timer-kernelstartc">&gt; M-&gt;S 전환, timer 세팅 kernel/start.c<a class="headerlink" href="#m-s-timer-kernelstartc" title="Permanent link">&para;</a></h3>
+<h3 id="3-m-s-timer-kernelstartc">3&gt; M-&gt;S 전환, timer 세팅 kernel/start.c<a class="headerlink" href="#3-m-s-timer-kernelstartc" title="Permanent link">&para;</a></h3>
 <p><div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;types.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;param.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;memlayout.h&quot;</span>
@@ -708,7 +896,7 @@ spin:
 <span class="p">}</span>
 </code></pre></div><br />
 참고로 타이머는 유일하게 cpu 안에 있는 순수 하드웨어 타이머로, M모드 소속 자원이자 모든 스케줄링의 기반이기에 여기에 정의되어 있다.</p>
-<h3 id="kernelmainc">&gt; 커널 초기화 루틴 kernel/main.c<a class="headerlink" href="#kernelmainc" title="Permanent link">&para;</a></h3>
+<h3 id="4-kernelmainc">4&gt; 커널 초기화 루틴 kernel/main.c<a class="headerlink" href="#4-kernelmainc" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;types.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;param.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;memlayout.h&quot;</span>
@@ -755,7 +943,7 @@ spin:
 <span class="w">  </span><span class="n">scheduler</span><span class="p">();</span><span class="w">                          </span><span class="c1">// 모든 cpu가 스케줄러에 진입하여 프로세스 루프  </span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="_2">&gt; 모드 전환<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<h3 id="5">5&gt; 모드 전환<a class="headerlink" href="#5" title="Permanent link">&para;</a></h3>
 <p>mret : M-&gt;S<br />
 mstatus.MPP를 보고 다음 모드를 결정<br />
 MPP=00(U모드) MPP=01(S모드) MPP=11(M모드)<br />
@@ -783,196 +971,310 @@ stvec에 등록된 trap handler로 점프. SPP=U모드. sepc에 복귀 주소 �
 [S 모드] 커널의 trap handler 동작
 </code></pre></div>
 <h3 id="makefile">&gt; makefile<a class="headerlink" href="#makefile" title="Permanent link">&para;</a></h3>
-<h3 id="kerneltrapc">&gt; kernel/trap.c<a class="headerlink" href="#kerneltrapc" title="Permanent link">&para;</a></h3>
-<p>trap handler : trap(인터럽트/예외/시스템콜)이 발생했을 때 실행되는 C 함수<br />
-trampoline : 유저 &lt;-&gt; 커널 모드 전환 시 사용되는 어셈블리 코드 블록<br />
-stvec : trap 발생 시 jump 할 주소를 저장하는 CSR 레지스터</p>
-<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;types.h&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;param.h&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;memlayout.h&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;riscv.h&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;spinlock.h&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;proc.h&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;defs.h&quot;</span>
+<p>[ test.S ] --(어셈블러)--&gt; [ test.o ] --(링커)--&gt; [ kernel.elf ] --(objcopy)--&gt; [ kernel.img ]<br />
+어셈블리 → 오브젝트 : CPU가 이해할 수 있는 기계어(.o)로 변환<br />
+오브젝트 → ELF 실행파일 : 코드와 데이터(섹션)들을 주소에 맞게 배치<br />
+ELF → 바이너리 이미지 : ELF 헤더 제거, 부트로더/에뮬레이터가 바로 읽을 수 있게</p>
+<p>툴체인이란 컴파일 전 과정을 담당하는 도구 세트이다.<br />
+(gcc / as / ld / objdump / gdb …)<br />
+gcc : .c -&gt; 중간 IR -&gt; 어셈블리 -&gt; .o<br />
+이때 -c 옵션을 주면 여기까지만 하고 링크는 하지 않음<br />
+as : .S -&gt; .o<br />
+ld : 여러 개의 .o와 라이브러리를 하나의 실행가능 elf로 묶음. 링커 스크립트에 따라 주소, 섹션 배치 결정<br />
+objcopy : 불필요한 섹션 제거 및 elf를 순수 바이너리로 바꾸기<br />
+objdump : 합쳐진 elf파일을 우리가 볼 수 있도록 다시 어셈블리어로 뽑아준 참고용 해설서.<br />
+-S 옵션은 어셈블리, -t 옵션은 심볼 테이블 등.<br />
+gdb : 실행 파일 조사 디버깅</p>
+<p>크로스 컴파일이란 x86-64 노트북에서 RISC-V용 커널을 빌드하는 것을 말한다.<br />
+동일 아키텍트면 네이티브 컴파일.</p>
+<p>따라서 크로스 컴파일용 툴체인은 이름으로 CPU와 OS 대상을 표시한다. (네이티브 컴파일 툴체인 이름과 구분)<br />
+<CPU>-<VENDOR>-<OS/ABI><br />
+vendor? 툴체인 제작사. 없으면 unknown<br />
+OS/ABI? C 라이브러리 규약. 즉 어떤 상황에서 런 시킬건지 미리 대비해 그에 맞춰 커널 이미지를 준비함.(elf 환경인지, glibc가 존재하는 환경인지)</p>
+<p>riscv64-unknown-elf는 RISC-V용 베어메탈 elf 실행포맷 환경 크로스 컴파일 툴체인. 즉 펌웨어, 커널, 임베디드 대상. OS 없음 → 직접 MMIO·폴링·trap 구현<br />
+riscv64-linux-gnu는 리눅스에서 만든 RISC-V용 GNU libc 환경 크로스 컴파일 툴체인. 즉 유저 공간 프로그램 대상.</p>
+<p>이때 xv6은 os가 리눅스가 아니기에 gnu libc나 시스템 콜이 필요하지 않고, qemu가 커널 elf를 0x80000000에 바로 로드하기에 부트로더 또한 필요하지 않고, 커널 안에서 자체 printf와 memcpy를 구현하기에 libc 또한 필요하지 않다.<br />
+riscv64-unknown-elf로 충분하다. 그 도구만 있어도 컴파일(.o 생성), 링크(커널.ld로 elf 만들기), 실행(qemu가 elf를 메모리에 배치)가 모두 가능하다.</p>
+<p>컴파일 단계 – Host PC에 RISC-V 크로스-툴체인이 있어야 Makefile이 통과.<br />
+실행 단계 – 생성된 kernel·fs.img 등을 QEMU가 부팅.<br />
+만약 컴파일한 kernel elf를 qemu가 아닌 실제 하드웨어 기기에서 부팅시키고 싶다면 openSBI 등을 활용해라. 걔가 커널 elf를 0x80000000으로 데려가는 부트로더 역할을 한다.</p>
+<div class="highlight"><pre><span></span><code># 여기부터 별칭 명명과 소스파일과 툴 준비
 
-<span class="k">struct</span><span class="w"> </span><span class="nc">spinlock</span><span class="w"> </span><span class="n">tickslock</span><span class="p">;</span><span class="w">              </span><span class="c1">// 타이머 인터럽트 보호용 스핀락</span>
-<span class="n">uint</span><span class="w"> </span><span class="n">ticks</span><span class="p">;</span><span class="w">                             </span><span class="c1">// 시스템 틱 수(시계 단위)</span>
+# 별칭
+# GNU make에서 =는 재귀확장 변수(매번 변수를 참초), :=는 단순확장 변수(대입순간 단 한번 그뒤로 상수)
+K=kernel
+U=user
 
-<span class="k">extern</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">trampoline</span><span class="p">[],</span><span class="w"> </span><span class="n">uservec</span><span class="p">[],</span><span class="w"> </span><span class="n">userret</span><span class="p">[];</span><span class="w"> </span><span class="c1">// trampline 주소 심볼</span>
+# 커널 오브젝트 파일 목록
+# .c -&gt; .o는 명령어로 적어주지 않아도 내장 규칙으로 수행
+OBJS = \
+  $K/entry.o \
+  $K/start.o \
+  $K/console.o \
+  $K/printf.o \
+  $K/uart.o \
+  $K/kalloc.o \
+  $K/spinlock.o \
+  $K/string.o \
+  $K/main.o \
+  $K/vm.o \
+  $K/proc.o \
+  $K/swtch.o \
+  $K/trampoline.o \
+  $K/trap.o \
+  $K/syscall.o \
+  $K/sysproc.o \
+  $K/bio.o \
+  $K/fs.o \
+  $K/log.o \
+  $K/sleeplock.o \
+  $K/file.o \
+  $K/pipe.o \
+  $K/exec.o \
+  $K/sysfile.o \
+  $K/kernelvec.o \
+  $K/plic.o \
+  $K/virtio_disk.o
 
-<span class="kt">void</span><span class="w"> </span><span class="nf">kernelvec</span><span class="p">();</span><span class="w">                             </span><span class="c1">// 커널 벡터 어셈블리 루틴</span>
+# riscv64-unknown-elf-나 riscv64-linux-gnu-는 /opt/riscv/bin에 있을 거임
+# TOOLPREFIX = 로 따로 설정도 가능
+# make toolprefix로 따로 명명하지 않았을때 자동 탐색
+# objdump = 설명서. 여기선 헤더 확인한거임
+# -i는 지원 포맷 목록을 출력
+# 2&gt;&amp;1 = 리다이렉션 명령어. stderr를 stdout으로 합쳐라
+# &gt;/dev/null = 출력은 폐기하고 성공 실패 여부만 남김
+# 탐색에 성공하면 출력하여 shell의 반환값이 됨
+# 세 후보가 모두 실패했으면 exit 1로 make 자체를 중단
+# 1&gt;&amp;2 = stdout을 stderr로 합쳐서 빨간 글씨로 눈에 잘띄게.
+ifndef TOOLPREFIX
+TOOLPREFIX := $(shell \
+  if riscv64-unknown-elf-objdump -i 2&gt;&amp;1 | grep &#39;elf64-big&#39; &gt;/dev/null 2&gt;&amp;1; \
+    then echo &#39;riscv64-unknown-elf-&#39;; \
+    elif riscv64-linux-gnu-objdump -i 2&gt;&amp;1 | grep &#39;elf64-big&#39; &gt;/dev/null 2&gt;&amp;1; \
+    then echo &#39;riscv64-linux-gnu-&#39;; \
+    elif riscv64-unknown-linux-gnu-objdump -i 2&gt;&amp;1 | grep &#39;elf64-big&#39; &gt;/dev/null 2&gt;&amp;1; \
+    then echo &#39;riscv64-unknown-linux-gnu-&#39;; \
+    else echo &quot;***&quot; 1&gt;&amp;2; \
+    echo &quot;*** Error: Couldn&#39;t find a riscv64 version of GCC/binutils.&quot; 1&gt;&amp;2; \
+    echo &quot;*** To turn off this error, run &#39;gmake TOOLPREFIX= ...&#39;.&quot; 1&gt;&amp;2; \
+    echo &quot;***&quot; 1&gt;&amp;2; exit 1; fi)
+endif
 
-<span class="k">extern</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">devintr</span><span class="p">();</span><span class="w">                         </span><span class="c1">// 디바이스 인터럽트 처리 함수</span>
+QEMU = qemu-system-riscv64
 
-<span class="c1">// S 모드에서 인터럽트 처리 루틴</span>
-<span class="kt">void</span>
-<span class="nf">trapinit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="n">initlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tickslock</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;time&quot;</span><span class="p">);</span><span class="w">         </span><span class="c1">// 타이머 인터럽트용 ticks 값을 보호하기 위한 락 초기화</span>
-<span class="p">}</span>
-
-<span class="kt">void</span>
-<span class="nf">trapinithart</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="n">w_stvec</span><span class="p">((</span><span class="n">uint64</span><span class="p">)</span><span class="n">kernelvec</span><span class="p">);</span><span class="w">           </span><span class="c1">// 현재 코어의 stvec에 kernelvec라는 c함수 주소를 써넣음</span>
-<span class="w">                                        </span><span class="c1">// stvec = supervisor trap vector base address register.</span>
-<span class="w">                                        </span><span class="c1">// s 모드에서 trap이 발생했을때 어디서부터 처리를 시작할지 주소를 담는 레지스터</span>
-<span class="p">}</span>
-
-
-<span class="c1">// 유저 프로그램이 trap 걸릴때</span>
-<span class="kt">void</span>
-<span class="nf">usertrap</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">which_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">                    </span><span class="c1">// 디바이스 인터럽트 식별용 변수</span>
-
-<span class="w">  </span><span class="k">if</span><span class="p">((</span><span class="n">r_sstatus</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">SSTATUS_SPP</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">      </span><span class="c1">// 진짜 유저 모드에서 온게 맞는지 확인</span>
-<span class="w">    </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;usertrap: not from user mode&quot;</span><span class="p">);</span>
-
-<span class="w">  </span><span class="n">w_stvec</span><span class="p">((</span><span class="n">uint64</span><span class="p">)</span><span class="n">kernelvec</span><span class="p">);</span><span class="w">               </span><span class="c1">// trap이 들어왔으니 stvec을 커널모드로 전환</span>
-
-<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span><span class="w">                </span><span class="c1">// 현재 실행 중인 프로세스 포인터</span>
-
-<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">epc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_sepc</span><span class="p">();</span><span class="w">             </span><span class="c1">// 유저의 pc를 저장 (복귀 시 필요)</span>
-
-<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">r_scause</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8</span><span class="p">){</span><span class="w">                      </span><span class="c1">// 8번은 시스템 콜(ecall)</span>
-
-<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">killed</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
-<span class="w">      </span><span class="n">exit</span><span class="p">(</span><span class="mi">-1</span><span class="p">);</span><span class="w">                             </span><span class="c1">// 이미 죽은 프로세스면 즉시 종료</span>
-
-<span class="w">    </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">epc</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w">                 </span><span class="c1">// pc+4 (다음 명령어)</span>
-
-<span class="w">    </span><span class="n">intr_on</span><span class="p">();</span><span class="w">                              </span><span class="c1">// syscall 도중 인터럽트 허용</span>
-
-<span class="w">    </span><span class="n">syscall</span><span class="p">();</span><span class="w">                              </span><span class="c1">// 시스템 콜 핸들링</span>
-<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">((</span><span class="n">which_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">devintr</span><span class="p">())</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
-
-<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">                                  </span><span class="c1">// 알 수 없는 예외 발생</span>
-<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;usertrap(): unexpected scause 0x%lx pid=%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">r_scause</span><span class="p">(),</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pid</span><span class="p">);</span>
-<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;            sepc=0x%lx stval=0x%lx</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">r_sepc</span><span class="p">(),</span><span class="w"> </span><span class="n">r_stval</span><span class="p">());</span>
-<span class="w">    </span><span class="n">setkilled</span><span class="p">(</span><span class="n">p</span><span class="p">);</span><span class="w">                           </span><span class="c1">// 프로세스 종료 예약</span>
-<span class="w">  </span><span class="p">}</span>
-
-<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">killed</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
-<span class="w">    </span><span class="n">exit</span><span class="p">(</span><span class="mi">-1</span><span class="p">);</span>
-
-<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">which_dev</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w">                        </span><span class="c1">// 2번은 타이머 인터럽트</span>
-<span class="w">    </span><span class="n">yield</span><span class="p">();</span><span class="w">                                </span><span class="c1">// CPU를 양보함</span>
-
-<span class="w">  </span><span class="n">usertrapret</span><span class="p">();</span><span class="w">                            </span><span class="c1">// 유저 공간 복귀 준비</span>
-<span class="p">}</span>
-
-<span class="c1">// 유저 모드로 복귀할 준비</span>
-<span class="kt">void</span>
-<span class="nf">usertrapret</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myproc</span><span class="p">();</span>
-
-<span class="w">  </span><span class="n">intr_off</span><span class="p">();</span><span class="w">                                 </span><span class="c1">// 복귀 도중 trap 발생하지 않게 인터럽트 비활성화</span>
-
-<span class="w">  </span><span class="c1">// stvec을 다시 다시 trampoline의 uservec으로 설정</span>
-<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">trampoline_uservec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TRAMPOLINE</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">uservec</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">trampoline</span><span class="p">);</span>
-<span class="w">  </span><span class="n">w_stvec</span><span class="p">(</span><span class="n">trampoline_uservec</span><span class="p">);</span>
-
-<span class="w">  </span><span class="c1">// uservec에서 사용할 정보들을 trapframe에 세팅</span>
-<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">kernel_satp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_satp</span><span class="p">();</span><span class="w">         </span><span class="c1">// 커널 페이지 테이블</span>
-<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">kernel_sp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">kstack</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">;</span><span class="w"> </span><span class="c1">// 커널 스택 최상단</span>
-<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">kernel_trap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">uint64</span><span class="p">)</span><span class="n">usertrap</span><span class="p">;</span><span class="w"> </span><span class="c1">// 다시 trap 들어올 때 실행할 함수</span>
-<span class="w">  </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">kernel_hartid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_tp</span><span class="p">();</span><span class="w">         </span><span class="c1">// 하트 번호</span>
+# as vs gas ― 이름만 다르고 실체는 같다
+CC = $(TOOLPREFIX)gcc
+AS = $(TOOLPREFIX)gas
+LD = $(TOOLPREFIX)ld
+OBJCOPY = $(TOOLPREFIX)objcopy
+OBJDUMP = $(TOOLPREFIX)objdump
 
 
-<span class="w">  </span><span class="c1">// 유저 모드 복귀를 위한 sstatus 설정</span>
-<span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_sstatus</span><span class="p">();</span>
-<span class="w">  </span><span class="n">x</span><span class="w"> </span><span class="o">&amp;=</span><span class="w"> </span><span class="o">~</span><span class="n">SSTATUS_SPP</span><span class="p">;</span><span class="w"> </span><span class="c1">// SPP=0(U)로</span>
-<span class="w">  </span><span class="n">x</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="n">SSTATUS_SPIE</span><span class="p">;</span><span class="w"> </span><span class="c1">// SPIE=1 유저 모드에서 인터럽트 허용</span>
-<span class="w">  </span><span class="n">w_sstatus</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
 
-<span class="w">  </span><span class="c1">// 실행 재개 위치 설정</span>
-<span class="w">  </span><span class="n">w_sepc</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">trapframe</span><span class="o">-&gt;</span><span class="n">epc</span><span class="p">);</span>
+# 여기부터 c compiler flags와 linker flags 설정
 
-<span class="w">  </span><span class="c1">// 유저 페이지 테이블 설정</span>
-<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">satp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MAKE_SATP</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">pagetable</span><span class="p">);</span>
+# -Wall 모든 경고 켜기 -Werror 경고를 오류로 취급 -O 기본 최적화(O1)
+# -fno~ 프레임 포인터 유지 -ggdb~ dwarf-2 디버그 심볼 삽입
+# -MD .c 타킷과 헤더 연결로 이루어진 의존성 .d 파일. 헤더를 수정하면 해당 .o만 재컴파일하도록 하기 위함.
+# -mcmodel medlow 모델이면 텍스트 섹션도 데이터 섹션도 2GB(31bit) 이내에 있어야함(작은 펌웨어). medany 모델이면 텍스트는 현재 pc에서 2GB, 데이터는 어디든 32bit이어야 함. large 모델이면 64bit 절대주소를 즉시값으로 넣음
+# 예를 들어 0x80004000(텍스트 섹션) pc 지점에서 전역변수 0x80011234(데이터 섹션)를 찾으려 하면 이는 0x0000D234 즉 52KB 차이이다. auipc t0, hi20(+0x0d000)과 addi t0, t0, lo12(0x234)로 도달가능.
+# 주석 부분은 완전 bare-metal 옵션 세트. -ffreestanding 표준 C 라이브러리 존재를 가정하지 말라 -mno-relax 릴랙스 최적화를 끔
+# 그 중 두개만 열어놓음 -fno-common 중복 전역 심볼을 오류 처리 -nostdlib 커널이니 crt0/libc 링크 안함
+# -fno-buildtin-17종 컴파일러 자체 최적화 대상에서 제외(커널이 구현한 함수와 충돌x)
+# -Wno-main main 반환값 없다고 경고x
+# -I 현재 디렉토리를 include 탐색 경로에 추가(include 파일이 어디에 있든 찾기 가능)
+# 마지막 줄은 cc가 스택 보호기를 인식(-E로 컴파일 없이 전처리 했을 때 종료코드 0)하면 추가하라. 실패하면 조용히 넘어가라.
+# 즉 커널은 자급자족 코드라 libc/시작파일이 필요 없고, 컴파일러 내장 builtin/스택보호/PIE를 꺼둔다
+CFLAGS = -Wall -Werror -O -fno-omit-frame-pointer -ggdb -gdwarf-2
+CFLAGS += -MD
+CFLAGS += -mcmodel=medany
+# CFLAGS += -ffreestanding -fno-common -nostdlib -mno-relax
+CFLAGS += -fno-common -nostdlib
+CFLAGS += -fno-builtin-strncpy -fno-builtin-strncmp -fno-builtin-strlen -fno-builtin-memset
+CFLAGS += -fno-builtin-memmove -fno-builtin-memcmp -fno-builtin-log -fno-builtin-bzero
+CFLAGS += -fno-builtin-strchr -fno-builtin-exit -fno-builtin-malloc -fno-builtin-putc
+CFLAGS += -fno-builtin-free
+CFLAGS += -fno-builtin-memcpy -Wno-main
+CFLAGS += -fno-builtin-printf -fno-builtin-fprintf -fno-builtin-vprintf
+CFLAGS += -I.
+CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null &gt;/dev/null 2&gt;&amp;1 &amp;&amp; echo -fno-stack-protector)
 
-<span class="w">  </span><span class="c1">// trampoline 상단에 있는 userret()을 호출하여 실제 복귀 수행</span>
-<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">trampoline_userret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TRAMPOLINE</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">userret</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">trampoline</span><span class="p">);</span>
-<span class="w">  </span><span class="p">((</span><span class="kt">void</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="n">uint64</span><span class="p">))</span><span class="n">trampoline_userret</span><span class="p">)(</span><span class="n">satp</span><span class="p">);</span>
-<span class="p">}</span>
+# PIE(포지션 독립 실행가능) 끄기 -우분투 16.10 툴체인에서 기본으로 켜질 수 있음
+# ifnoteq 같지 않으면 실행하라는 뜻. , 다음이 빈칸이니까 앞의 결과가 출력물이 존재하면 실행하라는게 됨.
+# cc의 스펙 파일 전체를 출력하여 그 중 &#39;f&#39;가 아닌 no-pie를 찾아라
+# 그래서 존재하면 -no-pie 옵션을 켜 PIE 끄기
+ifneq ($(shell $(CC) -dumpspecs 2&gt;/dev/null | grep -e &#39;[^f]no-pie&#39;),)
+CFLAGS += -fno-pie -no-pie
+endif
+ifneq ($(shell $(CC) -dumpspecs 2&gt;/dev/null | grep -e &#39;[^f]nopie&#39;),)
+CFLAGS += -fno-pie -nopie
+endif
 
-<span class="c1">// 커널 모드에서 trap 발생 시 호출</span>
-<span class="kt">void</span><span class="w"> </span>
-<span class="nf">kerneltrap</span><span class="p">()</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">which_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">sepc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_sepc</span><span class="p">();</span>
-<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">sstatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_sstatus</span><span class="p">();</span>
-<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">scause</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_scause</span><span class="p">();</span>
+# ELF 섹션 정렬 시 페이지 크기 4KB로 고정
+LDFLAGS = -z max-page-size=4096
 
-<span class="w">  </span><span class="k">if</span><span class="p">((</span><span class="n">sstatus</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">SSTATUS_SPP</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
-<span class="w">    </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;kerneltrap: not from supervisor mode&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">intr_get</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
-<span class="w">    </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;kerneltrap: interrupts enabled&quot;</span><span class="p">);</span>
 
-<span class="w">  </span><span class="k">if</span><span class="p">((</span><span class="n">which_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">devintr</span><span class="p">())</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
-<span class="w">    </span><span class="c1">// 원인을 알 수 없는 인터럽트</span>
-<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;scause=0x%lx sepc=0x%lx stval=0x%lx</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">scause</span><span class="p">,</span><span class="w"> </span><span class="n">r_sepc</span><span class="p">(),</span><span class="w"> </span><span class="n">r_stval</span><span class="p">());</span>
-<span class="w">    </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;kerneltrap&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">which_dev</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">myproc</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">       </span><span class="c1">// 타이머 인터럽트면 CPU 양보</span>
-<span class="w">    </span><span class="n">yield</span><span class="p">();</span>
+# 여기부터 타깃 설정
 
-<span class="w">  </span><span class="c1">// trap 전 레지스터 복원</span>
-<span class="w">  </span><span class="n">w_sepc</span><span class="p">(</span><span class="n">sepc</span><span class="p">);</span>
-<span class="w">  </span><span class="n">w_sstatus</span><span class="p">(</span><span class="n">sstatus</span><span class="p">);</span>
-<span class="p">}</span>
+# kernel = .o들 + 링커파일  + initcode
+# 설정플래그 + 링커파일과 + .o들 -&gt; 커널.elf 만들기
+# 디스어셈블로 설명서 만들기
+# 불필요 헤더 삭제하고 심볼 테이블 추출
+$K/kernel: $(OBJS) $K/kernel.ld $U/initcode
+    $(LD) $(LDFLAGS) -T $K/kernel.ld -o $K/kernel $(OBJS) 
+    $(OBJDUMP) -S $K/kernel &gt; $K/kernel.asm
+    $(OBJDUMP) -t $K/kernel | sed &#39;1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d&#39; &gt; $K/kernel.sym
 
-<span class="c1">// 타이머 인터럽트 핸들러</span>
-<span class="kt">void</span>
-<span class="nf">clockintr</span><span class="p">()</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">cpuid</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span><span class="w">                     </span><span class="c1">// 0번 하트만 ticks 증가 및 wakeup. 0번 하트는 초기화 담당인 동시에 전역 시계(ticks) 기준 하트임.</span>
-<span class="w">    </span><span class="n">acquire</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tickslock</span><span class="p">);</span>
-<span class="w">    </span><span class="n">ticks</span><span class="o">++</span><span class="p">;</span>
-<span class="w">    </span><span class="n">wakeup</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ticks</span><span class="p">);</span>
-<span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tickslock</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span>
+# initcode란 xv6가 부팅직후 userinit()에서 메모리에 복사 실행하는 최초 사용자 공간 코드
+# 커널은 앞에서 만든거고 이건 프로세스다. 유일하게 이것만 커널에도 넣어줌
+# 설정플래그 + .S -&gt; .o 만들기
+# -march-rv64g 모든 표준 확장 사용 -nostdinc 시스템 헤더 무시
+# .o -&gt; .out 만들기
+# -N .text(RX)/.data(RW)를 모두 하나의 RWX 덩어리로 만들어서 재배치 없음
+# -e start 엔트리포인트 심볼을 start로 설정
+# -Ttext 0 가상주소 0부터 배치하여 xv6커널이 유저 공간에 로드하기 편함
+# 순수 바이너리 파일 만들고 설명서 만들기
+$U/initcode: $U/initcode.S
+    $(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/initcode.S -o $U/initcode.o
+    $(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/initcode.out $U/initcode.o
+    $(OBJCOPY) -S -O binary $U/initcode.out $U/initcode
+    $(OBJDUMP) -S $U/initcode.o &gt; $U/initcode.asm
 
-<span class="w">  </span><span class="c1">// 100만 cpu 사이클 뒤에 또 깨워줘, 즉 1 tick = 1 timer interrupt = 100Hz = 약  10ms</span>
-<span class="w">  </span><span class="n">w_stimecmp</span><span class="p">(</span><span class="n">r_time</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1000000</span><span class="p">);</span>
-<span class="p">}</span>
+# 모든 c와 S에 대해 심볼 색인 파일 생성. 전부 탐색하도록 빌드 산출물 의존을 걸어둠.
+tags: $(OBJS) _init
+    etags *.S *.c
 
-<span class="c1">// 다른 디바이스면 1, 모르면 0, 타이머 인터럽트면 2</span>
-<span class="kt">int</span>
-<span class="nf">devintr</span><span class="p">()</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="n">uint64</span><span class="w"> </span><span class="n">scause</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r_scause</span><span class="p">();</span><span class="w">       </span><span class="c1">// scause 레지스터. 현재 trap의 원인을 나타냄</span>
 
-<span class="w">  </span><span class="c1">// 외부 인터럽트 (PLIC을 통해 들어오는 디바이스 인터럽트)</span>
-<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">scause</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">0x8000000000000009L</span><span class="p">){</span><span class="w">      </span><span class="c1">// 이 값이면 Supervisor external interrupt</span>
 
-<span class="w">    </span><span class="c1">// 어떤 장치가 인터럽트를 발생시켰는지 확인.</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">irq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">plic_claim</span><span class="p">();</span><span class="w">               </span><span class="c1">// PLIC에서 IRQ 번호 확인</span>
+# 여기부터 유저 프로세스 설정
 
-<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">irq</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">UART0_IRQ</span><span class="p">){</span><span class="w">                 </span><span class="c1">// UART(시리얼 통신 장치)에서 인터럽트 발생</span>
-<span class="w">      </span><span class="n">uartintr</span><span class="p">();</span><span class="w">                         </span><span class="c1">// UART 관련 인터럽트 핸들러 실행</span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">irq</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">VIRTIO0_IRQ</span><span class="p">){</span><span class="w">        </span><span class="c1">// VirtIO 디스크에서 인터럽트 발생</span>
-<span class="w">      </span><span class="n">virtio_disk_intr</span><span class="p">();</span><span class="w">                 </span><span class="c1">// 디스크 인터럽트 핸들러 실행</span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">irq</span><span class="p">){</span><span class="w">                       </span><span class="c1">// 알 수 없는 장치에서 인터럽트 발생</span>
-<span class="w">      </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;unexpected interrupt irq=%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">irq</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
+# 유저 프로그램용 정적 라이브러리 묶음
+ULIB = $U/ulib.o $U/usys.o $U/printf.o $U/umalloc.o
 
-<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">irq</span><span class="p">)</span><span class="w">                               </span><span class="c1">// 인터럽트 처리가 끝났음을 PLIC에 알림</span>
-<span class="w">      </span><span class="n">plic_complete</span><span class="p">(</span><span class="n">irq</span><span class="p">);</span>
+# 라이브러리 참조해 유저 프로그램 _cat같은 실행파일 만들기
+# _%는 패턴 규칙에 의해 알아서 _cat을 만들어야겠네? 하고 타깃 발동
+# $@은 정해진 타깃이름 참조 $^는 모든 의존 목록
+_%: %.o $(ULIB)
+    $(LD) $(LDFLAGS) -T $U/user.ld -o $@ $^
+    $(OBJDUMP) -S $@ &gt; $*.asm
+    $(OBJDUMP) -t $@ | sed &#39;1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d&#39; &gt; $*.sym
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">                             </span><span class="c1">// 장치 인터럽트 처리 완료</span>
-<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">scause</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">0x8000000000000005L</span><span class="p">){</span><span class="w">   </span><span class="c1">// 이 값이면 Supervisor timer interrupt</span>
-<span class="w">    </span><span class="n">clockintr</span><span class="p">();</span><span class="w">                           </span><span class="c1">// 타이머 인터럽트 핸들러 실행</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w">                         </span><span class="c1">// 타이머 인터럽트 처리 완료</span>
-<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">                   </span><span class="c1">// 알 수 없는 인터럽트</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
+# perl 스크립트 usys.pl을 .o로 만들기
+$U/usys.S : $U/usys.pl
+    perl $U/usys.pl &gt; $U/usys.S
+
+$U/usys.o : $U/usys.S
+    $(CC) $(CFLAGS) -c -o $U/usys.o $U/usys.S
+
+# 프로세스 테이블을 채우는 테스트 실행파일 만들기
+# -N .text/.data를 한 덩어리 RWX에
+# -e main 엔트리 심볼을 main으로
+# -Ttext 0 가상주소 0으로 링크
+$U/_forktest: $U/forktest.o $(ULIB)
+    $(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $U/_forktest $U/forktest.o $U/ulib.o $U/usys.o
+    $(OBJDUMP) -S $U/_forktest &gt; $U/forktest.asm
+
+# 호스트(내pc)용 실행파일 mkfs 만들기
+# 커널과 mkfs간 구조체와 상수가 같도록 커널에서 fs.h 파일시스템 정의 param.h 상수 정의 가져옴
+# 네이티브 gcc
+mkfs/mkfs: mkfs/mkfs.c $K/fs.h $K/param.h
+    gcc -Werror -Wall -I. -o mkfs/mkfs mkfs/mkfs.c
+
+# GNU make에서는 중간 파일 .o를 디폴트로 삭제하지만, 공유하거나 fs.img 재생성을 막기 위해 남겨둠
+.PRECIOUS: %.o
+
+# 사용할 유저 프로그램 목록
+UPROGS=\
+    $U/_cat\
+    $U/_echo\
+    $U/_forktest\
+    $U/_grep\
+    $U/_init\
+    $U/_kill\
+    $U/_ln\
+    $U/_ls\
+    $U/_mkdir\
+    $U/_rm\
+    $U/_sh\
+    $U/_stressfs\
+    $U/_usertests\
+    $U/_grind\
+    $U/_wc\
+    $U/_zombie\
+
+# 유저 프로그램 이미지 파일 생성(호스트에서)
+fs.img: mkfs/mkfs README $(UPROGS)
+    mkfs/mkfs fs.img README $(UPROGS)
+
+# 파일이 아직 없더라도(첫빌드) 넘어가는 장치
+-include kernel/*.d user/*.d
+
+
+
+# 여기부터 추가 기능
+
+clean: 
+    rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
+    */*.o */*.d */*.asm */*.sym \
+    $U/initcode $U/initcode.out $K/kernel fs.img \
+    mkfs/mkfs .gdbinit \
+        $U/usys.S \
+    $(UPROGS)
+
+# 호스트 UID로부터 고유한 GDB TCP 포트 계산. 몰리지 않게.
+GDBPORT = $(shell expr `id -u` % 5000 + 25000)
+# qemu 도움말에 -gdb 옵션이 있으면 -gdb tcp port 형식 사용, 없으면 구버전 -s -p port 사용
+QEMUGDB = $(shell if $(QEMU) -help | grep -q &#39;^-gdb&#39;; \
+    then echo &quot;-gdb tcp::$(GDBPORT)&quot;; \
+    else echo &quot;-s -p $(GDBPORT)&quot;; fi)
+# 하트수
+ifndef CPUS
+CPUS := 3
+endif
+
+# -bios none: OpenSBI같은 펌웨어 건너뜀 -kernel: 커널 elf 직접 로드
+# -m 128M: RAM 128MB -smp $(CPUS): 하트수 -nographic: 콘솔만
+# virtio-mmio 추가. fs.img 넣기.
+QEMUOPTS = -machine virt -bios none -kernel $K/kernel -m 128M -smp $(CPUS) -nographic
+QEMUOPTS += -global virtio-mmio.force-legacy=false
+QEMUOPTS += -drive file=fs.img,if=none,format=raw,id=x0
+QEMUOPTS += -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
+
+qemu: $K/kernel fs.img
+    $(QEMU) $(QEMUOPTS)
+
+# GDBPORT를 로컬에선 1234로 치환. 그리고 자동실행.
+.gdbinit: .gdbinit.tmpl-riscv
+    sed &quot;s/:1234/:$(GDBPORT)/&quot; &lt; $^ &gt; $@
+
+# -S: qemu를 리셋 직후 정지. 다른 창에서 gdb 실행하면 됨
+qemu-gdb: $K/kernel .gdbinit fs.img
+    @echo &quot;*** Now run &#39;gdb&#39; in another window.&quot; 1&gt;&amp;2
+    $(QEMU) $(QEMUOPTS) -S $(QEMUGDB)
 </code></pre></div>
+<div class="highlight"><pre><span></span><code>           ┌─ kernel (S-mode) ───────────────────────────┐
+           │ main() → userinit()                         │
+           │            │                                │
+</code></pre></div>
+<ol>
+<li>부팅 완료 ──┘            ▼                                │</li>
+<li>initproc 생성          (커널 내장)                         │<br />
+      → <code>p-&gt;pagetable</code>   +--------------------------------+  │<br />
+      → <code>memmove()</code>      |   RAW   initcode   binary      |  │<br />
+      → <code>p-&gt;trapframe</code>   +--------------------------------+  │<br />
+      → <code>epc = 0</code>        ^  (VA 0x0)                       │<br />
+               │         │  4 KiB  |R/W/X|                 │<br />
+               └─────────┴────────┴────────────────────────┘<br />
+                         ↓ sret (U-mode 진입)</li>
+<li><strong>initcode</strong> 실행 (U-mode)<br />
+<em>간단한 hand-written 어셈블리</em><br />
+   ```asm<br />
+   li  a0, 0        # argv=0<br />
+   auipc a1, init   # "init" 문자열<br />
+   ecall SYS_exec   # exec("/init")<br />
+   ecall SYS_exit   # 만약 실패하면 종료</li>
+</ol>
 
 
 
