@@ -9,22 +9,25 @@
       
       
       
-        <link rel="prev" href="../2-kernel/">
+        <link rel="prev" href="../3-kernel/">
       
       
-        <link rel="next" href="../4-trap/">
+        <link rel="next" href="../5-trap/">
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+      <link rel="icon" href="../logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
     
     
       
-        <title>MMU - make-os</title>
+        <title>4 MMU - Make-OS</title>
       
     
     
       <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -38,10 +41,12 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
       
     
+    
+      <link rel="stylesheet" href="../soft-era.css">
     
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -53,7 +58,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="apple" data-md-color-primary="white" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -74,14 +86,11 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="make-os" class="md-header__button md-logo" aria-label="make-os" data-md-component="logo">
+    <a href="../.." title="Make-OS" class="md-header__button md-logo" aria-label="Make-OS" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <img src="../logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -92,18 +101,44 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            make-os
+            Make-OS
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              MMU
+              4 MMU
             
           </span>
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="apple" data-md-color-primary="white" data-md-color-accent="indigo"  aria-label="Soft Era"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Soft Era" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20.71 4.63-1.34-1.34c-.37-.39-1.02-.39-1.41 0L9 12.25 11.75 15l8.96-8.96c.39-.39.39-1.04 0-1.41M7 14a3 3 0 0 0-3 3c0 1.31-1.16 2-2 2 .92 1.22 2.5 2 4 2a4 4 0 0 0 4-4 3 3 0 0 0-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="soft" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Apple Classic"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Apple Classic" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20.71 4.63-1.34-1.34c-.37-.39-1.02-.39-1.41 0L9 12.25 11.75 15l8.96-8.96c.39-.39.39-1.04 0-1.41M7 14a3 3 0 0 0-3 3c0 1.31-1.16 2-2 2 .92 1.22 2.5 2 4 2a4 4 0 0 0 4-4 3 3 0 0 0-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -160,6 +195,226 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../1-vm/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  1 vm
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../10-mini-os/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  10 mini os
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../2-hw/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  2 hw
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../3-kernel/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  3 kernel
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  4 MMU
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../5-trap/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  5 trap
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../6-PCB/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  6 PCB
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../7-uart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  7 uart
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../8-mkfs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  8 mkfs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../9-build/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  9 build
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -173,16 +428,17 @@
                     
 
 
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href=".." title="make-os" class="md-nav__button md-logo" aria-label="make-os" data-md-component="logo">
-      
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Make-OS" class="md-nav__button md-logo" aria-label="Make-OS" data-md-component="logo">
+      
+  <img src="../logo.svg" alt="logo">
 
     </a>
-    make-os
+    Make-OS
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -194,12 +450,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../0-vm/" class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    vm
+    Home
     
   </span>
   
@@ -216,12 +472,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../1-hardware/" class="md-nav__link">
+      <a href="../1-vm/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    h/w
+    1 vm
     
   </span>
   
@@ -238,12 +494,56 @@
   
   
     <li class="md-nav__item">
-      <a href="../2-kernel/" class="md-nav__link">
+      <a href="../10-mini-os/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    kernel
+    10 mini os
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-hw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    2 hw
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-kernel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    3 kernel
     
   </span>
   
@@ -272,7 +572,7 @@
   
   
   <span class="md-ellipsis">
-    MMU
+    4 MMU
     
   </span>
   
@@ -285,7 +585,7 @@
   
   
   <span class="md-ellipsis">
-    MMU
+    4 MMU
     
   </span>
   
@@ -380,12 +680,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../4-trap/" class="md-nav__link">
+      <a href="../5-trap/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    trap
+    5 trap
     
   </span>
   
@@ -402,12 +702,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../5-PCB/" class="md-nav__link">
+      <a href="../6-PCB/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    PCB
+    6 PCB
     
   </span>
   
@@ -424,12 +724,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../6-uart/" class="md-nav__link">
+      <a href="../7-uart/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    uart
+    7 uart
     
   </span>
   
@@ -446,34 +746,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../7-mkfs/" class="md-nav__link">
+      <a href="../8-mkfs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    mkfs
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../8-mini-os/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    mini-os
+    8 mkfs
     
   </span>
   
@@ -495,7 +773,7 @@
   
   
   <span class="md-ellipsis">
-    build
+    9 build
     
   </span>
   
@@ -605,13 +883,13 @@
 
 
 
-  <h1>MMU</h1>
+  <h1>4 MMU</h1>
 
-<h2 id="xv6-riscv-vmc">xv6-riscv의 vm.c 파일을 읽어보자<a class="headerlink" href="#xv6-riscv-vmc" title="Permanent link">&para;</a></h2>
-<h3 id="mmu">목표: MMU 이해<a class="headerlink" href="#mmu" title="Permanent link">&para;</a></h3>
+<h2 id="xv6-riscv-vmc">xv6-riscv의 vm.c 파일을 읽어보자</h2>
+<h3 id="mmu">목표: MMU 이해</h3>
 <p>작성자: kkongnyang2 작성일: 2025-06-25</p>
 <hr />
-<h3 id="0">0&gt; 개념 정리<a class="headerlink" href="#0" title="Permanent link">&para;</a></h3>
+<h3 id="0">0&gt; 개념 정리</h3>
 <p>페이지? 공간을 연속적으로 할당하지 않고 페이지라는 단위로 쪼개서 사용한다.<br />
 프로세스의 메모리도, 실제 physical 메모리도 페이지 4KB 단위로 쪼갠다.</p>
 <p>그리고 이러한 VPN(virtual page number)과 PEN(physical frame number)로 매핑해주는 표가 page table이다.(원소는 PTE)<br />
@@ -619,7 +897,7 @@
 <p>그럼 이 페이지 테이블 실체는 어디에 저장되냐? 공통 커널 PTE는 부팅시 .text, .data 밖 kalloc() 동적할당에 존재하고 satp CSR을 통해 부른다. 각 프로세스 PTE는 역시 kalloc() 동적할당에 저장되고, 개별 root PT 주소를 저장한다.</p>
 <p>그럼 페이지 테이블에서 각 PTE를 어떻게 찾느냐? VA를 4조각으로 끊어 3개의 index와 page offset으로 사용한다. 이 목차로 페이지 테이블을 구성하기에 한영사전 처럼 찾을수 있는 것이다.</p>
 <p>참고로 디스크에서는 블록이라는 단위를 쓰고, inode 메타데이터를 통해 블록끼리 연결된다. 이 디스크의 데이터를 메모리로 올릴 때 xv6은 각 페이지마다 VA 페이지를 할당하고 memcpy한다. </p>
-<h3 id="1">1&gt; 용어 정리<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<h3 id="1">1&gt; 용어 정리</h3>
 <div class="highlight"><pre><span></span><code>가상주소 (VA, Virtual Address)        // 사용자·커널 코드가 쓰는 논리적 주소
 물리주소 (PA, Physical Address)        // 실제 DRAM 칩의 셀 위치
 MMU (Memory Management Unit)           // VA→PA 변환을 담당하는 하드웨어
@@ -634,7 +912,7 @@ A/D 비트                               // Accessed/Dirty – 페이지 사용�
 sfence.vma zero,zero                   // TLB 전부 무효화(페이지테이블 바꾼 뒤 필수)
 csrw satp, t1                          // SATP CSR에 새로운 페이지테이블(root PPN) 등록
 </code></pre></div>
-<h3 id="2">2&gt; 흐름 정리<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<h3 id="2">2&gt; 흐름 정리</h3>
 <div class="highlight"><pre><span></span><code>start.c      → kvminit()         → vm.c
               (커널전용)              ├─ kvmmake()      // 커널 자체 map
                                     ├─ kvmmap()       // 실제 page → VA 매핑 헬퍼
@@ -682,7 +960,7 @@ root의 아래 영역까지 합치면 38비트는 user area, 38비트는 kernel 
    44 bits      2      권한·상태 비트
 </code></pre></div><br />
 PTE 형식(64bit=8byte) </p>
-<h3 id="3-vmc">3&gt; vm.c<a class="headerlink" href="#3-vmc" title="Permanent link">&para;</a></h3>
+<h3 id="3-vmc">3&gt; vm.c</h3>
 <div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;param.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;types.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;memlayout.h&quot;</span>
@@ -1150,10 +1428,10 @@ PTE 형식(64bit=8byte) </p>
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "content.code.copy", "header.autohide"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
       
     
   </body>

@@ -9,20 +9,23 @@
       
       
       
-        <link rel="prev" href="../8-mini-os/">
+        <link rel="prev" href="../8-mkfs/">
       
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+      <link rel="icon" href="../logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
     
     
       
-        <title>build - make-os</title>
+        <title>9 build - Make-OS</title>
       
     
     
       <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -36,10 +39,12 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
       
     
+    
+      <link rel="stylesheet" href="../soft-era.css">
     
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -51,7 +56,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="apple" data-md-color-primary="white" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -72,14 +84,11 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="make-os" class="md-header__button md-logo" aria-label="make-os" data-md-component="logo">
+    <a href="../.." title="Make-OS" class="md-header__button md-logo" aria-label="Make-OS" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <img src="../logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -90,18 +99,44 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            make-os
+            Make-OS
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              build
+              9 build
             
           </span>
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="apple" data-md-color-primary="white" data-md-color-accent="indigo"  aria-label="Soft Era"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Soft Era" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20.71 4.63-1.34-1.34c-.37-.39-1.02-.39-1.41 0L9 12.25 11.75 15l8.96-8.96c.39-.39.39-1.04 0-1.41M7 14a3 3 0 0 0-3 3c0 1.31-1.16 2-2 2 .92 1.22 2.5 2 4 2a4 4 0 0 0 4-4 3 3 0 0 0-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="soft" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Apple Classic"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Apple Classic" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20.71 4.63-1.34-1.34c-.37-.39-1.02-.39-1.41 0L9 12.25 11.75 15l8.96-8.96c.39-.39.39-1.04 0-1.41M7 14a3 3 0 0 0-3 3c0 1.31-1.16 2-2 2 .92 1.22 2.5 2 4 2a4 4 0 0 0 4-4 3 3 0 0 0-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -158,6 +193,226 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../1-vm/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  1 vm
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../10-mini-os/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  10 mini os
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../2-hw/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  2 hw
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../3-kernel/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  3 kernel
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../4-MMU/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  4 MMU
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../5-trap/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  5 trap
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../6-PCB/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  6 PCB
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../7-uart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  7 uart
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../8-mkfs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  8 mkfs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  9 build
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -171,16 +426,17 @@
                     
 
 
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href=".." title="make-os" class="md-nav__button md-logo" aria-label="make-os" data-md-component="logo">
-      
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Make-OS" class="md-nav__button md-logo" aria-label="Make-OS" data-md-component="logo">
+      
+  <img src="../logo.svg" alt="logo">
 
     </a>
-    make-os
+    Make-OS
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -192,12 +448,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../0-vm/" class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    vm
+    Home
     
   </span>
   
@@ -214,12 +470,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../1-hardware/" class="md-nav__link">
+      <a href="../1-vm/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    h/w
+    1 vm
     
   </span>
   
@@ -236,12 +492,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../2-kernel/" class="md-nav__link">
+      <a href="../10-mini-os/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    kernel
+    10 mini os
     
   </span>
   
@@ -258,12 +514,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../3-MMU/" class="md-nav__link">
+      <a href="../2-hw/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    MMU
+    2 hw
     
   </span>
   
@@ -280,12 +536,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../4-trap/" class="md-nav__link">
+      <a href="../3-kernel/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    trap
+    3 kernel
     
   </span>
   
@@ -302,12 +558,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../5-PCB/" class="md-nav__link">
+      <a href="../4-MMU/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    PCB
+    4 MMU
     
   </span>
   
@@ -324,12 +580,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../6-uart/" class="md-nav__link">
+      <a href="../5-trap/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    uart
+    5 trap
     
   </span>
   
@@ -346,12 +602,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../7-mkfs/" class="md-nav__link">
+      <a href="../6-PCB/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    mkfs
+    6 PCB
     
   </span>
   
@@ -368,12 +624,34 @@
   
   
     <li class="md-nav__item">
-      <a href="../8-mini-os/" class="md-nav__link">
+      <a href="../7-uart/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    mini-os
+    7 uart
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8-mkfs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    8 mkfs
     
   </span>
   
@@ -402,7 +680,7 @@
   
   
   <span class="md-ellipsis">
-    build
+    9 build
     
   </span>
   
@@ -415,7 +693,7 @@
   
   
   <span class="md-ellipsis">
-    build
+    9 build
     
   </span>
   
@@ -657,13 +935,13 @@
 
 
 
-  <h1>build</h1>
+  <h1>9 build</h1>
 
-<h2 id="_1">프로젝트 빌드 과정을 알아보자<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<h3 id="_2">목표: 프로젝트의 이해<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<h2 id="_1">프로젝트 빌드 과정을 알아보자</h2>
+<h3 id="_2">목표: 프로젝트의 이해</h3>
 <p>작성자: kkongnyang2 작성일: 2025-06-30</p>
 <hr />
-<h3 id="0">0&gt; 기본<a class="headerlink" href="#0" title="Permanent link">&para;</a></h3>
+<h3 id="0">0&gt; 기본</h3>
 <p>소스파일 가져오는건 <br />
  git clone https://gitlab.com/qemu-project/qemu.git</p>
 <div class="highlight"><pre><span></span><code>(사람)             (Generator)                 (Builder)
@@ -678,7 +956,7 @@
 builder: 빌드 산출물 리턴<br />
 install: prefix 경로에 안착</p>
 <p>Cmake는 요즘 범용성 높아 많이 쓰임. make도 ninja도 사용 가능.</p>
-<h3 id="1-riscv-gnu-toolchain">1&gt; riscv-gnu-toolchain<a class="headerlink" href="#1-riscv-gnu-toolchain" title="Permanent link">&para;</a></h3>
+<h3 id="1-riscv-gnu-toolchain">1&gt; riscv-gnu-toolchain</h3>
 <p>riscv-gnu-toolchain의 조합<br />
 Generator  : Autotools(./configure로 makefile파일 자동생성)<br />
 Builder    : GNU Make</p>
@@ -705,7 +983,7 @@ make -j$(nproc)          # 메인 Makefile이 scripts/build-*.sh 호출<br />
      ↳ 각 script 내부   →  binutils, gcc, newlib … 를 차례로 make<br />
 3) Install 단계<br />
 make install             # 결과물을 $HOME/opt/riscv/{bin,lib,include,…}로 복사</p>
-<h3 id="2-qemu">2&gt; qemu<a class="headerlink" href="#2-qemu" title="Permanent link">&para;</a></h3>
+<h3 id="2-qemu">2&gt; qemu</h3>
 <p>qemu의 조합<br />
 Generator   : Meson<br />
 Builder     : Ninja<br />
@@ -730,7 +1008,7 @@ Builder     : Ninja<br />
 ninja -C build -j$(nproc)                        # .o → libqemu* → qemu-system-riscv64<br />
 3) Install<br />
 ninja -C build install               # 디폴트는 실행파일 /usr/local/bin 에 복사. 아까 prefix 설정했으면 $HOME/opt/qemu/{bin,lib,share,…}로 복사됨</p>
-<h3 id="3-xv6-riscv">3&gt; xv6-riscv<a class="headerlink" href="#3-xv6-riscv" title="Permanent link">&para;</a></h3>
+<h3 id="3-xv6-riscv">3&gt; xv6-riscv</h3>
 <p>xv6-riscv의 조합<br />
 Generator  : 없음.(generator가 아무것도 없기에 손수 makefile파일 작성)<br />
 Builder    : GNU Make</p>
@@ -750,16 +1028,16 @@ Builder    : GNU Make</p>
 make<br />
 3) Install<br />
 따로 경로는 안하고 이 소스파일안에 냅두고 qemu에 올려서 부팅(make qemu)</p>
-<h3 id="3">3&gt; 명령어 의미<a class="headerlink" href="#3" title="Permanent link">&para;</a></h3>
+<h3 id="3">3&gt; 명령어 의미</h3>
 <p>--prefix=$HOME/opt/qemu<br />
 설치 결과물을 시스템 루트(/usr)가 아닌 내 홈 폴더 아래에 복사해라. (안쓰면 디폴트는 /usr/local일거임) root 권한 없이, 다른 qemu 버전과 충돌 없이 관리 가능.</p>
 <p>echo 'export PATH=$HOME/opt/qemu/bin:$PATH' &gt;&gt; ~/.bashrc<br />
 source ~/.bashrc<br />
 셸은 기본적으로 /usr/bin, /usr/local/bin 같은 표준 디렉토리만 찾기 때문에, 홈 안에 설치했으면 이 디렉터리를 PATH에 넣어야 편하게 호출가능. 아니면 매번 경로 입력해 호출해야함.</p>
 <p>이거 안해줄거면 그냥 디폴트로 하나만 쓰고 루트 디렉토리로 sudo make install 해주면 됨.</p>
-<h3 id="4">4&gt; 크로스 툴체인 위치<a class="headerlink" href="#4" title="Permanent link">&para;</a></h3>
+<h3 id="4">4&gt; 크로스 툴체인 위치</h3>
 <p>호스트 툴체인 실행파일은 usr/bin에 있음. 크로스 툴체인은 usr/riscv64-linux-gnu/bin에 저장되기에 구분</p>
-<h3 id="5">5&gt; 삭제 방법<a class="headerlink" href="#5" title="Permanent link">&para;</a></h3>
+<h3 id="5">5&gt; 삭제 방법</h3>
 <p>riscv-gnu-toolchain<br />
 설치 실행파일 제거 rm -rf usr/riscv-gnu-toolchain<br />
 path 되돌리기 nano ~/.bashrc에서 export PATH 라인 삭제<br />
@@ -829,10 +1107,10 @@ path 되돌리기 nano ~/.bashrc에서 export PATH 라인 삭제<br />
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "content.code.copy", "header.autohide"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
       
     
   </body>
