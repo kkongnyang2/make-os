@@ -1,24 +1,40 @@
-site_name: make-os
+site_name: Make-OS
+
 theme:
   name: material
-nav:                    #사이드바 목차
-  - vm: 0-vm.md
-  - h/w: 1-hardware.md
-  - kernel: 2-kernel.md
-  - MMU: 3-MMU.md
-  - trap: 4-trap.md
-  - PCB: 5-PCB.md
-  - uart: 6-uart.md
-  - mkfs: 7-mkfs.md
-  - mini-os: 8-mini-os.md
-  - build: 9-build.md
-docs_dir: docs          #기본값은 docs. 따라서 안써도 되지만 그냥 명시
-site_dir: site          #기본값은 site. 따라서 안써도 되지만 그냥 명시
+  logo: logo.svg
+  favicon: logo.svg
+
+  font:
+    text: Inter
+    code: "JetBrains Mono"
+
+  palette:
+    - scheme: apple          # 기본(라이트)
+      primary: white
+      accent: indigo
+      toggle:
+        icon: material/brush
+        name: Soft Era
+    - scheme: soft           # 커스텀 팔레트
+      primary: custom        # custom → CSS 변수에서 덮어씀
+      accent: custom
+      toggle:
+        icon: material/brush
+        name: Apple Classic
+
+  features:
+    - navigation.tabs           # 상단 탭 내비게이션
+    - content.code.copy         # 코드 블록 Copy 버튼
+    - header.autohide           # 스크롤 시 헤더 숨김
+
+extra:
+  homepage: .. 
+
+extra_css:
+  - soft-era.css
+
 markdown_extensions:
-  - admonition
-  - toc:
-      permalink: true
-  - pymdownx.extra
-  - pymdownx.highlight
-  - pymdownx.superfences
-  - nl2br       # ← 줄바꿈 자동 처리
+  - pymdownx.extra            # 유용 기능들 모음
+  - pymdownx.highlight        # 코드 블럭 문법 강조
+  - nl2br                     # 줄바꿈 자동 처리

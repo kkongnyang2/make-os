@@ -1,12 +1,3 @@
-## 📚 목차
+# Home
 
-- [0. vm](0-vm.md)
-- [1. hardware](1-hardware.md)
-- [2. kernel](2-kernel.md)
-- [3. MMU](3-MMU.md)
-- [4. trap](4-trap.md)
-- [5. PCB](5-PCB.md)
-- [6. uart](6-uart.md)
-- [7. mkfs](7-mkfs.md)
-- [8. mini-os](8-mini-os.md)
-- [9. build](9-build.md)
+## 가상머신 -> 하드웨어 -> 커널 엔트리 -> 가상 주소 -> 트랩 -> 프로세스 -> UART -> 파일 이미지 -> 빌드 시스템 -> 미니 os
