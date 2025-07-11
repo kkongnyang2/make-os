@@ -724,7 +724,7 @@
           <li class="md-nav__item">
   <a href="#1-riscv-gnu-toolchain" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; riscv-gnu-toolchain
+      1&gt; riscv-gnu-toolchain 조합
     </span>
   </a>
   
@@ -733,7 +733,7 @@
           <li class="md-nav__item">
   <a href="#2-qemu" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; qemu
+      2&gt; qemu 조합
     </span>
   </a>
   
@@ -742,7 +742,7 @@
           <li class="md-nav__item">
   <a href="#3-xv6-riscv" class="md-nav__link">
     <span class="md-ellipsis">
-      3&gt; xv6-riscv
+      3&gt; xv6-riscv 조합
     </span>
   </a>
   
@@ -770,6 +770,15 @@
   <a href="#5" class="md-nav__link">
     <span class="md-ellipsis">
       5&gt; 삭제 방법
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      6&gt; build 디렉토리 만들기
     </span>
   </a>
   
@@ -865,7 +874,7 @@
           <li class="md-nav__item">
   <a href="#1-riscv-gnu-toolchain" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; riscv-gnu-toolchain
+      1&gt; riscv-gnu-toolchain 조합
     </span>
   </a>
   
@@ -874,7 +883,7 @@
           <li class="md-nav__item">
   <a href="#2-qemu" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; qemu
+      2&gt; qemu 조합
     </span>
   </a>
   
@@ -883,7 +892,7 @@
           <li class="md-nav__item">
   <a href="#3-xv6-riscv" class="md-nav__link">
     <span class="md-ellipsis">
-      3&gt; xv6-riscv
+      3&gt; xv6-riscv 조합
     </span>
   </a>
   
@@ -911,6 +920,15 @@
   <a href="#5" class="md-nav__link">
     <span class="md-ellipsis">
       5&gt; 삭제 방법
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      6&gt; build 디렉토리 만들기
     </span>
   </a>
   
@@ -958,9 +976,8 @@
 builder: 빌드 산출물 리턴<br />
 install: prefix 경로에 안착</p>
 <p>Cmake는 요즘 범용성 높아 많이 쓰임. make도 ninja도 사용 가능.</p>
-<h3 id="1-riscv-gnu-toolchain">1&gt; riscv-gnu-toolchain</h3>
-<p>riscv-gnu-toolchain의 조합<br />
-Generator  : Autotools(./configure로 makefile파일 자동생성)<br />
+<h3 id="1-riscv-gnu-toolchain">1&gt; riscv-gnu-toolchain 조합</h3>
+<p>Generator  : Autotools(./configure로 makefile파일 자동생성)<br />
 Builder    : GNU Make</p>
 <div class="highlight"><pre><span></span><code>riscv-gnu-toolchain/
 ├── configure            ← 자동 생성된 셸 스크립트(Autoconf) ──▶ Generator
@@ -980,14 +997,13 @@ Builder    : GNU Make</p>
 <p>1) Generator 단계<br />
 ./configure --prefix=$HOME/opt/riscv --enable-multilib<br />
      ↳ configure  →  최상위 + 각 서브디렉터리 Makefile 생성<br />
-2) Builder 단계<br />
+1) Builder 단계<br />
 make -j$(nproc)          # 메인 Makefile이 scripts/build-*.sh 호출<br />
      ↳ 각 script 내부   →  binutils, gcc, newlib … 를 차례로 make<br />
-3) Install 단계<br />
+1) Install 단계<br />
 make install             # 결과물을 $HOME/opt/riscv/{bin,lib,include,…}로 복사</p>
-<h3 id="2-qemu">2&gt; qemu</h3>
-<p>qemu의 조합<br />
-Generator   : Meson<br />
+<h3 id="2-qemu">2&gt; qemu 조합</h3>
+<p>Generator   : Meson<br />
 Builder     : Ninja<br />
 최상위 ./configure 스크립트는 Autotools가 아니라 <strong>“Meson 설정 래퍼”</strong>입니다.</p>
 <div class="highlight"><pre><span></span><code>qemu/
@@ -1006,13 +1022,12 @@ Builder     : Ninja<br />
 <p>1) Generator<br />
 ./configure --target-list=riscv64-softmmu --prefix=$HOME/opt/qemu<br />
     ↳ 원래 사용하는 meson setup build/ 는 자동으로 되어 build.ninja 생성<br />
-2) Builder<br />
+1) Builder<br />
 ninja -C build -j$(nproc)                        # .o → libqemu* → qemu-system-riscv64<br />
-3) Install<br />
+1) Install<br />
 ninja -C build install               # 디폴트는 실행파일 /usr/local/bin 에 복사. 아까 prefix 설정했으면 $HOME/opt/qemu/{bin,lib,share,…}로 복사됨</p>
-<h3 id="3-xv6-riscv">3&gt; xv6-riscv</h3>
-<p>xv6-riscv의 조합<br />
-Generator  : 없음.(generator가 아무것도 없기에 손수 makefile파일 작성)<br />
+<h3 id="3-xv6-riscv">3&gt; xv6-riscv 조합</h3>
+<p>Generator  : 없음.(generator가 아무것도 없기에 손수 makefile파일 작성)<br />
 Builder    : GNU Make</p>
 <div class="highlight"><pre><span></span><code>xv6-riscv/
 ├── Makefile          ← 최상위 빌드 규칙 ― 핵심
@@ -1026,9 +1041,9 @@ Builder    : GNU Make</p>
 </code></pre></div>
 <p>1) Generator<br />
 손수 makefile파일 작성<br />
-2) Builder<br />
+1) Builder<br />
 make<br />
-3) Install<br />
+1) Install<br />
 따로 경로는 안하고 이 소스파일안에 냅두고 qemu에 올려서 부팅(make qemu)</p>
 <h3 id="3">3&gt; 명령어 의미</h3>
 <p>--prefix=$HOME/opt/qemu<br />
@@ -1041,13 +1056,13 @@ source ~/.bashrc<br />
 <p>호스트 툴체인 실행파일은 usr/bin에 있음. 크로스 툴체인은 usr/riscv64-linux-gnu/bin에 저장되기에 구분</p>
 <h3 id="5">5&gt; 삭제 방법</h3>
 <p>riscv-gnu-toolchain<br />
-설치 실행파일 제거 rm -rf usr/riscv-gnu-toolchain<br />
+설치 실행파일 제거 rm -rf usr/riscv-gnu-toolchain 과 sudo make uninstall<br />
 path 되돌리기 nano ~/.bashrc에서 export PATH 라인 삭제<br />
 빌드 산출물 삭제 make clean<br />
 소스 트리 초기화 make distclean<br />
 소스 폴더 삭제 rm -rf ~/riscv-gnu-toolchain</p>
 <p>qemu<br />
-설치 실행파일 제거 rm -rf usr/local/bin/qemu<br />
+설치 실행파일 제거 rm -rf usr/local/bin/qemu 과 sudo ninja uninstall<br />
 path 되돌리기 nano ~/.bashrc에서 export PATH 라인 삭제<br />
 빌드 산출물 삭제 ninja -C build clean<br />
 소스 트리 초기화 rm -rf build meson-logs meson-private<br />
@@ -1058,9 +1073,72 @@ path 되돌리기 nano ~/.bashrc에서 export PATH 라인 삭제<br />
 빌드 산출물 삭제 make clean<br />
 소스 트리 초기화 make distclean<br />
 소스 폴더 삭제 rm -rf ~/xv6-riscv</p>
+<p>참고로 설치 업데이트 할때마다 삭제해야 하나?<br />
+같은 --prefix(기본은 /usr/local)로 sudo make install을 또 실행하면<br />
+기존 파일 위에 덮어쓰므로 별도 삭제는 필요 없습니다.<br />
+경로·이름이 같은 파일이라면 install -c가 자동으로 교체합니다.</p>
+<p>만약 소스 폴더를 먼저 삭제해버려 설치 uninstall이 안된다면?<br />
+sudo rm -v /usr/local/bin/qemu-system-*          # 실행파일<br />
+sudo rm -rv /usr/local/share/qemu                # 펌웨어·bios<br />
+sudo rm -v /usr/local/lib/libqemu-<em>.so           # 공유 라이브러리<br />
+sudo rm -v /usr/local/include/qemu/</em>.h           # 헤더<br />
+sudo ldconfig<br />
+수동삭제..</p>
 <div class="highlight"><pre><span></span><code>~$ ps aux | grep qemu           #실행중인 프로세스 번호
 ~$ kill 숫자                     #강제종료
 </code></pre></div>
+<h3 id="6-build">6&gt; build 디렉토리 만들기</h3>
+<p>깔끔하게 build 디렉토리 만들고 ../configure하기도 함.</p>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th><strong>외부(out-of-source) 빌드</strong><br><code>mkdir build &amp;&amp; cd build &amp;&amp; ../configure …</code></th>
+<th><strong>내부(in-source) 빌드</strong><br><code>./configure …</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>빌드 산출물</strong></td>
+<td>소스 폴더 밖(<code>build/</code>)에만 생성 → <code>&lt;repo&gt;/</code> 가 깔끔</td>
+<td><code>.o</code>, <code>Makefile</code>, <code>config.h</code> 등이 소스 트리에 섞여 들어옴</td>
+</tr>
+<tr>
+<td><strong>동시에 여러 구성</strong><br>(Debug/Release·다른 아키텍처)</td>
+<td>build-debug, build-release 등 <strong>여러 디렉터리 병렬</strong>로 가능</td>
+<td>한 번에 하나만 가능(다시 <code>make clean</code> 필요)</td>
+</tr>
+<tr>
+<td><strong>git 상태</strong></td>
+<td><code>git status</code>가 수정·추가 파일 거의 없어서 패치 작성·리뷰 편리</td>
+<td>수백 개 생성물이 untracked 로 떠서 헷갈리거나 <code>.gitignore</code> 관리 필요</td>
+</tr>
+<tr>
+<td><strong>빌드 시스템 호환</strong></td>
+<td>CMake · Meson · ninja · qmake 등은 <strong>기본</strong>·<strong>권장</strong></td>
+<td>오래된 Autotools(특히 libtool)·Makefile만 직접 작성한 소규모 프로젝트는 in-source만 가정하는 경우가 있음</td>
+</tr>
+<tr>
+<td><strong>배포 스크립트</strong></td>
+<td>패키저가 “<code>rm -rf build &amp;&amp; git clean -xfd</code>” 로 손쉽게 초기화</td>
+<td><code>make distclean</code> 타깃이 <em>제대로</em> 정의돼 있어야 깔끔히 지워짐</td>
+</tr>
+<tr>
+<td><strong>초기 설정 난이도</strong></td>
+<td><code>../configure</code>, <code>cmake ..</code>, <code>meson setup ..</code> 식으로 <strong>상대 경로 신경 써야 함</strong></td>
+<td>소스 루트에서 바로 <code>./configure</code> → <code>make</code></td>
+</tr>
+</tbody>
+</table>
+<p>내부<br />
+./configure --target-list=riscv64-softmmu<br />
+ninja -j$(nproc) <br />
+ninja install</p>
+<p>외부<br />
+mkdir build &amp;&amp; cd build<br />
+../configure --target-list=riscv64-softmmu<br />
+ninja -j$(nproc)    # 만약 build를 나가서 입력할거면 -C build를 붙여준다<br />
+ninja install</p>
 
 
 
