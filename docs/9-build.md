@@ -25,8 +25,8 @@ install: prefix 경로에 안착
 
 Cmake는 요즘 범용성 높아 많이 쓰임. make도 ninja도 사용 가능.
 
-### 1> riscv-gnu-toolchain
-riscv-gnu-toolchain의 조합
+### 1> riscv-gnu-toolchain 조합
+
 Generator  : Autotools(./configure로 makefile파일 자동생성)
 Builder    : GNU Make
 
@@ -50,14 +50,14 @@ riscv-gnu-toolchain/
 1) Generator 단계
 ./configure --prefix=$HOME/opt/riscv --enable-multilib
      ↳ configure  →  최상위 + 각 서브디렉터리 Makefile 생성
-2) Builder 단계
+1) Builder 단계
 make -j$(nproc)          # 메인 Makefile이 scripts/build-*.sh 호출
      ↳ 각 script 내부   →  binutils, gcc, newlib … 를 차례로 make
-3) Install 단계
+1) Install 단계
 make install             # 결과물을 $HOME/opt/riscv/{bin,lib,include,…}로 복사
 
-### 2> qemu
-qemu의 조합
+### 2> qemu 조합
+
 Generator   : Meson
 Builder     : Ninja
 최상위 ./configure 스크립트는 Autotools가 아니라 **“Meson 설정 래퍼”**입니다.
@@ -80,13 +80,13 @@ qemu/
 1) Generator
 ./configure --target-list=riscv64-softmmu --prefix=$HOME/opt/qemu
     ↳ 원래 사용하는 meson setup build/ 는 자동으로 되어 build.ninja 생성
-2) Builder
+1) Builder
 ninja -C build -j$(nproc)                        # .o → libqemu* → qemu-system-riscv64
-3) Install
+1) Install
 ninja -C build install               # 디폴트는 실행파일 /usr/local/bin 에 복사. 아까 prefix 설정했으면 $HOME/opt/qemu/{bin,lib,share,…}로 복사됨
 
-### 3> xv6-riscv
-xv6-riscv의 조합
+### 3> xv6-riscv 조합
+
 Generator  : 없음.(generator가 아무것도 없기에 손수 makefile파일 작성)
 Builder    : GNU Make
 
@@ -104,9 +104,9 @@ xv6-riscv/
 
 1) Generator
 손수 makefile파일 작성
-2) Builder
+1) Builder
 make
-3) Install
+1) Install
 따로 경로는 안하고 이 소스파일안에 냅두고 qemu에 올려서 부팅(make qemu)
 
 ### 3> 명령어 의미
@@ -125,14 +125,14 @@ source ~/.bashrc
 ### 5> 삭제 방법
 
 riscv-gnu-toolchain
-설치 실행파일 제거 rm -rf usr/riscv-gnu-toolchain
+설치 실행파일 제거 rm -rf usr/riscv-gnu-toolchain 과 sudo make uninstall
 path 되돌리기 nano ~/.bashrc에서 export PATH 라인 삭제
 빌드 산출물 삭제 make clean
 소스 트리 초기화 make distclean
 소스 폴더 삭제 rm -rf ~/riscv-gnu-toolchain
 
 qemu
-설치 실행파일 제거 rm -rf usr/local/bin/qemu
+설치 실행파일 제거 rm -rf usr/local/bin/qemu 과 sudo ninja uninstall
 path 되돌리기 nano ~/.bashrc에서 export PATH 라인 삭제
 빌드 산출물 삭제 ninja -C build clean
 소스 트리 초기화 rm -rf build meson-logs meson-private
@@ -145,7 +145,45 @@ path 되돌리기 nano ~/.bashrc에서 export PATH 라인 삭제
 소스 트리 초기화 make distclean
 소스 폴더 삭제 rm -rf ~/xv6-riscv
 
+참고로 설치 업데이트 할때마다 삭제해야 하나?
+같은 --prefix(기본은 /usr/local)로 sudo make install을 또 실행하면
+기존 파일 위에 덮어쓰므로 별도 삭제는 필요 없습니다.
+경로·이름이 같은 파일이라면 install -c가 자동으로 교체합니다.
+
+만약 소스 폴더를 먼저 삭제해버려 설치 uninstall이 안된다면?
+sudo rm -v /usr/local/bin/qemu-system-*          # 실행파일
+sudo rm -rv /usr/local/share/qemu                # 펌웨어·bios
+sudo rm -v /usr/local/lib/libqemu-*.so           # 공유 라이브러리
+sudo rm -v /usr/local/include/qemu/*.h           # 헤더
+sudo ldconfig
+수동삭제..
+
 ```
 ~$ ps aux | grep qemu           #실행중인 프로세스 번호
 ~$ kill 숫자                     #강제종료
 ```
+
+### 6> build 디렉토리 만들기
+
+깔끔하게 build 디렉토리 만들고 ../configure하기도 함.
+
+
+| 구분                                       | **외부(out-of-source) 빌드**<br>`mkdir build && cd build && ../configure …` | **내부(in-source) 빌드**<br>`./configure …`                                     |
+| ---------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| **빌드 산출물**                               | 소스 폴더 밖(`build/`)에만 생성 → `<repo>/` 가 깔끔                                 | `.o`, `Makefile`, `config.h` 등이 소스 트리에 섞여 들어옴                               |
+| **동시에 여러 구성**<br>(Debug/Release·다른 아키텍처) | build-debug, build-release 등 **여러 디렉터리 병렬**로 가능                         | 한 번에 하나만 가능(다시 `make clean` 필요)                                             |
+| **git 상태**                               | `git status`가 수정·추가 파일 거의 없어서 패치 작성·리뷰 편리                               | 수백 개 생성물이 untracked 로 떠서 헷갈리거나 `.gitignore` 관리 필요                           |
+| **빌드 시스템 호환**                            | CMake · Meson · ninja · qmake 등은 **기본**·**권장**                          | 오래된 Autotools(특히 libtool)·Makefile만 직접 작성한 소규모 프로젝트는 in-source만 가정하는 경우가 있음 |
+| **배포 스크립트**                              | 패키저가 “`rm -rf build && git clean -xfd`” 로 손쉽게 초기화                       | `make distclean` 타깃이 *제대로* 정의돼 있어야 깔끔히 지워짐                                  |
+| **초기 설정 난이도**                            | `../configure`, `cmake ..`, `meson setup ..` 식으로 **상대 경로 신경 써야 함**      | 소스 루트에서 바로 `./configure` → `make`                                           |
+
+내부
+./configure --target-list=riscv64-softmmu
+ninja -j$(nproc) 
+ninja install
+
+외부
+mkdir build && cd build
+../configure --target-list=riscv64-softmmu
+ninja -j$(nproc)    # 만약 build를 나가서 입력할거면 -C build를 붙여준다
+ninja install
