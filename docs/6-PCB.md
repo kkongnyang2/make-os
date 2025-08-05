@@ -1,10 +1,9 @@
 ## xv6-riscv의 proc.c 파일을 읽어보자
 
-### 목표: PCB 이해
 작성자: kkongnyang2 작성일: 2025-06-26
 
 ---
-### 0> 개념 정리
+### 개념 정리
 
 PCB? 커널이 한 프로세스를 식별하는 구조체이다. pagetable, kstack, context, trapframe, state, pid 등의 정보를 담고 있다.
 
@@ -23,7 +22,7 @@ struct proc proc[NPROC]   // .bss 영역에 한꺼번에 자리 예약
 스케줄러는 이러한 PCB를 생성/파괴하고 스위치하고 clock 기반 스케줄링, sleep/wakeup을 맡는다.
 
 
-### 1> 용어 정리
+### 용어 정리
 
 PCB(process control block)  // 커널이 프로레스를 관리하는 구조체
 PID(process ID)             // 고유 정수 ID
@@ -48,7 +47,7 @@ struct trapframe -> 31개 일반레지스터 + sepc, sstatus, satp, kernel_sp
 struct cpu -> proc, context, noff
 
 
-### 2> 흐름 정리
+### 흐름 정리
 
 ```
 CPU 하트
@@ -64,7 +63,7 @@ CPU 하트
 
 ```
 
-### 3> proc.c
+### proc.c
 
 ```c
 #include "types.h"

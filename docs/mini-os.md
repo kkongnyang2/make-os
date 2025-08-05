@@ -1,9 +1,9 @@
 ## mini-os를 완성하자
 
-### 목표: os의 이해
 작성자: kkongnyang2 작성일: 2025-07-01
 
-### 0> 프로젝트
+---
+### 프로젝트
 
 모든 프로젝트는 소스파일 -> 규칙 -> 컴파일 및 빌드 -> 설치 -> 런 으로 이루어진다.
 
@@ -11,8 +11,8 @@
 
 이를 위한 과정은 다음과 같다. MMU와 TRAP, PCB, MMIO 함수들과, mkfs 함수 등의 소스 파일을 만든다.그리고 GNU make로 빌드할 수 있도록 makefile로 규칙을 작성한다. 크로스 툴체인(riscv64-unknown-elf)으로 컴파일하고 linker.ld 링커 파일로 빌드하여 커널 이미지를 만들도록 한다. 그리고 호스트 툴체인으로 디스크 이미지를 만든다. 해당 이미지들을 빌드 산출물로 내놓고 홈에 설치해 qemu로 런하도록 한다.
 
-
-### 1> 프로세스 흐름
+---
+### 프로세스 흐름
 ```
                 ┌──────────┐
    사용자 모드    │ Syscall   │ ← trap/exception/interrupt로 진입
@@ -54,43 +54,44 @@
  └──────────────────────────────────────────────┘
 ```
 
-### 2> 기존 xv6-riscv 공부
+---
+### 기존 xv6-riscv 공부
 
-step 1. qemu-riscv64 설치
+qemu-riscv64 설치
 ```
-~$ sudo apt install ninja-build         # qemu는 기본 내장 gnu make가 아니라 ninja라는 builder 사용
-~$ ninja --version
+$ sudo apt install ninja-build         # qemu는 기본 내장 gnu make가 아니라 ninja라는 builder 사용
+$ ninja --version
 1.10.1
-~$ git clone https://gitlab.com/qemu-project/qemu.git
-~$ cd qemu
-~$ ./configure --target-list=riscv64-softmmu
-~$ ninja -C build -j$(nproc)
-~$ ninja -C build install
+$ git clone https://gitlab.com/qemu-project/qemu.git
+$ cd qemu
+$ ./configure --target-list=riscv64-softmmu
+$ ninja -C build -j$(nproc)
+$ ninja -C build install
 ```
 
-step 2. 베어메탈용 크로스 툴체인 설치
+베어메탈용 크로스 툴체인 설치
 ```
-~$ sudo apt install gcc-riscv64-unknown-elf
-~$ riscv64-unknown-elf-gcc --version
+$ sudo apt install gcc-riscv64-unknown-elf
+$ riscv64-unknown-elf-gcc --version
 riscv64-unknown-elf-gcc () 10.2.0
 ```
 
-step 3. xv6-riscv 실행
+xv6-riscv 실행
 ```
-~$ git clone https://gitlab.com/xv6-riscv.git
-~$ cd xv6-riscv
-~$ make
-~$ make qemu
+$ git clone https://gitlab.com/xv6-riscv.git
+$ cd xv6-riscv
+$ make
+$ make qemu
 xv6 kernel is booting
 hart 1 starting
 hart 2 starting
 init: starting sh
-~$ ctrl+A+X
+$ ctrl+A+X
 QEMU: Terminated
 ```
 
-
-### 3> 소스 파일 디렉토리 구조
+---
+### 소스 파일 디렉토리 구조
 
 ```
 xv6-riscv/            ← 프로젝트 루트
@@ -130,8 +131,8 @@ xv6-riscv/            ← 프로젝트 루트
 └─ (빌드 산출물) kernel, fs.img, *.o, *.d, *.sym …
 ```
 
-
-### 4> arm64 특성
+---
+### arm64 특성
 
 1. 바이트 순서: little endian사용. 0x12345678은 메모리에 78 56 34 12 순서로 저장.
 2. 메모리 정렬: 4바이트 단위의 word alignment가 기본. 0x40080001같은건 정렬되지 않은 주소.
@@ -139,7 +140,8 @@ xv6-riscv/            ← 프로젝트 루트
 4. 함수 호출 규약: 리턴값은 x0, 파라메터 x0~x7. 스택은 16바이트 정렬(align 16)
 
 
-### 5> 디버깅
+---
+### 디버깅
 
 다른 터미널에서
 gdb-multiarch ~/make-os/kernel.elf
@@ -151,9 +153,10 @@ gdb-multiarch ~/make-os/kernel.elf
 (gdb) x/i $pc                       #현재 위치(pc)
 
 
-### 6> 전용 명령어 추가
+---
+### 전용 명령어 추가
 
-step 1. user 디렉토리에 hi.c 생성
+user 디렉토리에 hi.c 생성
 ```
 // user/hi.c
 #include "kernel/types.h"
@@ -168,7 +171,7 @@ main(int argc, char *argv[])
 }
 ```
 
-step 2. makefile에 $U/_hi 추가
+makefile에 $U/_hi 추가
 ```
 UPROGS=\
 	$U/_cat\
@@ -192,7 +195,7 @@ UPROGS=\
 이거 하나 추가.
 hi.c가 _hi 실행파일로 바껴서 hi라는 명령어 사용가능
 
-step 3. 기존 빌드 산출물 make clean하고 다시 make && make qemu
+기존 빌드 산출물 make clean하고 다시 make && make qemu
 ```
 xv6 kernel is booting
 
@@ -203,8 +206,8 @@ $ hi
 hi,kkongnyang2
 ```
 
-
-### 7> 흐름 메시지 추가
+---
+### 흐름 메시지 추가
 
 // 새 프로세스 생성 - PCB 스택이 막 잡힌 시점
 kernel/proc.c/fork() allocproc 후

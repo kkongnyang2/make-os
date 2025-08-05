@@ -1,10 +1,9 @@
 ## 프로젝트 빌드 과정을 알아보자
 
-### 목표: 프로젝트의 이해
 작성자: kkongnyang2 작성일: 2025-06-30
 
 ---
-### 0> 기본
+### 기본
 
 소스파일 가져오는건 
  git clone https://gitlab.com/qemu-project/qemu.git
@@ -25,7 +24,8 @@ install: prefix 경로에 안착
 
 Cmake는 요즘 범용성 높아 많이 쓰임. make도 ninja도 사용 가능.
 
-### 1> riscv-gnu-toolchain 조합
+---
+### riscv-gnu-toolchain 조합
 
 Generator  : Autotools(./configure로 makefile파일 자동생성)
 Builder    : GNU Make
@@ -50,13 +50,14 @@ riscv-gnu-toolchain/
 1) Generator 단계
 ./configure --prefix=$HOME/opt/riscv --enable-multilib
      ↳ configure  →  최상위 + 각 서브디렉터리 Makefile 생성
-1) Builder 단계
+2) Builder 단계
 make -j$(nproc)          # 메인 Makefile이 scripts/build-*.sh 호출
      ↳ 각 script 내부   →  binutils, gcc, newlib … 를 차례로 make
-1) Install 단계
+3) Install 단계
 make install             # 결과물을 $HOME/opt/riscv/{bin,lib,include,…}로 복사
 
-### 2> qemu 조합
+---
+### qemu 조합
 
 Generator   : Meson
 Builder     : Ninja
@@ -85,7 +86,8 @@ ninja -C build -j$(nproc)                        # .o → libqemu* → qemu-syst
 1) Install
 ninja -C build install               # 디폴트는 실행파일 /usr/local/bin 에 복사. 아까 prefix 설정했으면 $HOME/opt/qemu/{bin,lib,share,…}로 복사됨
 
-### 3> xv6-riscv 조합
+---
+### xv6-riscv 조합
 
 Generator  : 없음.(generator가 아무것도 없기에 손수 makefile파일 작성)
 Builder    : GNU Make
@@ -109,7 +111,9 @@ make
 1) Install
 따로 경로는 안하고 이 소스파일안에 냅두고 qemu에 올려서 부팅(make qemu)
 
-### 3> 명령어 의미
+---
+### 명령어 의미
+
 --prefix=$HOME/opt/qemu
 설치 결과물을 시스템 루트(/usr)가 아닌 내 홈 폴더 아래에 복사해라. (안쓰면 디폴트는 /usr/local일거임) root 권한 없이, 다른 qemu 버전과 충돌 없이 관리 가능.
 
@@ -119,10 +123,13 @@ source ~/.bashrc
 
 이거 안해줄거면 그냥 디폴트로 하나만 쓰고 루트 디렉토리로 sudo make install 해주면 됨.
 
-### 4> 크로스 툴체인 위치
+---
+### 크로스 툴체인 위치
+
 호스트 툴체인 실행파일은 usr/bin에 있음. 크로스 툴체인은 usr/riscv64-linux-gnu/bin에 저장되기에 구분
 
-### 5> 삭제 방법
+---
+### 삭제 방법
 
 riscv-gnu-toolchain
 설치 실행파일 제거 rm -rf usr/riscv-gnu-toolchain 과 sudo make uninstall
@@ -163,7 +170,8 @@ sudo ldconfig
 ~$ kill 숫자                     #강제종료
 ```
 
-### 6> build 디렉토리 만들기
+---
+### build 디렉토리 만들기
 
 깔끔하게 build 디렉토리 만들고 ../configure하기도 함.
 

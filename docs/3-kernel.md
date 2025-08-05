@@ -1,10 +1,9 @@
 ## xv6-riscv의 시작 파일을 읽어보자
 
-### 목표: 커널의 이해
 작성자: kkongnyang2 작성일: 2025-06-21
 
 ---
-### 0> 파일 구조
+### 파일 구조
 
 [1] 부트 진입
 [2] 커널 초기화
@@ -46,7 +45,7 @@ xv6-riscv/
 
 
 
-### 1> 메모리 배치 kernel/kernel.ld
+### 메모리 배치 kernel/kernel.ld
 
 링커 스크립트란? .o 들을 하나로 묶어 실행 가능한 .elf 바이너리를 만들때, 어떤 섹션을 어디에 배치할지 결정하는 배치도 역할을 한다.
 ```
@@ -132,7 +131,7 @@ SECTIONS
 c언어 함수들을 위해 사용하는 stack0은 초기화되지 않았으므로 .bss 섹션에 포함
 
 
-### 2> M모드 및 스택 설정 kernel/entry.S
+### M모드 및 스택 설정 kernel/entry.S
 
 cpu가 제일 먼저 읽는 파일은? _entry 라벨.
 
@@ -167,7 +166,7 @@ stack0:  ┌────────────────────┐ ← 
 ```
 
 
-### 3> M->S 전환, timer 세팅 kernel/start.c
+### M->S 전환, timer 세팅 kernel/start.c
 
 ```c
 #include "types.h"
@@ -258,7 +257,7 @@ timerinit()
 참고로 타이머는 유일하게 cpu 안에 있는 순수 하드웨어 타이머로, M모드 소속 자원이자 모든 스케줄링의 기반이기에 여기에 정의되어 있다.
 
 
-### 4> 커널 초기화 루틴 kernel/main.c
+### 커널 초기화 루틴 kernel/main.c
 
 ```c
 #include "types.h"
@@ -308,7 +307,7 @@ main()
 }
 ```
 
-### 5> 모드 전환
+### 모드 전환
 mret : M->S
 mstatus.MPP를 보고 다음 모드를 결정
 MPP=00(U모드) MPP=01(S모드) MPP=11(M모드)
@@ -341,7 +340,7 @@ trap이 언제 발생하나요?
 [S 모드] 커널의 trap handler 동작
 ```
 
-### > makefile
+### makefile
 
 [ test.S ] --(어셈블러)--> [ test.o ] --(링커)--> [ kernel.elf ] --(objcopy)--> [ kernel.img ]
 어셈블리 → 오브젝트	: CPU가 이해할 수 있는 기계어(.o)로 변환

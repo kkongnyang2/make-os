@@ -1,6 +1,5 @@
-## xv6-riscv의 하드웨어 구조를 알아보자
+## riscv의 하드웨어를 알아보자
 
-### 목표: SoC칩 이해
 작성자: kkongnyang2 작성일: 2025-06-25
 
 ---
@@ -42,8 +41,8 @@ Legend:
   TLB     : Translation Lookaside Buffer
   MMU     : Memory Management Unit
 
-
-### 1> CPU 내부 유닛(CSR)
+---
+### CPU 내부 유닛(CSR)
 
 연산블록 ALU, FPU /모든 모드
 제어블록 MMU /M모드가 껐다킴. S나 U는 설정된 테이블 하에서 사용
@@ -59,8 +58,8 @@ satp : MMU 루트 페이지테이블
 mtime, stimecmp : 사이클, 카운터, 타이머 비교
 scause, sepc, stval : trap 원인, 복귀 pc, 오류 값
 
-
-### 2> CPU 외부 유닛(MMIO)
+---
+### CPU 외부 유닛(MMIO)
 
 MMIO들은 그냥 주소를 읽으면 레지스터에 연결되어 동작 가능
 lw rd, 0(xaddr) (일반 메모리 Load/Store)
@@ -72,15 +71,15 @@ CPU ──(AXI/AHB/TileLink 버스)──►
        └─ PLIC(외부 인터럽트) (0x0C00_0000)
 ```
 
-
-### 3> CLINT vs PLIC
+---
+### CLINT vs PLIC
 
 CLINT는 MSIP/SSIP/MTIP/STIP 소프트웨어와 타이머 인터럽트를 처리하고, 코어 내부의 0x02000000에 있다.
 PLIC는 외부 디바이스 IRQ (UART, VirtIO) 를 처리하고, 0x0C000000에 있다.
 
 
-
-### 4> MMU
+---
+### MMU
 
 물리 주소 = DRAM 칩, MMIO 레지스터를 전선 번호로 직접 가리키는 값
 가상 주소 = CPU에서 실행 중인 프로그램이 보는 주소

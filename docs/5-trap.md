@@ -1,9 +1,8 @@
 ## xv6-riscv의 trap.c 파일을 읽어보자
 
-### 목표: trap 이해
 작성자: kkongnyang2 작성일: 2025-06-23
 
-### 0> 개념 정리
+### 개념 정리
 
 트랩? CPU가 현재 흐름을 즉시 끊고 커널로 점프하는 모든 사건의 총칭이다.
 종류는 시스템 콜(8번), 페이지 폴트(12,13,15번), 0 나누기 등 명령어에 기인하는 exception 와 타이머(7번), 디바이스, 외부 인터럽트(5번) 등 외부에 기인하는 interrupt 가 있다.
@@ -13,7 +12,7 @@ RISC-V는 둘 모두를 scause 코드로 구분하고 같은 통로로 들어온
 trampoline.S(가장 높은 VA 페이지 0xFFFF..F000) 코드가 전체 레지스터를 struct trapframe(그 바로 아래 VA이고 스택구조)으로 푸시하고 C함수 kernel_trap() 호출.
 커널이 원인 처리 후 usertrapret()을 거쳐 다시 트램펄린으로 돌아가 레지스터를 복원하고 sret으로 U 복귀.
 
-### 1> 용어 정리
+### 용어 정리
 ```
 stvec (Supervisor Trap-Vector)      // 트랩 진입 시 점프할 VA를 담는 CSR
 sepc (Supervisor Exception PC)      // 트랩 직전 PC 보관 CSR
@@ -32,7 +31,7 @@ SPP (Previous Privilege)            // sstatus 내 ‘트랩 전 모드(U/S)’ 
 SPIE (Previous Interrupt Enable)    // sstatus 내 ‘U-mode에서의 인터럽트 허용’ 비트
 ```
 
-### 2> 흐름 정리
+### 흐름 정리
 ```
 ┌─────────────┐          ┌────────────────────┐
 │ User space  │  trap    │  trampoline.S      │
@@ -88,7 +87,7 @@ usertrapret에서는 다시 원상태로 세팅해주는 거! stvec을 다시 us
 280 t6
 ```
 
-### 3> kernel/trampoline.S
+### kernel/trampoline.S
 
 ```
 #include "riscv.h"
@@ -236,7 +235,7 @@ userret:
 ```
 
 
-### 4 > kernel/trap.c
+### kernel/trap.c
 
 ```c
 #include "types.h"
