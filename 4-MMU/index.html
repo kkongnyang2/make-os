@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -594,45 +594,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#mmu" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      목표: MMU 이해
+      개념 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#0" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      0&gt; 개념 정리
+      용어 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; 용어 정리
+      흐름 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#vmc" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; 흐름 정리
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-vmc" class="md-nav__link">
-    <span class="md-ellipsis">
-      3&gt; vm.c
+      vm.c
     </span>
   </a>
   
@@ -818,45 +809,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#mmu" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      목표: MMU 이해
+      개념 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#0" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      0&gt; 개념 정리
+      용어 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; 용어 정리
+      흐름 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#vmc" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; 흐름 정리
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-vmc" class="md-nav__link">
-    <span class="md-ellipsis">
-      3&gt; vm.c
+      vm.c
     </span>
   </a>
   
@@ -886,10 +868,9 @@
   <h1>4 MMU</h1>
 
 <h2 id="xv6-riscv-vmc">xv6-riscv의 vm.c 파일을 읽어보자</h2>
-<h3 id="mmu">목표: MMU 이해</h3>
 <p>작성자: kkongnyang2 작성일: 2025-06-25</p>
 <hr />
-<h3 id="0">0&gt; 개념 정리</h3>
+<h3 id="_1">개념 정리</h3>
 <p>페이지? 공간을 연속적으로 할당하지 않고 페이지라는 단위로 쪼개서 사용한다.<br />
 프로세스의 메모리도, 실제 physical 메모리도 페이지 4KB 단위로 쪼갠다.</p>
 <p>그리고 이러한 VPN(virtual page number)과 PEN(physical frame number)로 매핑해주는 표가 page table이다.(원소는 PTE)<br />
@@ -897,7 +878,7 @@
 <p>그럼 이 페이지 테이블 실체는 어디에 저장되냐? 공통 커널 PTE는 부팅시 .text, .data 밖 kalloc() 동적할당에 존재하고 satp CSR을 통해 부른다. 각 프로세스 PTE는 역시 kalloc() 동적할당에 저장되고, 개별 root PT 주소를 저장한다.</p>
 <p>그럼 페이지 테이블에서 각 PTE를 어떻게 찾느냐? VA를 4조각으로 끊어 3개의 index와 page offset으로 사용한다. 이 목차로 페이지 테이블을 구성하기에 한영사전 처럼 찾을수 있는 것이다.</p>
 <p>참고로 디스크에서는 블록이라는 단위를 쓰고, inode 메타데이터를 통해 블록끼리 연결된다. 이 디스크의 데이터를 메모리로 올릴 때 xv6은 각 페이지마다 VA 페이지를 할당하고 memcpy한다. </p>
-<h3 id="1">1&gt; 용어 정리</h3>
+<h3 id="_2">용어 정리</h3>
 <div class="highlight"><pre><span></span><code>가상주소 (VA, Virtual Address)        // 사용자·커널 코드가 쓰는 논리적 주소
 물리주소 (PA, Physical Address)        // 실제 DRAM 칩의 셀 위치
 MMU (Memory Management Unit)           // VA→PA 변환을 담당하는 하드웨어
@@ -912,7 +893,7 @@ A/D 비트                               // Accessed/Dirty – 페이지 사용�
 sfence.vma zero,zero                   // TLB 전부 무효화(페이지테이블 바꾼 뒤 필수)
 csrw satp, t1                          // SATP CSR에 새로운 페이지테이블(root PPN) 등록
 </code></pre></div>
-<h3 id="2">2&gt; 흐름 정리</h3>
+<h3 id="_3">흐름 정리</h3>
 <div class="highlight"><pre><span></span><code>start.c      → kvminit()         → vm.c
               (커널전용)              ├─ kvmmake()      // 커널 자체 map
                                     ├─ kvmmap()       // 실제 page → VA 매핑 헬퍼
@@ -960,7 +941,7 @@ root의 아래 영역까지 합치면 38비트는 user area, 38비트는 kernel 
    44 bits      2      권한·상태 비트
 </code></pre></div><br />
 PTE 형식(64bit=8byte) </p>
-<h3 id="3-vmc">3&gt; vm.c</h3>
+<h3 id="vmc">vm.c</h3>
 <div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;param.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;types.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;memlayout.h&quot;</span>
@@ -1431,7 +1412,7 @@ PTE 형식(64bit=8byte) </p>
       <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "content.code.copy", "header.autohide"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      <script src="../assets/javascripts/bundle.50899def.min.js"></script>
       
     
   </body>

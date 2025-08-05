@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -638,45 +638,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#pcb" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      목표: PCB 이해
+      개념 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#0" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      0&gt; 개념 정리
+      용어 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; 용어 정리
+      흐름 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#procc" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; 흐름 정리
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-procc" class="md-nav__link">
-    <span class="md-ellipsis">
-      3&gt; proc.c
+      proc.c
     </span>
   </a>
   
@@ -818,45 +809,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#pcb" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      목표: PCB 이해
+      개념 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#0" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      0&gt; 개념 정리
+      용어 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; 용어 정리
+      흐름 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#procc" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; 흐름 정리
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-procc" class="md-nav__link">
-    <span class="md-ellipsis">
-      3&gt; proc.c
+      proc.c
     </span>
   </a>
   
@@ -886,10 +868,9 @@
   <h1>6 PCB</h1>
 
 <h2 id="xv6-riscv-procc">xv6-riscv의 proc.c 파일을 읽어보자</h2>
-<h3 id="pcb">목표: PCB 이해</h3>
 <p>작성자: kkongnyang2 작성일: 2025-06-26</p>
 <hr />
-<h3 id="0">0&gt; 개념 정리</h3>
+<h3 id="_1">개념 정리</h3>
 <p>PCB? 커널이 한 프로세스를 식별하는 구조체이다. pagetable, kstack, context, trapframe, state, pid 등의 정보를 담고 있다.</p>
 <p>그리고 여러 PCB를 미리 고정된 크기의 배열로 할당해 둔 공간을 PCB 풀이라고 한다. 부팅 시 PCB풀 + kstack풀 + trapframe 등 프로세스 자원을 부팅 시 전부 예약해둔다.</p>
 <div class="highlight"><pre><span></span><code>struct proc proc[NPROC]   // .bss 영역에 한꺼번에 자리 예약
@@ -900,7 +881,7 @@
 └──────────────┴──────────────┴── … ──┴──────────────┘
 </code></pre></div>
 <p>스케줄러는 이러한 PCB를 생성/파괴하고 스위치하고 clock 기반 스케줄링, sleep/wakeup을 맡는다.</p>
-<h3 id="1">1&gt; 용어 정리</h3>
+<h3 id="_2">용어 정리</h3>
 <p>PCB(process control block)  // 커널이 프로레스를 관리하는 구조체<br />
 PID(process ID)             // 고유 정수 ID<br />
 RUNNABLE                    // cpu를 받을 준비 완료(런 큐에 존재)<br />
@@ -921,7 +902,7 @@ struct context -&gt; ra, sp, s0~11<br />
 struct trapframe -&gt; 31개 일반레지스터 + sepc, sstatus, satp, kernel_sp<br />
 // 하트 당 전역: 현재 프로세스, 중첩 깊이<br />
 struct cpu -&gt; proc, context, noff</p>
-<h3 id="2">2&gt; 흐름 정리</h3>
+<h3 id="_3">흐름 정리</h3>
 <div class="highlight"><pre><span></span><code>CPU 하트
 ┌─────────────────────────────────────────────┐
 │   사용자 모드 (U)                             │
@@ -933,7 +914,7 @@ struct cpu -&gt; proc, context, noff</p>
 │     └─ 드라이버               └─┬───────────┘
 └─────────────────────────────────────────────┘
 </code></pre></div>
-<h3 id="3-procc">3&gt; proc.c</h3>
+<h3 id="procc">proc.c</h3>
 <div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;types.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;param.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;memlayout.h&quot;</span>
@@ -1665,7 +1646,7 @@ struct cpu -&gt; proc, context, noff</p>
       <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "content.code.copy", "header.autohide"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      <script src="../assets/javascripts/bundle.50899def.min.js"></script>
       
     
   </body>

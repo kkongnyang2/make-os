@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#xv6-riscv" class="md-skip">
+        <a href="#riscv" class="md-skip">
           Skip to content
         </a>
       
@@ -540,23 +540,14 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#xv6-riscv" class="md-nav__link">
+  <a href="#riscv" class="md-nav__link">
     <span class="md-ellipsis">
-      xv6-riscv의 하드웨어 구조를 알아보자
+      riscv의 하드웨어를 알아보자
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="xv6-riscv의 하드웨어 구조를 알아보자">
+    <nav class="md-nav" aria-label="riscv의 하드웨어를 알아보자">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#soc" class="md-nav__link">
-    <span class="md-ellipsis">
-      목표: SoC칩 이해
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#0" class="md-nav__link">
@@ -568,36 +559,36 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#1-cpu-csr" class="md-nav__link">
+  <a href="#cpu-csr" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; CPU 내부 유닛(CSR)
+      CPU 내부 유닛(CSR)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-cpu-mmio" class="md-nav__link">
+  <a href="#cpu-mmio" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; CPU 외부 유닛(MMIO)
+      CPU 외부 유닛(MMIO)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-clint-vs-plic" class="md-nav__link">
+  <a href="#clint-vs-plic" class="md-nav__link">
     <span class="md-ellipsis">
-      3&gt; CLINT vs PLIC
+      CLINT vs PLIC
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-mmu" class="md-nav__link">
+  <a href="#mmu" class="md-nav__link">
     <span class="md-ellipsis">
-      4&gt; MMU
+      MMU
     </span>
   </a>
   
@@ -817,23 +808,14 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#xv6-riscv" class="md-nav__link">
+  <a href="#riscv" class="md-nav__link">
     <span class="md-ellipsis">
-      xv6-riscv의 하드웨어 구조를 알아보자
+      riscv의 하드웨어를 알아보자
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="xv6-riscv의 하드웨어 구조를 알아보자">
+    <nav class="md-nav" aria-label="riscv의 하드웨어를 알아보자">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#soc" class="md-nav__link">
-    <span class="md-ellipsis">
-      목표: SoC칩 이해
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#0" class="md-nav__link">
@@ -845,36 +827,36 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#1-cpu-csr" class="md-nav__link">
+  <a href="#cpu-csr" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; CPU 내부 유닛(CSR)
+      CPU 내부 유닛(CSR)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-cpu-mmio" class="md-nav__link">
+  <a href="#cpu-mmio" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; CPU 외부 유닛(MMIO)
+      CPU 외부 유닛(MMIO)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-clint-vs-plic" class="md-nav__link">
+  <a href="#clint-vs-plic" class="md-nav__link">
     <span class="md-ellipsis">
-      3&gt; CLINT vs PLIC
+      CLINT vs PLIC
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-mmu" class="md-nav__link">
+  <a href="#mmu" class="md-nav__link">
     <span class="md-ellipsis">
-      4&gt; MMU
+      MMU
     </span>
   </a>
   
@@ -903,8 +885,7 @@
 
   <h1>2 hw</h1>
 
-<h2 id="xv6-riscv">xv6-riscv의 하드웨어 구조를 알아보자</h2>
-<h3 id="soc">목표: SoC칩 이해</h3>
+<h2 id="riscv">riscv의 하드웨어를 알아보자</h2>
 <p>작성자: kkongnyang2 작성일: 2025-06-25</p>
 <hr />
 <h3 id="0">0&gt; 구조</h3>
@@ -943,7 +924,8 @@ Legend:<br />
   BP      : Branch Predictor<br />
   TLB     : Translation Lookaside Buffer<br />
   MMU     : Memory Management Unit</p>
-<h3 id="1-cpu-csr">1&gt; CPU 내부 유닛(CSR)</h3>
+<hr />
+<h3 id="cpu-csr">CPU 내부 유닛(CSR)</h3>
 <p>연산블록 ALU, FPU /모든 모드<br />
 제어블록 MMU /M모드가 껐다킴. S나 U는 설정된 테이블 하에서 사용<br />
 캐시블록 L1/L2 Cache <br />
@@ -956,7 +938,8 @@ stvec, mtvec : trap/interrupt 벡터 주소<br />
 satp : MMU 루트 페이지테이블<br />
 mtime, stimecmp : 사이클, 카운터, 타이머 비교<br />
 scause, sepc, stval : trap 원인, 복귀 pc, 오류 값</p>
-<h3 id="2-cpu-mmio">2&gt; CPU 외부 유닛(MMIO)</h3>
+<hr />
+<h3 id="cpu-mmio">CPU 외부 유닛(MMIO)</h3>
 <p>MMIO들은 그냥 주소를 읽으면 레지스터에 연결되어 동작 가능<br />
 lw rd, 0(xaddr) (일반 메모리 Load/Store)<br />
 <div class="highlight"><pre><span></span><code>CPU ──(AXI/AHB/TileLink 버스)──►
@@ -965,10 +948,12 @@ lw rd, 0(xaddr) (일반 메모리 Load/Store)<br />
        ├─ VirtIO 블록 (0x1000_1000) : paravirtual 장치 표준
        └─ PLIC(외부 인터럽트) (0x0C00_0000)
 </code></pre></div></p>
-<h3 id="3-clint-vs-plic">3&gt; CLINT vs PLIC</h3>
+<hr />
+<h3 id="clint-vs-plic">CLINT vs PLIC</h3>
 <p>CLINT는 MSIP/SSIP/MTIP/STIP 소프트웨어와 타이머 인터럽트를 처리하고, 코어 내부의 0x02000000에 있다.<br />
 PLIC는 외부 디바이스 IRQ (UART, VirtIO) 를 처리하고, 0x0C000000에 있다.</p>
-<h3 id="4-mmu">4&gt; MMU</h3>
+<hr />
+<h3 id="mmu">MMU</h3>
 <p>물리 주소 = DRAM 칩, MMIO 레지스터를 전선 번호로 직접 가리키는 값<br />
 가상 주소 = CPU에서 실행 중인 프로그램이 보는 주소<br />
 MMU = CPU 안에 붙어 있는 유닛. 주소 매핑 및 권한 체크.</p>
@@ -1034,7 +1019,7 @@ Sv39 = 가상주소 39bit(9+9+9+12) 구조<br />
       <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "content.code.copy", "header.autohide"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      <script src="../assets/javascripts/bundle.50899def.min.js"></script>
       
     
   </body>

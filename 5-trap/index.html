@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -616,54 +616,45 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#trap" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      목표: trap 이해
+      개념 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#0" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      0&gt; 개념 정리
+      용어 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; 용어 정리
+      흐름 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#kerneltrampolines" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; 흐름 정리
+      kernel/trampoline.S
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-kerneltrampolines" class="md-nav__link">
+  <a href="#kerneltrapc" class="md-nav__link">
     <span class="md-ellipsis">
-      3&gt; kernel/trampoline.S
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-kerneltrapc" class="md-nav__link">
-    <span class="md-ellipsis">
-      4 &gt; kernel/trap.c
+      kernel/trap.c
     </span>
   </a>
   
@@ -827,54 +818,45 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#trap" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      목표: trap 이해
+      개념 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#0" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      0&gt; 개념 정리
+      용어 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; 용어 정리
+      흐름 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#kerneltrampolines" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; 흐름 정리
+      kernel/trampoline.S
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-kerneltrampolines" class="md-nav__link">
+  <a href="#kerneltrapc" class="md-nav__link">
     <span class="md-ellipsis">
-      3&gt; kernel/trampoline.S
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-kerneltrapc" class="md-nav__link">
-    <span class="md-ellipsis">
-      4 &gt; kernel/trap.c
+      kernel/trap.c
     </span>
   </a>
   
@@ -904,16 +886,15 @@
   <h1>5 trap</h1>
 
 <h2 id="xv6-riscv-trapc">xv6-riscv의 trap.c 파일을 읽어보자</h2>
-<h3 id="trap">목표: trap 이해</h3>
 <p>작성자: kkongnyang2 작성일: 2025-06-23</p>
-<h3 id="0">0&gt; 개념 정리</h3>
+<h3 id="_1">개념 정리</h3>
 <p>트랩? CPU가 현재 흐름을 즉시 끊고 커널로 점프하는 모든 사건의 총칭이다.<br />
 종류는 시스템 콜(8번), 페이지 폴트(12,13,15번), 0 나누기 등 명령어에 기인하는 exception 와 타이머(7번), 디바이스, 외부 인터럽트(5번) 등 외부에 기인하는 interrupt 가 있다.<br />
 RISC-V는 둘 모두를 scause 코드로 구분하고 같은 통로로 들어온다.</p>
 <p>유저/커널을 U/S 모드로 구분해 실행하고, 트랩 진입 시 PC와 레지스터 일부를 CSR에 잠깐 보관한 후<br />
 trampoline.S(가장 높은 VA 페이지 0xFFFF..F000) 코드가 전체 레지스터를 struct trapframe(그 바로 아래 VA이고 스택구조)으로 푸시하고 C함수 kernel_trap() 호출.<br />
 커널이 원인 처리 후 usertrapret()을 거쳐 다시 트램펄린으로 돌아가 레지스터를 복원하고 sret으로 U 복귀.</p>
-<h3 id="1">1&gt; 용어 정리</h3>
+<h3 id="_2">용어 정리</h3>
 <div class="highlight"><pre><span></span><code>stvec (Supervisor Trap-Vector)      // 트랩 진입 시 점프할 VA를 담는 CSR
 sepc (Supervisor Exception PC)      // 트랩 직전 PC 보관 CSR
 scause(Supervisor Cause)            // 트랩 원인 코드 &amp; 인터럽트 플래그
@@ -930,7 +911,7 @@ CLINT (Core-Local Int. Ctrl.)       // 타이머·소프트웨어 인터럽트 M
 SPP (Previous Privilege)            // sstatus 내 ‘트랩 전 모드(U/S)’ 비트
 SPIE (Previous Interrupt Enable)    // sstatus 내 ‘U-mode에서의 인터럽트 허용’ 비트
 </code></pre></div>
-<h3 id="2">2&gt; 흐름 정리</h3>
+<h3 id="_3">흐름 정리</h3>
 <p><div class="highlight"><pre><span></span><code>┌─────────────┐          ┌────────────────────┐
 │ User space  │  trap    │  trampoline.S      │
 │   code      │─────────▶│  (VA 0x...FFF000)  │
@@ -980,7 +961,7 @@ usertrapret에서는 다시 원상태로 세팅해주는 거! stvec을 다시 us
 
 280 t6
 </code></pre></div>
-<h3 id="3-kerneltrampolines">3&gt; kernel/trampoline.S</h3>
+<h3 id="kerneltrampolines">kernel/trampoline.S</h3>
 <div class="highlight"><pre><span></span><code>#include &quot;riscv.h&quot;
 #include &quot;memlayout.h&quot;
 
@@ -1124,7 +1105,7 @@ userret:
 
         sret
 </code></pre></div>
-<h3 id="4-kerneltrapc">4 &gt; kernel/trap.c</h3>
+<h3 id="kerneltrapc">kernel/trap.c</h3>
 <div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;types.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;param.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;memlayout.h&quot;</span>
@@ -1366,7 +1347,7 @@ userret:
       <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "content.code.copy", "header.autohide"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      <script src="../assets/javascripts/bundle.50899def.min.js"></script>
       
     
   </body>

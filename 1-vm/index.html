@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -530,43 +530,34 @@
           <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      목표: 가상머신 이해
+      개념 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#0" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      0&gt; 개념 정리
+      분류
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; 분류
+      구성요소
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#qemu-kvm" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; 구성요소
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-qemu-kvm" class="md-nav__link">
-    <span class="md-ellipsis">
-      3&gt; QEMU-KVM 흐름
+      QEMU-KVM 흐름
     </span>
   </a>
   
@@ -820,43 +811,34 @@
           <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      목표: 가상머신 이해
+      개념 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#0" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      0&gt; 개념 정리
+      분류
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; 분류
+      구성요소
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#qemu-kvm" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; 구성요소
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-qemu-kvm" class="md-nav__link">
-    <span class="md-ellipsis">
-      3&gt; QEMU-KVM 흐름
+      QEMU-KVM 흐름
     </span>
   </a>
   
@@ -886,13 +868,13 @@
   <h1>1 vm</h1>
 
 <h2 id="qemu">qemu의 구조를 알아보자</h2>
-<h3 id="_1">목표: 가상머신 이해</h3>
 <p>작성자: kkongnyang2 작성일: 2025-06-20</p>
 <hr />
-<h3 id="0">0&gt; 개념 정리</h3>
+<h3 id="_1">개념 정리</h3>
 <p>가상머신? 물리적 컴퓨터 위에서 돌아가는 소프트웨어 컴퓨터</p>
 <p>하이퍼바이저 -&gt; 그 가짜 컴퓨터를 관리하는 관리자</p>
-<h3 id="1">1&gt; 분류</h3>
+<hr />
+<h3 id="_2">분류</h3>
 <p>하이퍼바이저 위치</p>
 <p>type 1. bare-metal<br />
 하드웨어 바로 위에 하이퍼바이저가 동작. os 설치 없이 바로 vm 실행 가능</p>
@@ -947,7 +929,8 @@ qemu가 소프트웨어로 가상 하드웨어 구현. 쉽게 말해 가짜 수�
 게스트가 virtio 통신. 전용 고속 택배 전용</p>
 <p>패스-스루<br />
 실제 장치 기능 직접 넘김. 집 열쇠를 통째로 줌.</p>
-<h3 id="2">2&gt; 구성요소</h3>
+<hr />
+<h3 id="_3">구성요소</h3>
 <p>vcpu<br />
 실제 cpu 코어와 논리 코어 매핑. 컨텍스트 스위치, 타미어 인터럽트, TLB flush 등.<br />
 <div class="highlight"><pre><span></span><code>┌─ Host CPU Core ──────────────────────────┐
@@ -982,7 +965,8 @@ mmio 트랩, DMA 리맵, virtio ring buffer<br />
 <p>이때 virtio는 2,3단계에서 링 버퍼/IOVRING을 써서 트랩 횟수를 확 줄이는 최적화</p>
 <p>스토리지 네트워킹<br />
 QCOW2같은 이미지 형식</p>
-<h3 id="3-qemu-kvm">3&gt; QEMU-KVM 흐름</h3>
+<hr />
+<h3 id="qemu-kvm">QEMU-KVM 흐름</h3>
 <p>qemu? type2 풀 에뮬레이션 하이퍼바이저<br />
 kvm? HW-assist 방식 전용 커널 모듈(type 1)<br />
 큰 틀은 qemu를 쓰고 cpu 가상화를 추가로 진행하여 qemu+kvm 방식으로 많이 씀.</p>
@@ -1057,7 +1041,7 @@ RISC-V에서는 U(유저) S(커널) M(최상위)</p>
       <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "content.code.copy", "header.autohide"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      <script src="../assets/javascripts/bundle.50899def.min.js"></script>
       
     
   </body>

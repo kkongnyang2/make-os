@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -574,61 +574,52 @@
           <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      목표: 커널의 이해
+      파일 구조
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#0" class="md-nav__link">
+  <a href="#kernelkernelld" class="md-nav__link">
     <span class="md-ellipsis">
-      0&gt; 파일 구조
+      메모리 배치 kernel/kernel.ld
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1-kernelkernelld" class="md-nav__link">
+  <a href="#m-kernelentrys" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; 메모리 배치 kernel/kernel.ld
+      M모드 및 스택 설정 kernel/entry.S
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-m-kernelentrys" class="md-nav__link">
+  <a href="#m-s-timer-kernelstartc" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; M모드 및 스택 설정 kernel/entry.S
+      M-&gt;S 전환, timer 세팅 kernel/start.c
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-m-s-timer-kernelstartc" class="md-nav__link">
+  <a href="#kernelmainc" class="md-nav__link">
     <span class="md-ellipsis">
-      3&gt; M-&gt;S 전환, timer 세팅 kernel/start.c
+      커널 초기화 루틴 kernel/main.c
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-kernelmainc" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      4&gt; 커널 초기화 루틴 kernel/main.c
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5" class="md-nav__link">
-    <span class="md-ellipsis">
-      5&gt; 모드 전환
+      모드 전환
     </span>
   </a>
   
@@ -637,7 +628,7 @@
           <li class="md-nav__item">
   <a href="#makefile" class="md-nav__link">
     <span class="md-ellipsis">
-      &gt; makefile
+      makefile
     </span>
   </a>
   
@@ -847,61 +838,52 @@
           <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      목표: 커널의 이해
+      파일 구조
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#0" class="md-nav__link">
+  <a href="#kernelkernelld" class="md-nav__link">
     <span class="md-ellipsis">
-      0&gt; 파일 구조
+      메모리 배치 kernel/kernel.ld
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1-kernelkernelld" class="md-nav__link">
+  <a href="#m-kernelentrys" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; 메모리 배치 kernel/kernel.ld
+      M모드 및 스택 설정 kernel/entry.S
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-m-kernelentrys" class="md-nav__link">
+  <a href="#m-s-timer-kernelstartc" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; M모드 및 스택 설정 kernel/entry.S
+      M-&gt;S 전환, timer 세팅 kernel/start.c
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-m-s-timer-kernelstartc" class="md-nav__link">
+  <a href="#kernelmainc" class="md-nav__link">
     <span class="md-ellipsis">
-      3&gt; M-&gt;S 전환, timer 세팅 kernel/start.c
+      커널 초기화 루틴 kernel/main.c
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-kernelmainc" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      4&gt; 커널 초기화 루틴 kernel/main.c
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5" class="md-nav__link">
-    <span class="md-ellipsis">
-      5&gt; 모드 전환
+      모드 전환
     </span>
   </a>
   
@@ -910,7 +892,7 @@
           <li class="md-nav__item">
   <a href="#makefile" class="md-nav__link">
     <span class="md-ellipsis">
-      &gt; makefile
+      makefile
     </span>
   </a>
   
@@ -940,10 +922,9 @@
   <h1>3 kernel</h1>
 
 <h2 id="xv6-riscv">xv6-riscv의 시작 파일을 읽어보자</h2>
-<h3 id="_1">목표: 커널의 이해</h3>
 <p>작성자: kkongnyang2 작성일: 2025-06-21</p>
 <hr />
-<h3 id="0">0&gt; 파일 구조</h3>
+<h3 id="_1">파일 구조</h3>
 <p>[1] 부트 진입<br />
 [2] 커널 초기화<br />
 [3] 트랩 핸들러 등록<br />
@@ -978,7 +959,7 @@
 ├── .gdbinit           ← GDB 초기화 설정
 └── README.md
 </code></pre></div>
-<h3 id="1-kernelkernelld">1&gt; 메모리 배치 kernel/kernel.ld</h3>
+<h3 id="kernelkernelld">메모리 배치 kernel/kernel.ld</h3>
 <p>링커 스크립트란? .o 들을 하나로 묶어 실행 가능한 .elf 바이너리를 만들때, 어떤 섹션을 어디에 배치할지 결정하는 배치도 역할을 한다.<br />
 <div class="highlight"><pre><span></span><code>OUTPUT_ARCH( &quot;riscv&quot; )
 ENTRY( _entry )
@@ -1059,7 +1040,7 @@ SECTIONS
 각 섹션들은 링커가 .o들을 모아 하나의 elf를 생성하며 그때 크기가 결정된다.<br />
 커널 heap은 런타임 공간이라 섹션이 아님. 저주소부터 증가하며 요청 시 크기만큼 동적으로 메모리를 할당한다.<br />
 c언어 함수들을 위해 사용하는 stack0은 초기화되지 않았으므로 .bss 섹션에 포함</p>
-<h3 id="2-m-kernelentrys">2&gt; M모드 및 스택 설정 kernel/entry.S</h3>
+<h3 id="m-kernelentrys">M모드 및 스택 설정 kernel/entry.S</h3>
 <p>cpu가 제일 먼저 읽는 파일은? _entry 라벨.</p>
 <p><div class="highlight"><pre><span></span><code>        # qemu는 커널을 0x80000000에 로드
         # 각 하트(CPU)가 해당 위치로 점프하도록 함.
@@ -1088,7 +1069,7 @@ spin:
          │                    │
          └────────────────────┘ ← sp 설정 (최상단 = stack0 + STACK_SIZE)
 </code></pre></div></p>
-<h3 id="3-m-s-timer-kernelstartc">3&gt; M-&gt;S 전환, timer 세팅 kernel/start.c</h3>
+<h3 id="m-s-timer-kernelstartc">M-&gt;S 전환, timer 세팅 kernel/start.c</h3>
 <p><div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;types.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;param.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;memlayout.h&quot;</span>
@@ -1175,7 +1156,7 @@ spin:
 <span class="p">}</span>
 </code></pre></div><br />
 참고로 타이머는 유일하게 cpu 안에 있는 순수 하드웨어 타이머로, M모드 소속 자원이자 모든 스케줄링의 기반이기에 여기에 정의되어 있다.</p>
-<h3 id="4-kernelmainc">4&gt; 커널 초기화 루틴 kernel/main.c</h3>
+<h3 id="kernelmainc">커널 초기화 루틴 kernel/main.c</h3>
 <div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;types.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;param.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;memlayout.h&quot;</span>
@@ -1222,7 +1203,7 @@ spin:
 <span class="w">  </span><span class="n">scheduler</span><span class="p">();</span><span class="w">                          </span><span class="c1">// 모든 cpu가 스케줄러에 진입하여 프로세스 루프  </span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="5">5&gt; 모드 전환</h3>
+<h3 id="_2">모드 전환</h3>
 <p>mret : M-&gt;S<br />
 mstatus.MPP를 보고 다음 모드를 결정<br />
 MPP=00(U모드) MPP=01(S모드) MPP=11(M모드)<br />
@@ -1249,7 +1230,7 @@ stvec에 등록된 trap handler로 점프. SPP=U모드. sepc에 복귀 주소 �
     ↓
 [S 모드] 커널의 trap handler 동작
 </code></pre></div>
-<h3 id="makefile">&gt; makefile</h3>
+<h3 id="makefile">makefile</h3>
 <p>[ test.S ] --(어셈블러)--&gt; [ test.o ] --(링커)--&gt; [ kernel.elf ] --(objcopy)--&gt; [ kernel.img ]<br />
 어셈블리 → 오브젝트 : CPU가 이해할 수 있는 기계어(.o)로 변환<br />
 오브젝트 → ELF 실행파일 : 코드와 데이터(섹션)들을 주소에 맞게 배치<br />
@@ -1603,7 +1584,7 @@ qemu-gdb: $K/kernel .gdbinit fs.img
       <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "content.code.copy", "header.autohide"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      <script src="../assets/javascripts/bundle.50899def.min.js"></script>
       
     
   </body>

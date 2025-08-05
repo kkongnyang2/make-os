@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -660,45 +660,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#uart" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      목표: uart 이해
+      개념 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#0" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      0&gt; 개념 정리
+      용어 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; 용어 정리
+      흐름 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#uartc" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; 흐름 정리
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-uartc" class="md-nav__link">
-    <span class="md-ellipsis">
-      3&gt; uart.c
+      uart.c
     </span>
   </a>
   
@@ -818,45 +809,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#uart" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      목표: uart 이해
+      개념 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#0" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
-      0&gt; 개념 정리
+      용어 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
-      1&gt; 용어 정리
+      흐름 정리
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#uartc" class="md-nav__link">
     <span class="md-ellipsis">
-      2&gt; 흐름 정리
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-uartc" class="md-nav__link">
-    <span class="md-ellipsis">
-      3&gt; uart.c
+      uart.c
     </span>
   </a>
   
@@ -886,10 +868,9 @@
   <h1>7 uart</h1>
 
 <h2 id="xv6-riscv-uartc">xv6-riscv의 uart.c 파일을 읽어보자</h2>
-<h3 id="uart">목표: uart 이해</h3>
 <p>작성자: kkongnyang2 작성일: 2025-06-26</p>
 <hr />
-<h3 id="0">0&gt; 개념 정리</h3>
+<h3 id="_1">개념 정리</h3>
 <p>uart는 cpu, 메모리 쪽의 병렬 데이터를 두 가닥(TX보내기와 RX받기)의 직렬 신호로 바꿔 주는 컨버터다. 원래 칩 내부에서는 64개의 선으로 클럭마다 64비트를 보낸다. 하지만 외부에서는 클럭을 동기화할 수 없기에 비동기 직렬로 전송하고, 8비트(1바이트)마다 체크를 한다. 그리고 이러한 선들을 버스라고 부르는데, 이미 cpu에서는 하드웨어 제작 단계에서 이러한 uart mmio의 존재를 알고 있기에 주소 0x10000000으로 사용한다.</p>
 <p><div class="highlight"><pre><span></span><code>  CPU 파이프라인 (5~10 stage 예)          메모리·I/O
 ┌─ IF ─┬─ ID ─┬─ EX/AGU ─┬─ MEM  ─┬─ WB ─┐
@@ -932,7 +913,7 @@ TX   RX  GND  REFCLK                       ← serial PCIe 예시
       └───────────────────┘
 </code></pre></div></p>
 <hr />
-<h3 id="1">1&gt; 용어 정리</h3>
+<h3 id="_2">용어 정리</h3>
 <div class="highlight"><pre><span></span><code>baud rate                       // 초당 전송 비트 수. xv6은 38.4kbis/s이다
 THR/RHR(transmit/receive holding register)  // cpu에 오가는 바이트를 담는 8bit 레지스터
 LSR(line status register)       // TX_IDLE, RX_READY 같은 플래그로 하드웨어 상태 보고
@@ -944,7 +925,7 @@ top/bottom half                 // 인터럽트 진입 직후 처리(top)과 버
 console subsystem               // 실제 하드웨어는 uart.c, 라인 처리는 console.c
 </code></pre></div>
 <hr />
-<h3 id="2">2&gt; 흐름 정리</h3>
+<h3 id="_3">흐름 정리</h3>
 <div class="highlight"><pre><span></span><code>+-------------+        +-------------+         +----------------+
 | user space  | sys_write → consolewrite() →   | circular TX buf|
 |  printf()   |        |  (console.c) |         | uart_tx_buf[]  |
@@ -963,7 +944,7 @@ console subsystem               // 실제 하드웨어는 uart.c, 라인 처리�
     wakeup(&amp;uart_tx_r) ◄─────────────┘         while(uartgetc()!=-1) consoleintr()
 </code></pre></div>
 <hr />
-<h3 id="3-uartc">3&gt; uart.c</h3>
+<h3 id="uartc">uart.c</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">//</span>
 <span class="c1">// low-level driver routines for 16550a UART.</span>
 <span class="c1">//</span>
@@ -1207,7 +1188,7 @@ console subsystem               // 실제 하드웨어는 uart.c, 라인 처리�
       <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "content.code.copy", "header.autohide"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      <script src="../assets/javascripts/bundle.50899def.min.js"></script>
       
     
   </body>
